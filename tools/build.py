@@ -19,7 +19,7 @@ ORG = {
   "contactPoint": [{"@type": "ContactPoint", "telephone": "+90-212-651-66-69", "contactType": "sales", "areaServed": "TR", "availableLanguage": ["tr", "en", "de"]},
                    {"@type": "ContactPoint", "telephone": "+90-535-718-35-98", "contactType": "customer service", "availableLanguage": ["tr"]}],
   "sameAs": ["https://www.facebook.com/epratiplastikofficial/", "https://www.instagram.com/epratiplastikofficial/",
-             "https://www.youtube.com/channel/UC_Hg5Dj8rEe2AiyAkmrdrwg"]
+             "https://www.youtube.com/channel/UC_Hg5Dj8rEe2AiyAkmrdrwg", "https://epratiplastic.trustpass.alibaba.com"]
 }
 FAQ = [
   ("Ürünleriniz gıdaya uygun mu?", "Evet. Gıda ambalajlarımız TR-34-K-282635 kayıt numaralı belgeyle üretilir."),
@@ -99,8 +99,9 @@ def page(p):
   pgid = {'home.html': 'pg-home', 'asistan.html': 'pg-asistan', 'urun.html': 'pg-urun'}[p['main']]
   foot = part('footer.html').replace('{{R}}', R).replace('{{HOME}}', H).replace('src="logo-beyaz.svg"', f'src="{R}logo-beyaz.svg"')
   return f'''<!DOCTYPE html>
-<html lang="tr">
+<html lang="tr" class="no-js">
 <head>
+<script>document.documentElement.className='js'</script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>{p['title']}</title>

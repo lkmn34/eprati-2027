@@ -22,6 +22,69 @@ var COLS=[['Şeffaf','#EEF3F0'],['Beyaz','#FFFFFF'],['Krem','#F3E9D2'],['Sarı',
 function swatches(cur){return '<div class="swatches">'+COLS.map(function(c){return '<button type="button" data-color="'+c[0]+'" class="'+(cur===c[0]?'on':'')+'" aria-pressed="'+(cur===c[0])+'"><i style="background:'+c[1]+'"></i>'+c[0]+'</button>'}).join('')+'</div>'}
 
 function sizeStr(o){return o.w+'+'+o.g+'+'+o.g+' x '+o.h+' cm'}
+var PHOTOS={atlet:null};
+var INKS=[['Lacivert','#2B3787'],['Siyah','#1E1E1E'],['Kırmızı','#C62828'],['Yeşil','#2E7D32'],['Mavi','#1565C0'],['Altın','#B08A2E']];
+var BAG='M40 30Q40 18 52 18L88 18Q96 18 96 30L96 92Q96 128 150 128Q204 128 204 92L204 30Q204 18 212 18L248 18Q260 18 260 30L265 352Q265 368 249 368L51 368Q35 368 35 352Z';
+function bagRender(hex,clear,ink,logo,showPrint){
+  if(PHOTOS.atlet){ // gerçek fotoğraf modu
+    var m='-webkit-mask-image:url('+PHOTOS.atlet+');mask-image:url('+PHOTOS.atlet+');-webkit-mask-size:contain;mask-size:contain;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;-webkit-mask-position:center;mask-position:center';
+    return '<img src="'+PHOTOS.atlet+'" alt="" style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:contain">'+
+      '<div style="position:absolute;top:0;left:0;background:'+hex+';mix-blend-mode:multiply;opacity:'+(clear?0.25:1)+';'+m+'"></div>'+
+      (logo?'<img src="'+logo+'" alt="Logonuz" style="position:absolute;left:33%;top:50%;width:34%;height:28%;object-fit:contain;mix-blend-mode:multiply">':'');
+  }
+  var o=clear?0.42:1, fill=clear?'#DDEBF2':hex;
+  var s='<svg width="100%" height="100%" viewBox="0 0 300 380" role="img" aria-label="Atlet poşet önizlemesi"><defs>'+
+   '<clipPath id="bc"><path d="'+BAG+'"/></clipPath>'+
+   '<linearGradient id="sheen" x1="0" x2="1"><stop offset="0" stop-color="#000" stop-opacity=".16"/><stop offset=".14" stop-color="#000" stop-opacity=".02"/><stop offset=".38" stop-color="#fff" stop-opacity=".38"/><stop offset=".55" stop-color="#fff" stop-opacity=".06"/><stop offset=".86" stop-color="#000" stop-opacity=".03"/><stop offset="1" stop-color="#000" stop-opacity=".18"/></linearGradient>'+
+   '<linearGradient id="vsh" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".25"/><stop offset=".5" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".12"/></linearGradient>'+
+   '<filter id="bl"><feGaussianBlur stdDeviation="2.2"/></filter><filter id="bl2"><feGaussianBlur stdDeviation="6"/></filter></defs>'+
+   '<ellipse cx="150" cy="372" rx="120" ry="8" fill="#191B45" opacity=".12" filter="url(#bl2)"/>'+
+   '<path d="'+BAG+'" fill="'+fill+'" fill-opacity="'+o+'"/>'+
+   '<g clip-path="url(#bc)">'+
+     '<rect x="0" y="0" width="300" height="380" fill="url(#sheen)"/><rect x="0" y="0" width="300" height="380" fill="url(#vsh)"/>'+
+     '<rect x="35" y="0" width="22" height="380" fill="#000" opacity=".07"/><rect x="243" y="0" width="22" height="380" fill="#000" opacity=".07"/>'+
+     '<g fill="none" stroke-linecap="round" filter="url(#bl)">'+
+       '<path d="M60 40Q70 80 64 120M236 40Q228 82 238 124M110 150Q140 210 120 300M190 160Q170 230 196 330M70 250Q120 270 150 330M232 220Q210 270 220 350" stroke="#000" stroke-opacity=".10" stroke-width="5"/>'+
+       '<path d="M66 44Q76 82 70 120M230 44Q222 84 232 122M116 150Q146 212 126 300M196 160Q176 232 202 330M74 246Q124 266 154 326" stroke="#fff" stroke-opacity=".45" stroke-width="3"/>'+
+     '</g>'+
+     '<path d="M35 354L265 354" stroke="#000" stroke-opacity=".12" stroke-width="2" stroke-dasharray="3 3"/>'+
+   '</g>'+
+   '<path d="'+BAG+'" fill="none" stroke="#000" stroke-opacity=".16" stroke-width="1.5"/>';
+  if(logo) s+='<image href="'+logo+'" xlink:href="'+logo+'" x="95" y="180" width="110" height="110" preserveAspectRatio="xMidYMid meet" style="mix-blend-mode:multiply"/>';
+  else if(showPrint) s+='<g opacity=".92"><path d="M128 238c0-26 16-40 42-40 0 26-16 40-42 40z" fill="'+ink+'"/><path d="M130 236c10-12 20-22 34-32" stroke="#fff" stroke-width="2" fill="none" opacity=".6"/><text x="150" y="272" text-anchor="middle" font-family="Plus Jakarta Sans,Inter,sans-serif" font-weight="800" font-size="19" fill="'+ink+'">FİRMA ADI</text><text x="150" y="292" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="'+ink+'">0212 000 00 00</text></g>';
+  return s+'</svg>';
+}
+/* Ürün ikonları (48x48, çizgi) — gerçek ürün fotoğrafları gelince bunların yerini alabilir */
+var IC={
+ atlet:'<path d="M13 8h7v8c0 3 2 5 4 5s4-2 4-5V8h7v32a2 2 0 0 1-2 2H15a2 2 0 0 1-2-2z"/><path d="M13 13h7M28 13h7" opacity=".5"/>',
+ elgecme:'<rect x="12" y="7" width="24" height="35" rx="2"/><rect x="19" y="12" width="10" height="4" rx="2"/>',
+ kulplu:'<rect x="10" y="18" width="28" height="24" rx="2"/><path d="M17 18c0-9 14-9 14 0"/>',
+ kargo:'<rect x="7" y="12" width="34" height="26" rx="2"/><path d="M7 14l17 12 17-12"/><path d="M30 33h6" opacity=".5"/>',
+ rulo:'<ellipse cx="15" cy="24" rx="5" ry="12"/><path d="M15 12h16M15 36h16"/><path d="M31 12a5 12 0 0 1 0 24"/><path d="M31 36v6h10V28" opacity=".6"/>',
+ ekmek:'<path d="M17 5h14v38H17z"/><path d="M17 11h14" opacity=".5"/><path d="M21 20c2-2 4-2 6 0M21 27c2-2 4-2 6 0M21 34c2-2 4-2 6 0" opacity=".6"/>',
+ bakliyat:'<path d="M15 14c-4 9-4 19 0 28h18c4-9 4-19 0-28z"/><path d="M15 14l3-6h12l3 6"/><circle cx="21" cy="30" r="1.6"/><circle cx="27" cy="26" r="1.6"/><circle cx="26" cy="34" r="1.6"/>',
+ buz:'<rect x="12" y="10" width="24" height="32" rx="3"/><path d="M18 22l4 4-4 4M30 22l-4 4 4 4M24 18v16" opacity=".6"/>',
+ aski:'<path d="M24 11a3 3 0 1 1 3-3"/><path d="M24 11v3L9 23h30L24 14"/><path d="M11 23v19h26V23"/>',
+ hali:'<circle cx="15" cy="30" r="7"/><circle cx="15" cy="30" r="2.5"/><path d="M15 23h24v14H15"/>',
+ opp:'<rect x="10" y="14" width="28" height="28" rx="2"/><path d="M10 14l4-6h20l4 6"/><path d="M19 24l5 4 5-4" opacity=".6"/>',
+ kilitli:'<rect x="10" y="9" width="28" height="33" rx="2"/><path d="M10 16h28"/><path d="M13 12.5h22" stroke-dasharray="2 2" opacity=".6"/>',
+ bardak:'<path d="M14 10h20l-3 32H17z"/><path d="M13 10h22" stroke-width="3"/><path d="M16 22h16" opacity=".5"/>',
+ lastik:'<circle cx="24" cy="24" r="16"/><circle cx="24" cy="24" r="7"/><path d="M24 8v5M24 35v5M8 24h5M35 24h5" opacity=".5"/>',
+ bobin:'<ellipse cx="24" cy="12" rx="13" ry="4"/><path d="M11 12v24c0 2 6 4 13 4s13-2 13-4V12"/><ellipse cx="24" cy="12" rx="4" ry="1.3"/>'
+};
+function icon(k,size,col){return '<svg width="'+(size||28)+'" height="'+(size||28)+'" viewBox="0 0 48 48" fill="none" stroke="'+(col||'#2B3787')+'" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+IC[k]+'</svg>'}
+
+/* ---------- hafif hareketler: kaydırınca belirme, sayaçlar ---------- */
+var calm=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+if('IntersectionObserver' in window&&!calm){
+  var rv=document.querySelectorAll('.sec .h2, .sec .eyebrow, .card, .cat, .dcard, .mapwrap, .faq, .cta, .dstage, .dctl, .qform, .sz');
+  Array.prototype.forEach.call(rv,function(el){var sib=el.parentNode?Array.prototype.indexOf.call(el.parentNode.children,el):0;el.classList.add('rv');el.style.transitionDelay=Math.min(sib,6)*60+'ms'});
+  var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}})},{rootMargin:'0px 0px -8% 0px'});
+  Array.prototype.forEach.call(rv,function(el){io.observe(el)});
+  var co=new IntersectionObserver(function(es){es.forEach(function(e){if(!e.isIntersecting)return;co.unobserve(e.target);var el=e.target,to=+el.getAttribute('data-to'),fr=+(el.getAttribute('data-from')||0),t0=null;
+    function step(ts){if(!t0)t0=ts;var p=Math.min(1,(ts-t0)/1400);p=1-Math.pow(1-p,3);el.textContent=Math.round(fr+(to-fr)*p);if(p<1)requestAnimationFrame(step)}requestAnimationFrame(step)})},{threshold:.6});
+  Array.prototype.forEach.call(document.querySelectorAll('.count'),function(el){co.observe(el)});
+}
 if($('#pg-home')){
 /* ---------- ana sayfa ---------- */
 var P=[['Atlet Poşet','Mağaza','market, hışır, alışveriş, bakkal'],['El Geçmeli Poşet','Mağaza','butik, giyim, mağaza'],['Kulplu Poşet','Mağaza','ayakkabı, kutu, tekstil'],['Kargo Poşeti','Mağaza','e-ticaret, gönderi, kurye'],
@@ -42,28 +105,9 @@ document.addEventListener('click',function(e){if(!e.target.closest||!e.target.cl
 ['Market poşeti','Ekmek poşeti','Kargo poşeti','Kilitli torba'].forEach(function(l){
   var b=document.createElement('button');b.type='button';b.textContent=l;
   b.onclick=function(e){e.stopPropagation();ara.value=l.split(' ')[0];doSearch();ara.focus()};$('#chips').appendChild(b)});
-$('#minigrid').innerHTML=['Market ve mağaza','Fırın ve pastane','Manav ve pazar','E-ticaret ve kargo','Kuru temizleme ve halı','Sanayi ve otomotiv'].map(function(s){return '<a href="'+ASIST+'">'+s+'</a>'}).join('');
-/* Ürün ikonları (48x48, çizgi) — gerçek ürün fotoğrafları gelince bunların yerini alabilir */
-var IC={
- atlet:'<path d="M13 8h7v8c0 3 2 5 4 5s4-2 4-5V8h7v32a2 2 0 0 1-2 2H15a2 2 0 0 1-2-2z"/><path d="M13 13h7M28 13h7" opacity=".5"/>',
- elgecme:'<rect x="12" y="7" width="24" height="35" rx="2"/><rect x="19" y="12" width="10" height="4" rx="2"/>',
- kulplu:'<rect x="10" y="18" width="28" height="24" rx="2"/><path d="M17 18c0-9 14-9 14 0"/>',
- kargo:'<rect x="7" y="12" width="34" height="26" rx="2"/><path d="M7 14l17 12 17-12"/><path d="M30 33h6" opacity=".5"/>',
- rulo:'<ellipse cx="15" cy="24" rx="5" ry="12"/><path d="M15 12h16M15 36h16"/><path d="M31 12a5 12 0 0 1 0 24"/><path d="M31 36v6h10V28" opacity=".6"/>',
- ekmek:'<path d="M17 5h14v38H17z"/><path d="M17 11h14" opacity=".5"/><path d="M21 20c2-2 4-2 6 0M21 27c2-2 4-2 6 0M21 34c2-2 4-2 6 0" opacity=".6"/>',
- bakliyat:'<path d="M15 14c-4 9-4 19 0 28h18c4-9 4-19 0-28z"/><path d="M15 14l3-6h12l3 6"/><circle cx="21" cy="30" r="1.6"/><circle cx="27" cy="26" r="1.6"/><circle cx="26" cy="34" r="1.6"/>',
- buz:'<rect x="12" y="10" width="24" height="32" rx="3"/><path d="M18 22l4 4-4 4M30 22l-4 4 4 4M24 18v16" opacity=".6"/>',
- aski:'<path d="M24 11a3 3 0 1 1 3-3"/><path d="M24 11v3L9 23h30L24 14"/><path d="M11 23v19h26V23"/>',
- hali:'<circle cx="15" cy="30" r="7"/><circle cx="15" cy="30" r="2.5"/><path d="M15 23h24v14H15"/>',
- opp:'<rect x="10" y="14" width="28" height="28" rx="2"/><path d="M10 14l4-6h20l4 6"/><path d="M19 24l5 4 5-4" opacity=".6"/>',
- kilitli:'<rect x="10" y="9" width="28" height="33" rx="2"/><path d="M10 16h28"/><path d="M13 12.5h22" stroke-dasharray="2 2" opacity=".6"/>',
- bardak:'<path d="M14 10h20l-3 32H17z"/><path d="M13 10h22" stroke-width="3"/><path d="M16 22h16" opacity=".5"/>',
- lastik:'<circle cx="24" cy="24" r="16"/><circle cx="24" cy="24" r="7"/><path d="M24 8v5M24 35v5M8 24h5M35 24h5" opacity=".5"/>',
- bobin:'<ellipse cx="24" cy="12" rx="13" ry="4"/><path d="M11 12v24c0 2 6 4 13 4s13-2 13-4V12"/><ellipse cx="24" cy="12" rx="4" ry="1.3"/>'
-};
-function icon(k,size,col){return '<svg width="'+(size||28)+'" height="'+(size||28)+'" viewBox="0 0 48 48" fill="none" stroke="'+(col||'#2B3787')+'" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+IC[k]+'</svg>'}
+$('#minigrid').innerHTML=[['market','atlet','Market ve mağaza'],['firin','ekmek','Fırın ve pastane'],['manav','rulo','Manav ve pazar'],['eticaret','kargo','E-ticaret ve kargo'],['kt','aski','Kuru temizleme ve halı'],['sanayi','lastik','Sanayi ve otomotiv']].map(function(s){return '<a href="'+ASIST+'?sektor='+s[0]+'"><span class="mi">'+icon(s[1],22)+'</span>'+s[2]+'</a>'}).join('');
 $('#sectors').innerHTML=[['atlet','#E8F3E3','Market ve Mağaza','Atlet, el geçmeli, kulplu poşet'],['ekmek','#F3EFE6','Fırın ve Pastane','Ekmek poşeti, plast kağıt'],['rulo','#E6EAF7','Manav ve Pazar','Rulo manav poşeti, atlet poşet'],['bakliyat','#E8F3E3','Gıda Üreticisi','Bakliyat, koli-kasa, dondurma-buz poşeti'],['kargo','#F3EFE6','E-ticaret ve Kargo','Kargo poşeti, bantlı torba'],['aski','#E6EAF7','Kuru Temizleme ve Halı','Kuru temizleme poşeti, halı poşeti'],['opp','#E8F3E3','Tekstil ve Hazır Giyim','OPP-CPP torba, jelatin, taşıma torbası'],['lastik','#F3EFE6','Sanayi ve Otomotiv','Kilitli torba, oto lastik poşeti, film bobin']]
-  .map(function(s){return '<a class="card sector" href="'+ASIST+'"><span class="badge" style="background:'+s[1]+'">'+icon(s[0],34)+'</span><b>'+s[2]+'</b><span class="muted" style="font-size:14px">'+s[3]+'</span></a>'}).join('');
+  .map(function(s,i){return '<a class="card sector" href="'+ASIST+'?sektor='+['market','firin','manav','gida','eticaret','kt','tekstil','sanayi'][i]+'"><span class="badge" style="background:'+s[1]+'">'+icon(s[0],34)+'</span><b>'+s[2]+'</b><span class="muted" style="font-size:14px">'+s[3]+'</span></a>'}).join('');
 $('#cats').innerHTML=[['Mağaza Ambalajları','mağaza','#E8F3E3',['Atlet Poşet','El Geçmeli Poşet','Kulplu Poşet','Kargo Poşeti'],['atlet','elgecme','kulplu','kargo']],['Gıda Ambalajları','gıda','#F3EFE6',['Rulo Manav','Bakliyat','Plast Kağıt','Koli-Kasa','Ekmek','Dondurma-Buz'],['rulo','bakliyat','ekmek','buz']],['Tekstil ve Temizlik','tekstil','#E6EAF7',['Kuru Temizleme','Halı Poşeti','OPP-CPP Torba','OPP-CPP Bantlı','OPP-Film Bobin','Jelatin','Taşıma Torbası'],['aski','hali','opp','bobin']],['Endüstriyel Ambalajlar','endüstriyel','#EEF1EC',['Torba','Bantlı Torba','Bardak Poşeti','Fermuarlı Kilitli','Kilitli Torba','Oto Lastik','Film (Bobin)'],['kilitli','bardak','lastik','bobin']]]
   .map(function(c){return '<div class="cat" style="background:'+c[2]+'"><h3 style="font-size:20px;margin:0 0 14px">'+c[0]+'</h3><div class="tags">'+c[3].map(function(p){return '<a href="'+URUN+'">'+p+'</a>'}).join('')+'</div><a href="'+URUN+'" style="margin:10px 0 18px;font-weight:600;font-size:14px">Tüm '+c[1]+' ürünleri →</a><div class="collage" aria-hidden="true">'+c[4].map(function(k,i){return '<span style="transform:rotate('+[-6,4,-3,6][i]+'deg)">'+icon(k,40)+'</span>'}).join('')+'</div></div>'}).join('');
 /* Referanslar: gerçek logolar gelince {ad:'THY', img:'logolar/thy.png'} şeklinde eklenir */
@@ -77,6 +121,33 @@ function drawFaq(){$('#faqs').innerHTML=FAQ.map(function(f,i){var o=i===openF;re
 $('#faqs').addEventListener('click',function(e){var b=e.target.closest('[data-f]');if(!b)return;var i=+b.getAttribute('data-f');openF=openF===i?-1:i;drawFaq()});
 drawFaq();
 
+
+
+/* ihracat haritası: ülke noktaları */
+var PINS=[{"ad": "ABD", "x": 21.61, "y": 30.87}, {"ad": "Birleşik Krallık", "x": 48.71, "y": 19.72}, {"ad": "İsveç", "x": 53.49, "y": 13.85}, {"ad": "Fransa", "x": 47.56, "y": 27.88}, {"ad": "Almanya", "x": 52.23, "y": 21.86}, {"ad": "Polonya", "x": 54.64, "y": 21.09}, {"ad": "Macaristan", "x": 54.78, "y": 24.73}, {"ad": "Romanya", "x": 56.38, "y": 25.71}, {"ad": "Bulgaristan", "x": 56.55, "y": 28.02}, {"ad": "Sırbistan", "x": 55.26, "y": 26.94}, {"ad": "Gürcistan", "x": 61.75, "y": 28.47}, {"ad": "Azerbaycan", "x": 63, "y": 29.9}, {"ad": "Irak", "x": 62.29, "y": 35.44}, {"ad": "Libya", "x": 54.84, "y": 40.02}, {"ad": "Moğolistan", "x": 77.9, "y": 24.89}, {"ad": "Kırgızistan", "x": 70.58, "y": 29}, {"ad": "İstanbul — üretim tesisimiz", "x": 59.97, "y": 30.29, "ev": 1}];
+$('#pins').innerHTML=PINS.map(function(p,i){return '<button type="button" class="pin'+(p.ev?' ev':'')+'" data-i="'+i+'" style="left:'+p.x+'%;top:'+p.y+'%;animation-delay:'+(i*0.12)+'s" aria-label="'+esc(p.ad)+'"><span class="tip">'+esc(p.ad)+'</span></button>'}).join('');
+function hl(i,on){var b=$('#pins').querySelector('[data-i="'+i+'"]');if(b)b.classList.toggle('on',on)}
+$('#pins').addEventListener('click',function(e){var b=e.target.closest('.pin');if(!b)return;var was=b.classList.contains('on');Array.prototype.forEach.call(document.querySelectorAll('.pin.on'),function(x){x.classList.remove('on')});if(!was)b.classList.add('on')});
+var cc=$('#countries');
+['mouseover','focusin'].forEach(function(ev){cc.addEventListener(ev,function(e){var b=e.target.closest('[data-p]');if(b)hl(b.getAttribute('data-p'),true)})});
+['mouseout','focusout'].forEach(function(ev){cc.addEventListener(ev,function(e){var b=e.target.closest('[data-p]');if(b)hl(b.getAttribute('data-p'),false)})});
+cc.addEventListener('click',function(e){var b=e.target.closest('[data-p]');if(!b)return;Array.prototype.forEach.call(document.querySelectorAll('.pin.on'),function(x){x.classList.remove('on')});hl(b.getAttribute('data-p'),true)});
+/* hero: yüzen poşetler */
+[['#fb1','#FFFFFF',true],['#fb2','#F6D34A',true],['#fb3','#5FAE6E',false]].forEach(function(b){var el=$(b[0]);if(el)el.innerHTML=bagRender(b[1],false,'#2B3787',null,b[2])});
+/* poşetinizi tasarlayın */
+var D={color:'Beyaz',ink:'Lacivert',logo:null};
+function drawD(){
+  $('#dbag').innerHTML=bagRender(find(COLS,D.color)[1],D.color==='Şeffaf',find(INKS,D.ink)[1],D.logo,true);
+  $('#dstage').className='dstage'+(D.color==='Şeffaf'?' checker':'');
+  $('#dcname').textContent='· '+D.color; $('#diname').textContent=D.logo?'· logonuz':'· '+D.ink;
+  $('#dcol').innerHTML=COLS.map(function(c){return '<button type="button" data-dc="'+c[0]+'" class="'+(D.color===c[0]?'on':'')+'" aria-pressed="'+(D.color===c[0])+'" aria-label="Zemin '+c[0]+'" title="'+c[0]+'" style="background:'+c[1]+'"></button>'}).join('');
+  $('#dink').innerHTML=INKS.map(function(c){return '<button type="button" data-di="'+c[0]+'" class="'+(D.ink===c[0]?'on':'')+'" aria-pressed="'+(D.ink===c[0])+'" aria-label="Baskı '+c[0]+'" title="'+c[0]+'" style="background:'+c[1]+'"></button>'}).join('');
+  $('#dgo').href=URUN+'?renk='+encodeURIComponent(D.color)+'&baski='+encodeURIComponent(D.ink)+'#teklif';
+}
+$('#tasarla').addEventListener('click',function(e){var t=e.target.closest?e.target.closest('button'):null;if(!t)return;
+  if(t.hasAttribute('data-dc'))D.color=t.getAttribute('data-dc');if(t.hasAttribute('data-di')){D.ink=t.getAttribute('data-di');D.logo=null}drawD()});
+$('#dlogo').addEventListener('change',function(){var f=this.files&&this.files[0];if(!f||!/^image\//.test(f.type))return;var fr=new FileReader();fr.onload=function(){D.logo=fr.result;drawD()};fr.readAsDataURL(f)});
+drawD();
 }
 if($('#pg-asistan')){
 /* ---------- asistan ---------- */
@@ -138,6 +209,7 @@ function drawQ(){
     h+='<div class="qnav"><button type="button" class="btn ghost" data-nav="back" style="visibility:'+(s===0?'hidden':'visible')+'">← Geri</button><div>'+(s===5?'<a class="btn ghost" href="https://wa.me/905357183598" style="border-color:#24803A;color:#24803A">WhatsApp ile gönder</a>':'')+'<button type="button" class="btn" data-nav="next"'+(can?'':' disabled')+'>'+(s===5?'Teklif iste':'Devam et →')+'</button></div></div>';}
   $('#qpanel').innerHTML=h; drawSteps(); drawSide();
 }
+var qs=location.search.match(/[?&]sektor=([a-z]+)/);if(qs&&find(SEC,qs[1])){A.sector=qs[1];A.step=1}
 var qp=$('#qpanel');
 qp.addEventListener('click',function(e){
   var t=e.target.closest?e.target.closest('button'):null; if(!t)return;
@@ -170,39 +242,7 @@ function pname(){return find(PP,U.print)[1]}
    Gerçek fotoğraf gelince: beyaz poşetin şeffaf zeminli PNG fotoğrafı PHOTOS'a eklenir,
    örn. PHOTOS.atlet='urunler/atlet-beyaz.png'. Renk, fotoğrafın üzerine "multiply" ile
    ve fotoğrafın kendi şekli maske olarak kullanılarak boyanır; kırışıklık ve gölgeler korunur. */
-var PHOTOS={atlet:null};
-var INKS=[['Lacivert','#2B3787'],['Siyah','#1E1E1E'],['Kırmızı','#C62828'],['Yeşil','#2E7D32'],['Mavi','#1565C0'],['Altın','#B08A2E']];
 U.ink='Lacivert'; U.logo=null;
-var BAG='M40 30Q40 18 52 18L88 18Q96 18 96 30L96 92Q96 128 150 128Q204 128 204 92L204 30Q204 18 212 18L248 18Q260 18 260 30L265 352Q265 368 249 368L51 368Q35 368 35 352Z';
-function bagRender(hex,clear,ink,logo,showPrint){
-  if(PHOTOS.atlet){ // gerçek fotoğraf modu
-    var m='-webkit-mask-image:url('+PHOTOS.atlet+');mask-image:url('+PHOTOS.atlet+');-webkit-mask-size:contain;mask-size:contain;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;-webkit-mask-position:center;mask-position:center';
-    return '<img src="'+PHOTOS.atlet+'" alt="" style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:contain">'+
-      '<div style="position:absolute;top:0;left:0;background:'+hex+';mix-blend-mode:multiply;opacity:'+(clear?0.25:1)+';'+m+'"></div>'+
-      (logo?'<img src="'+logo+'" alt="Logonuz" style="position:absolute;left:33%;top:50%;width:34%;height:28%;object-fit:contain;mix-blend-mode:multiply">':'');
-  }
-  var o=clear?0.42:1, fill=clear?'#DDEBF2':hex;
-  var s='<svg width="100%" height="100%" viewBox="0 0 300 380" role="img" aria-label="Atlet poşet önizlemesi"><defs>'+
-   '<clipPath id="bc"><path d="'+BAG+'"/></clipPath>'+
-   '<linearGradient id="sheen" x1="0" x2="1"><stop offset="0" stop-color="#000" stop-opacity=".16"/><stop offset=".14" stop-color="#000" stop-opacity=".02"/><stop offset=".38" stop-color="#fff" stop-opacity=".38"/><stop offset=".55" stop-color="#fff" stop-opacity=".06"/><stop offset=".86" stop-color="#000" stop-opacity=".03"/><stop offset="1" stop-color="#000" stop-opacity=".18"/></linearGradient>'+
-   '<linearGradient id="vsh" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".25"/><stop offset=".5" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".12"/></linearGradient>'+
-   '<filter id="bl"><feGaussianBlur stdDeviation="2.2"/></filter><filter id="bl2"><feGaussianBlur stdDeviation="6"/></filter></defs>'+
-   '<ellipse cx="150" cy="372" rx="120" ry="8" fill="#191B45" opacity=".12" filter="url(#bl2)"/>'+
-   '<path d="'+BAG+'" fill="'+fill+'" fill-opacity="'+o+'"/>'+
-   '<g clip-path="url(#bc)">'+
-     '<rect x="0" y="0" width="300" height="380" fill="url(#sheen)"/><rect x="0" y="0" width="300" height="380" fill="url(#vsh)"/>'+
-     '<rect x="35" y="0" width="22" height="380" fill="#000" opacity=".07"/><rect x="243" y="0" width="22" height="380" fill="#000" opacity=".07"/>'+
-     '<g fill="none" stroke-linecap="round" filter="url(#bl)">'+
-       '<path d="M60 40Q70 80 64 120M236 40Q228 82 238 124M110 150Q140 210 120 300M190 160Q170 230 196 330M70 250Q120 270 150 330M232 220Q210 270 220 350" stroke="#000" stroke-opacity=".10" stroke-width="5"/>'+
-       '<path d="M66 44Q76 82 70 120M230 44Q222 84 232 122M116 150Q146 212 126 300M196 160Q176 232 202 330M74 246Q124 266 154 326" stroke="#fff" stroke-opacity=".45" stroke-width="3"/>'+
-     '</g>'+
-     '<path d="M35 354L265 354" stroke="#000" stroke-opacity=".12" stroke-width="2" stroke-dasharray="3 3"/>'+
-   '</g>'+
-   '<path d="'+BAG+'" fill="none" stroke="#000" stroke-opacity=".16" stroke-width="1.5"/>';
-  if(logo) s+='<image href="'+logo+'" xlink:href="'+logo+'" x="95" y="180" width="110" height="110" preserveAspectRatio="xMidYMid meet" style="mix-blend-mode:multiply"/>';
-  else if(showPrint) s+='<g opacity=".92"><path d="M128 238c0-26 16-40 42-40 0 26-16 40-42 40z" fill="'+ink+'"/><path d="M130 236c10-12 20-22 34-32" stroke="#fff" stroke-width="2" fill="none" opacity=".6"/><text x="150" y="272" text-anchor="middle" font-family="Plus Jakarta Sans,Inter,sans-serif" font-weight="800" font-size="19" fill="'+ink+'">FİRMA ADI</text><text x="150" y="292" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="'+ink+'">0212 000 00 00</text></g>';
-  return s+'</svg>';
-}
 function drawBag(){
   var hex=find(COLS,U.color)[1], ink=find(INKS,U.ink)[1];
   $('#bagstage').innerHTML=bagRender(hex,U.color==='Şeffaf',ink,U.logo,U.print!=='yok');
@@ -254,6 +294,8 @@ pu.addEventListener('input',function(e){
   if(t.hasAttribute('data-uin'))U[t.getAttribute('data-uin')]=t.value;
 });
 pu.addEventListener('change',function(e){var t=e.target;if(t.getAttribute('data-file')==='u'){var f=t.files&&t.files[0];U.file=f?f.name:'';if(f&&/^image\//.test(f.type))readLogo(f);else drawForm()}});
+var pr=location.search;function qv(k){var m=pr.match(new RegExp('[?&]'+k+'=([^&#]+)'));return m?decodeURIComponent(m[1]):null}
+if(qv('renk')&&find(COLS,qv('renk')))U.color=qv('renk');if(qv('baski')&&find(INKS,qv('baski'))){U.ink=qv('baski');U.print='1'}
 drawBag();drawTable();drawForm();
 }
 })();

@@ -308,3 +308,59 @@ img{max-width:100%}
 @media(max-width:760px){.collage span{width:52px;height:52px}.collage svg{width:32px;height:32px}.mapwrap{margin:0 -10px}}
 .asth{font-size:22px;margin:0 0 18px}.asth span{font-family:Inter,sans-serif;font-weight:500;font-size:15px;color:var(--mut);letter-spacing:0}
 @media(max-width:760px){.asth{font-size:19px;margin-bottom:12px}.asth span{display:block;font-size:13px;margin-top:2px}}
+
+/* ===== 3. sürüm: hero poşetleri, tasarla, hareketler ===== */
+.hero{position:relative;overflow:hidden}
+.hero:before{content:'';position:absolute;width:620px;height:620px;right:-140px;top:-160px;border-radius:50%;background:radial-gradient(circle,rgba(51,170,71,.16),rgba(51,170,71,0) 65%);pointer-events:none}
+.hero:after{content:'';position:absolute;width:520px;height:520px;left:-200px;bottom:-220px;border-radius:50%;background:radial-gradient(circle,rgba(43,55,135,.10),rgba(43,55,135,0) 65%);pointer-events:none}
+.hero .wrap{position:relative;z-index:1}
+.hero-r{position:relative}
+.fbags{position:absolute;top:-30px;right:-40px;bottom:-30px;left:-60px;pointer-events:none}
+.fbag{position:absolute;width:150px;height:190px;filter:drop-shadow(0 18px 24px rgba(25,27,69,.14))}
+.fbag.b1{right:-10px;top:-24px;transform:rotate(9deg);animation:fl1 7s ease-in-out infinite}
+.fbag.b2{left:-34px;bottom:10px;width:120px;height:152px;transform:rotate(-12deg);animation:fl2 8s ease-in-out infinite}
+.fbag.b3{right:40px;bottom:-6px;width:100px;height:127px;transform:rotate(14deg);animation:fl1 9s ease-in-out infinite reverse}
+@keyframes fl1{0%,100%{translate:0 0}50%{translate:0 -10px}}
+@keyframes fl2{0%,100%{translate:0 0}50%{translate:0 8px}}
+.asist{position:relative;z-index:2;background:rgba(255,255,255,.92);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+.mini-grid a .mi{width:30px;height:30px;border-radius:8px;background:#EEF1F8;display:inline-flex;align-items:center;justify-content:center;margin-right:10px;flex:none}
+.mini-grid a:hover .mi{background:#E2F2E5}
+.trust .card b{color:var(--navy)}
+.designsec{background:linear-gradient(180deg,#F7F9F6,#EEF3F9)}
+.dsgrid{display:grid;grid-template-columns:1fr 1fr;grid-gap:48px;align-items:center}
+.dstage{position:relative;background:radial-gradient(circle at 50% 40%,#fff 0%,#E9EDF5 75%);border-radius:28px;height:480px;display:flex;align-items:center;justify-content:center;border:1px solid var(--line)}
+.dstage.checker{background-color:#fff;background-image:linear-gradient(45deg,#EEF0F4 25%,transparent 25%),linear-gradient(-45deg,#EEF0F4 25%,transparent 25%),linear-gradient(45deg,transparent 75%,#EEF0F4 75%),linear-gradient(-45deg,transparent 75%,#EEF0F4 75%);background-size:24px 24px;background-position:0 0,0 12px,12px -12px,-12px 0}
+.dbag{width:290px;height:368px;transition:transform .4s}
+.dstage:hover .dbag{transform:rotate(-2deg) scale(1.02)}
+.dlogo{position:absolute;left:16px;bottom:16px;display:inline-flex;align-items:center;min-height:42px;padding:0 16px;border-radius:999px;background:#fff;border:1px solid var(--line);font-size:13px;font-weight:600;cursor:pointer;overflow:hidden}
+.dlogo input{position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;cursor:pointer}
+.dlab{font-weight:600;font-size:14px;margin:6px 0 10px}.dlab span{color:var(--mut);font-weight:500}
+.js .rv{opacity:0;transform:translateY(18px);transition:opacity .6s ease,transform .6s ease}
+.js .rv.in{opacity:1;transform:none}
+@media(max-width:1060px){.fbag.b1{right:0;top:-40px;width:110px;height:140px}.fbag.b2,.fbag.b3{display:none}}
+@media(max-width:760px){
+  .fbags{display:none}
+  .dsgrid{grid-template-columns:1fr;grid-gap:24px}
+  .dstage{height:380px}.dbag{width:230px;height:292px}
+  .dctl .btn{width:100%;margin:0 0 10px!important}
+}
+@media(prefers-reduced-motion:reduce){.fbag{animation:none!important}.js .rv{opacity:1;transform:none}}
+
+/* harita noktaları */
+.pins{position:absolute;top:0;left:0;width:100%;height:100%}
+.pin{position:absolute;width:14px;height:14px;margin:-7px 0 0 -7px;padding:0;border-radius:50%;border:2.5px solid #fff;background:#33AA47;box-shadow:0 2px 6px rgba(25,27,69,.25);cursor:pointer;transition:transform .2s;animation:pinin .5s ease both}
+.pin:before{content:'';position:absolute;top:-10px;left:-10px;right:-10px;bottom:-10px;border-radius:50%}
+.pin.ev{width:18px;height:18px;margin:-9px 0 0 -9px;background:#2B3787;z-index:3}
+.pin:hover,.pin:focus-visible,.pin.on{transform:scale(1.35);z-index:5}
+.pin .tip{position:absolute;bottom:calc(100% + 10px);left:50%;transform:translateX(-50%) translateY(4px);white-space:nowrap;background:var(--ink);color:#fff;font:600 13px Inter,sans-serif;padding:6px 10px;border-radius:8px;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;box-shadow:0 6px 16px rgba(25,27,69,.2)}
+.pin .tip:after{content:'';position:absolute;top:100%;left:50%;margin-left:-5px;border:5px solid transparent;border-top-color:var(--ink)}
+.pin:hover .tip,.pin:focus-visible .tip,.pin.on .tip{opacity:1;transform:translateX(-50%) translateY(0)}
+@keyframes pinin{from{transform:scale(0)}to{transform:scale(1)}}
+.countries button{font:500 13px Inter,sans-serif;background:#F1F7F2;color:#1C6A30;border:1px solid transparent;border-radius:999px;padding:6px 12px;margin:0 6px 8px 0;cursor:pointer;min-height:34px}
+.countries button:hover,.countries button:focus-visible{border-color:#33AA47;background:#fff}
+.alibaba{display:flex;align-items:center;text-align:left;max-width:760px;margin:26px auto 0;padding:18px 20px;border-radius:18px;background:linear-gradient(90deg,#FFF5EC,#FFFFFF);border:1px solid #F6D9BF;text-decoration:none;color:var(--ink);transition:box-shadow .3s,transform .3s}
+.alibaba:hover{box-shadow:0 12px 30px rgba(255,106,0,.12);transform:translateY(-2px)}
+.ab-ic{width:48px;height:48px;border-radius:14px;background:#FF6A00;display:flex;align-items:center;justify-content:center;flex:none;margin-right:16px}
+.ab-tx{flex:1}.ab-tx b{display:block;font-size:16px}.ab-tx span{display:block;font-size:14px;color:var(--mut);margin-top:2px}
+.ab-go{font-weight:600;color:#C2410C;margin-left:16px;white-space:nowrap}
+@media(max-width:760px){.alibaba{flex-wrap:wrap}.ab-go{margin:10px 0 0 64px}.pin{width:11px;height:11px;margin:-5.5px 0 0 -5.5px;border-width:2px}.pin.ev{width:14px;height:14px;margin:-7px 0 0 -7px}}
