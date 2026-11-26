@@ -570,3 +570,19 @@ img{max-width:100%}
 .powered{margin-left:12px;padding-left:12px;border-left:1px solid #363A8E;opacity:.8}
 .gtabs{display:flex}.gtabs button{flex:1 1 0}.gtabs button[hidden]{display:none}.vlabel[hidden],.pnote[hidden]{display:none}
 @media(max-width:760px){.gtabs{flex-wrap:wrap}.gtabs button{flex:1 1 40%}}
+.advbtn{display:block;width:100%;min-height:44px;margin:4px 0;border:1.5px dashed var(--line);border-radius:12px;background:#FBFCFE;font:600 13.5px Inter,sans-serif;color:var(--navy);cursor:pointer}
+.advbtn:hover{border-color:var(--navy)}
+.steps{grid-template-columns:repeat(5,1fr)!important}
+
+/* nasıl teklif alınır */
+.tksec{background:linear-gradient(180deg,#F7F9F6,#EEF3F9)}
+.tkgrid{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);grid-gap:56px;align-items:center}
+.tkvis{position:relative;height:440px;border-radius:28px;background:radial-gradient(circle at 50% 42%,#F7F8FB 0%,#DCE2EE 82%);border:1px solid var(--line);display:flex;align-items:center;justify-content:center}
+#tkcv{max-width:78%;max-height:360px;width:auto;height:auto;opacity:0;transform:translateY(8px) scale(.98);transition:opacity .35s,transform .35s;filter:drop-shadow(0 16px 20px rgba(25,27,69,.18))}
+#tkcv.in{opacity:1;transform:none}
+.tkchip{position:absolute;left:16px;bottom:16px;background:#fff;border:1px solid var(--line);border-radius:999px;padding:7px 14px;font:600 13px Inter,sans-serif}
+.tksteps{list-style:none;margin:8px 0 24px;padding:0}
+.tksteps li{display:flex;margin-bottom:16px}.tksteps li>span{flex:none;width:34px;height:34px;border-radius:50%;background:var(--navy);color:#fff;font:700 15px Inter,sans-serif;display:flex;align-items:center;justify-content:center;margin-right:14px}
+.tksteps b{display:block;font-size:17px}.tksteps p{margin:3px 0 0;color:var(--mut);font-size:15px}
+.refin{margin-top:28px}.reflab{text-align:center;font-size:13px;font-weight:600;color:var(--mut);margin:0 0 6px;letter-spacing:.03em}
+@media(max-width:860px){.tkgrid{grid-template-columns:1fr;grid-gap:24px}.tkvis{height:320px}#tkcv{max-height:260px}}
