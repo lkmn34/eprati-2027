@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://lkmn34.github.io/eprati-2027/sitemap.xml
