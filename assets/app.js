@@ -92,7 +92,7 @@ function bagRender(hex,clear,ink,logo,showPrint){
 }
 /* Ürün ikonları (48x48, çizgi) — gerçek ürün fotoğrafları gelince bunların yerini alabilir */
 var IC={
- atlet:'<path d="M13 8h7v8c0 3 2 5 4 5s4-2 4-5V8h7v32a2 2 0 0 1-2 2H15a2 2 0 0 1-2-2z"/><path d="M13 13h7M28 13h7" opacity=".5"/>',
+ atlet:'<path d="M8 43L9.5 17 11.5 5h7l.7 9c1.3 7 8.3 7 9.6 0l.7-9h7l2 12L38.5 43z"/><path d="M11.5 10h7M29.5 10h7M8.5 39h30" opacity=".5"/>',
  elgecme:'<rect x="12" y="7" width="24" height="35" rx="2"/><rect x="19" y="12" width="10" height="4" rx="2"/>',
  kulplu:'<rect x="10" y="18" width="28" height="24" rx="2"/><path d="M17 18c0-9 14-9 14 0"/>',
  kargo:'<rect x="7" y="12" width="34" height="26" rx="2"/><path d="M7 14l17 12 17-12"/><path d="M30 33h6" opacity=".5"/>',
@@ -227,7 +227,7 @@ if($('#pg-asistan')){
 var A={step:0,sector:null,content:null,handle:null,size:null,print:null,color:'Beyaz',kulp:'Siyah',logoImg:null,logoCol:null,ink:'Otomatik',pt:{firma:'',slogan:'',tel:'',adres:'',web:''},unit:'adet',w:30,g:10,h:60,name:'',phone:'',file:'',tried:false};
 var SEC=[['market','Market ve Mağaza','Bakkal, market, butik','Atlet Poşet'],['firin','Fırın ve Pastane','Ekmek, simit, pasta','Ekmek Poşeti'],['manav','Manav ve Pazar','Meyve, sebze','Rulo Manav Poşeti'],['gida','Gıda Üreticisi','Bakliyat, kuru gıda, buz','Bakliyat Poşeti'],['eticaret','E-ticaret ve Kargo','Online satış, gönderi','Kargo Poşeti'],['kt','Kuru Temizleme','Askılı kıyafet','Kuru Temizleme Poşeti'],['hali','Halı Yıkama','Halı ve kilim','Halı Poşeti'],['tekstil','Tekstil ve Hazır Giyim','Ürün paketleme','OPP-CPP Torba'],['sanayi','Sanayi ve Otomotiv','Parça, lastik, depolama','Kilitli Torba']];
 var CON=[['hafif','Hafif ürünler','Giyim, aksesuar, kozmetik'],['orta','Günlük alışveriş','Market ürünleri, karışık'],['agir','Ağır ürünler','Şişe, konserve, bakliyat'],['gida','Doğrudan gıda','Ekmek, meyve, açık gıda'],['soguk','Soğuk veya donuk','Buz, dondurma, donuk ürün'],['parca','Parça veya büyük eşya','Halı, lastik, yedek parça']];
-var HAN=[['atlet','Atlet','M14 8v12M50 8v12M14 20c0 8 8 10 10 10h16c2 0 10-2 10-10M10 20h44v46H10z'],['el','El geçmeli','M10 8h44v58H10zM24 18h16v6H24z'],['kulp','Kulplu','M10 22h44v44H10zM22 22c0-14 20-14 20 0'],['sapsiz','Sapsız torba','M12 10h40v56H12zM12 18h40'],['rulo','Rulo / bobin','M16 16h32v40H16zM16 16c-6 0-6 40 0 40M48 16c6 0 6 40 0 40'],['oneri','Siz önerin','M26 22a6 6 0 1 1 8 6c-2 1-2 3-2 6M32 42v2']];
+var HAN=[['atlet','Atlet','M8 68L10 28L12 4H22L23 22C24 35 40 35 41 22L42 4H52L54 28L56 68ZM29 33V36H35V33M8 61H56'],['el','El geçmeli','M12 5H52V68H12ZM25 13H39A4 4 0 0 1 39 21H25A4 4 0 0 1 25 13Z'],['kulp','Kulplu','M8 27H56V68H8ZM22 27V17A10 10 0 0 1 42 17V27'],['sapsiz','Sapsız torba','M12 6H52V68H12ZM12 15H52'],['rulo','Rulo / bobin','M16 16h32v40H16zM16 16c-6 0-6 40 0 40M48 16c6 0 6 40 0 40'],['oneri','Siz önerin','M26 22a6 6 0 1 1 8 6c-2 1-2 3-2 6M32 42v2']];
 var SIZ=[['kucuk','Küçük','Eczane, butik, tek ürün'],['orta','Orta','Günlük alışveriş'],['buyuk','Büyük','Battal, toplu taşıma'],['ozel','Özel ölçü','Ölçüyü ben gireceğim'],['bilmiyorum','Bilmiyorum','Siz önerin']];
 var PRI=[['yok','Baskısız','En hızlı ve ekonomik'],['logo','1–3 renk logo','Logonuz ve iletişim bilgileriniz'],['foto','Çok renkli / fotoğraf','CMYK, tam renkli tasarım']];
 var KEYS=['sector','content','handle','size','print'];
