@@ -172,7 +172,7 @@ var P=[['Atlet Poşet','Mağaza','market, hışır, alışveriş, bakkal'],['El 
 /* ---------- menü (niyete göre) ---------- */
 (function(){var xb=$('#xbtn'),xm=$('#xmenu');if(!xb||!xm)return;
   Array.prototype.forEach.call(xm.querySelectorAll('[data-ic]'),function(el){var k=el.getAttribute('data-ic');if(IC[k])el.innerHTML=icon(k,26)});
-  function open(o){xm.hidden=!o;xb.setAttribute('aria-expanded',o);document.documentElement.style.overflow=o?'hidden':'';document.body.classList.toggle('xopen',o);if(o){var f=xm.querySelector('.xi.on .xh');f&&f.focus()}else xb.focus()}
+  function open(o){xm.hidden=!o;xb.setAttribute('aria-expanded',o);document.documentElement.style.overflow=o?'hidden':'';document.body.classList.toggle('xopen',o);if(o){var f=xm.querySelector('.xclose');f&&f.focus({preventScroll:true})}else xb.focus()}
   xb.addEventListener('click',function(){open(xm.hidden)});
   xm.addEventListener('click',function(e){if(e.target.closest('[data-xclose]')){open(false);return}var a=e.target.closest('a');if(a&&a.getAttribute('href')!=='#'){open(false);return}if(a)e.preventDefault();
     var h=e.target.closest('.xh');if(!h)return;var it=h.parentNode,wide=window.innerWidth>900;
@@ -202,6 +202,30 @@ var P=[['Atlet Poşet','Mağaza','market, hışır, alışveriş, bakkal'],['El 
   sb&&sb.addEventListener('click',function(){document.body.classList.toggle('sopen');if(document.body.classList.contains('sopen'))setTimeout(function(){q.focus()},50)});
 })();
 Array.prototype.forEach.call(document.querySelectorAll('.pcic'),function(el){var k=el.getAttribute('data-ic');if(IC[k])el.innerHTML=icon(k,40)});
+
+/* ---------- geri bildirim ---------- */
+(function(){var K='eprFb';try{if(localStorage.getItem(K))return}catch(e){}
+  var shown=false,t0=Date.now();
+  var el=document.createElement('div');el.className='fb';el.setAttribute('role','dialog');el.setAttribute('aria-label','Geri bildirim');
+  el.innerHTML='<button type="button" class="fbx" aria-label="Kapat">×</button><div class="fb1"><b>Yeni sitemizi beğendiniz mi?</b><div class="fbst" role="radiogroup" aria-label="Puan">'+[1,2,3,4,5].map(function(i){return '<button type="button" role="radio" aria-checked="false" data-r="'+i+'" aria-label="'+i+' yıldız">★</button>'}).join('')+'</div><small>Görüşünüz yeni siteyi geliştirmemize yardımcı olur.</small></div>'+
+    '<div class="fb2" hidden><b class="fbt"></b><textarea rows="3" maxlength="500" placeholder="İsterseniz birkaç kelime yazın (isteğe bağlı)" aria-label="Yorumunuz"></textarea><div class="fbr"><button type="button" class="fbskip">Geç</button><button type="button" class="btn fbsend">Gönder</button></div></div>'+
+    '<div class="fb3" hidden><b>Teşekkür ederiz!</b><small>Geri bildiriminiz bize ulaştı.</small></div>';
+  var rate=0;function done(v){try{localStorage.setItem(K,JSON.stringify(v))}catch(e){}}
+  function close(){el.classList.remove('in');setTimeout(function(){el.remove()},300)}
+  el.addEventListener('mouseover',function(e){var b=e.target.closest('[data-r]');if(!b)return;var r=+b.getAttribute('data-r');Array.prototype.forEach.call(el.querySelectorAll('[data-r]'),function(x){x.classList.toggle('hv',+x.getAttribute('data-r')<=r)})});
+  el.addEventListener('mouseout',function(){Array.prototype.forEach.call(el.querySelectorAll('[data-r]'),function(x){x.classList.remove('hv')})});
+  el.addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;
+    if(b.classList.contains('fbx')){done({dismissed:true,at:Date.now()});close();return}
+    if(b.hasAttribute('data-r')){rate=+b.getAttribute('data-r');Array.prototype.forEach.call(el.querySelectorAll('[data-r]'),function(x){var on=+x.getAttribute('data-r')<=rate;x.classList.toggle('on',on);x.setAttribute('aria-checked',+x.getAttribute('data-r')===rate)});
+      setTimeout(function(){el.querySelector('.fb1').hidden=true;el.querySelector('.fb2').hidden=false;el.querySelector('.fbt').textContent=rate>=4?'Çok sevindik! Neyi beğendiniz?':rate===3?'Teşekkürler! Neyi geliştirelim?':'Üzgünüz. Neyi daha iyi yapabiliriz?';el.querySelector('textarea').focus()},250);return}
+    if(b.classList.contains('fbsend')||b.classList.contains('fbskip')){var txt=b.classList.contains('fbsend')?el.querySelector('textarea').value.trim():'';
+      done({rating:rate,comment:txt,page:location.pathname,at:Date.now()});/* gerçek sitede WordPress'e gönderilecek */
+      el.querySelector('.fb2').hidden=true;el.querySelector('.fb3').hidden=false;setTimeout(close,2200)}});
+  function show(){if(shown)return;shown=true;document.body.appendChild(el);requestAnimationFrame(function(){el.classList.add('in')})}
+  function check(){if(shown)return;var sc=(window.pageYOffset+window.innerHeight)/document.documentElement.scrollHeight;if(Date.now()-t0>40000&&sc>.45)show()}
+  window.addEventListener('scroll',check,{passive:true});setInterval(check,5000);
+  document.addEventListener('epr:done',function(){setTimeout(show,1500)});
+})();
 if($('#pg-home')){
 /* ---------- ana sayfa ---------- */
 
@@ -488,7 +512,7 @@ qp.addEventListener('click',function(e){
     if(act==='send'){if(!/^\S+@\S+\.\S+$/.test(V.email))V.err='Geçerli bir e-posta adresi girin.';else if(V.pass.length<6)V.err='Şifre en az 6 karakter olmalı.';else if(!V.kvkk)V.err='Devam etmek için aydınlatma metnini onaylayın.';else{V.sent=true;V.demo=String(Math.floor(100000+Math.random()*900000))}}
     if(act==='change'){V.code='';A.step=5}
     if(act==='resend'){V.code='';V.demo=String(Math.floor(100000+Math.random()*900000))}
-    if(act==='verify'){if(V.code.trim()===V.demo)A.step=7;else V.err='Kod hatalı, tekrar deneyin.'}
+    if(act==='verify'){if(V.code.trim()===V.demo){A.step=7;setTimeout(function(){document.dispatchEvent(new Event('epr:done'))},10)}else V.err='Kod hatalı, tekrar deneyin.'}
     if(act==='login'){if(!/^\S+@\S+\.\S+$/.test(V.email)||!V.pass)V.err='E-posta ve şifrenizi girin.';else A.step=7}
     drawQ();return}
   if(t.hasAttribute('data-adv')){A.adv=!A.adv;drawQ();return}
