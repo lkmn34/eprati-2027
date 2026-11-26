@@ -255,10 +255,11 @@ function ensureFont(f,cb){if(!document.fonts||!document.fonts.load)return cb();d
 var BAGSZ={atlet:{kucuk:[20,35],orta:[25,45],buyuk:[30,60]},elgecme:{kucuk:[25,35],orta:[35,45],buyuk:[45,55]},kulplu:{kucuk:[40,30],orta:[49,35],buyuk:[54,40]}};
 var FACE={atlet:{x0:.075,x1:.925,top:.008,cut:.25,bot:.975},elgecme:{x0:.025,x1:.975,top:.003,cut:.16,bot:.99},kulplu:{x0:.045,x1:.955,top:.185,cut:.31,bot:.965}};
 function bagCm(mid){if(A.size==='ozel'&&A.w>0&&A.h>0)return [A.w,A.h];var t=BAGSZ[mid];return t[A.size]||t.orta}
-function printArea(mid,M){var f=FACE[mid],cm=bagCm(mid),fw=(f.x1-f.x0)*M.w,ppc=fw/cm[0],ppcV=(f.bot-f.top)*M.h/cm[1],mg=5;
-  var x0=f.x0*M.w+mg*ppc,x1=f.x1*M.w-mg*ppc,y0=f.cut*M.h+2*ppcV,y1=f.bot*M.h-mg*ppcV;
-  if(x1-x0<20){var c=(x0+x1)/2;x0=c-10;x1=c+10}if(y1-y0<20){y1=y0+20}
-  return {x0:x0,x1:x1,y0:y0,y1:y1,ppc:ppc,wcm:Math.max(0,cm[0]-2*mg),hcm:Math.max(0,(y1-y0)/ppcV),cm:cm}}
+/* güvenli baskı alanı (fotoğraf üzerinde, oransal) */
+var SAFE={atlet:[.174,.437,.835,.904],elgecme:[.109,.283,.908,.913],kulplu:[.093,.387,.915,.889]};
+function printArea(mid,M){var f=FACE[mid],cm=bagCm(mid),fw=(f.x1-f.x0)*M.w,ppc=fw/cm[0],r=SAFE[mid];
+  var x0=r[0]*M.w,x1=r[2]*M.w,y0=r[1]*M.h,y1=r[3]*M.h;
+  return {x0:x0,x1:x1,y0:y0,y1:y1,ppc:ppc,wcm:(r[2]-r[0])/(f.x1-f.x0)*cm[0],hcm:(r[3]-r[1])/(f.bot-f.top)*cm[1],cm:cm}}
 A.els={logo:{y:.14,size:7,font:'',col:'Otomatik'},firma:{text:'',font:'Montserrat',size:4,col:'Otomatik',y:.36},slogan:{text:'',font:'Montserrat',size:1.5,col:'Otomatik',y:.5},iletisim:{text:'',font:'Inter',size:1.2,col:'Otomatik',y:.9},adres:{text:'',font:'Inter',size:1,col:'Otomatik',y:.98}};
 A.sel='firma';
 var ELN=[['firma','Firma adı','ör. Yıldız Market','FİRMA ADI'],['slogan','Slogan','ör. Her zaman taze','Sloganınız'],['iletisim','Telefon / web','ör. 0212 000 00 00 · www.firma.com','0212 000 00 00 · www.firmaniz.com'],['adres','Adres','ör. Cumhuriyet Mah. Ekin Sk. No:5 Esenyurt / İstanbul','Adresiniz, İlçe / İl']];
@@ -361,7 +362,7 @@ function drawQ(){
       (kul?'<p class="dlab">Kulp rengi <span>· '+A.kulp+'</span></p>'+sw(HANDLE,A.kulp,'data-kulp'):'')+
       '<div class="ctip" id="ctip"></div>'+
       '<p class="dlab" style="margin-top:18px">Baskı</p>'+opts(PRI,'print')+
-      ((A.print==='logo'||A.print==='foto')?'<div class="ptx"><p class="dlab" style="margin-top:18px">Poşetin üzerine yazılacaklar</p><p class="muted" style="font-size:13px;margin:-4px 0 12px">Yazılarınızı girin; yazı tipini, boyutunu ve rengini ayrı ayrı seçin. Önizlemede yazıyı <b>fareyle tutup yukarı-aşağı sürükleyebilirsiniz</b>. Yeşil çerçeve, kenarlardan ve alttan 5 cm boşluk bırakılmış baskı alanıdır. Bu bir önizlemedir; son tasarımı sipariş aşamasında birlikte netleştiririz.</p>'+
+      ((A.print==='logo'||A.print==='foto')?'<div class="ptx"><p class="dlab" style="margin-top:18px">Poşetin üzerine yazılacaklar</p><p class="muted" style="font-size:13px;margin:-4px 0 12px">Yazılarınızı girin; yazı tipini, boyutunu ve rengini ayrı ayrı seçin. Önizlemede yazıyı <b>fareyle tutup yukarı-aşağı sürükleyebilirsiniz</b>. Kesikli çerçeve, güvenli baskı alanını gösterir. Bu bir önizlemedir; son tasarımı sipariş aşamasında birlikte netleştiririz.</p>'+
         (A.logoImg?elCard('logo','Logo','',true):'')+ELN.map(function(n){return elCard(n[0],n[1],n[2])}).join('')+
         '<label class="drop"><b>'+(A.logoImg?'Logoyu değiştir':'Logonuz varsa yükleyin (isteğe bağlı)')+'</b><span class="muted" style="font-size:13px">PNG, JPG ya da SVG. Logo da sürüklenebilir ve boyutlandırılabilir.</span><input type="file" accept="image/*,.pdf,.ai" data-file="a"></label></div>':'')+
       '</div></div>';}
