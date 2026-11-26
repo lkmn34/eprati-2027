@@ -364,3 +364,25 @@ img{max-width:100%}
 .ab-tx{flex:1}.ab-tx b{display:block;font-size:16px}.ab-tx span{display:block;font-size:14px;color:var(--mut);margin-top:2px}
 .ab-go{font-weight:600;color:#C2410C;margin-left:16px;white-space:nowrap}
 @media(max-width:760px){.alibaba{flex-wrap:wrap}.ab-go{margin:10px 0 0 64px}.pin{width:11px;height:11px;margin:-5.5px 0 0 -5.5px;border-width:2px}.pin.ev{width:14px;height:14px;margin:-7px 0 0 -7px}}
+
+/* yaptığımız işler */
+.worksec{background:#fff;border-top:1px solid var(--line)}
+.works{display:grid;grid-template-columns:repeat(3,1fr);grid-gap:18px}
+.work{background:var(--bg);border-radius:22px;overflow:hidden;display:flex;flex-direction:column;border:1px solid var(--line)}
+.wimg{height:320px;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at 50% 45%,#fff 0%,#EDF0F6 80%);padding:20px}
+.wimg img{max-width:100%;max-height:100%;width:auto;height:auto;transition:opacity .25s;filter:drop-shadow(0 14px 18px rgba(25,27,69,.15))}
+.wbody{padding:20px 22px 22px;display:flex;flex-direction:column;flex:1}
+.wtag{align-self:flex-start;font-size:12px;font-weight:600;color:#1C6A30;background:#E8F3E3;border-radius:999px;padding:4px 10px}
+.wbody h3{font-size:20px;margin:10px 0 4px}.wbody .muted{margin:0;font-size:14px}
+.wlab{font-size:14px;margin:16px 0 8px}.wlab b{font-weight:600}
+.wsw button{width:36px;height:36px;border-radius:50%;border:3px solid #fff;box-shadow:0 0 0 1px var(--line);margin:0 8px 6px 0;cursor:pointer}
+.wsw button.on{box-shadow:0 0 0 3px var(--green)}
+.wtip,.dtip{display:flex;font-size:14px;line-height:1.5;background:#FFFBEA;border:1px solid #F4E3A3;border-radius:12px;padding:10px 12px;margin:12px 0 0;color:#4A3F12}
+.wtip span,.dtip span{margin-right:8px}
+.dtip{margin:16px 0 0}
+.ctips{margin-top:22px;background:var(--bg);border-radius:18px;padding:20px 22px}
+.ctips ol{list-style:none;margin:12px 0 0;padding:0;display:grid;grid-template-columns:repeat(3,1fr);grid-gap:14px}
+.ctips li{display:flex;font-size:14px;color:var(--mut);line-height:1.5}
+.ctips li span{flex:none;width:26px;height:26px;border-radius:50%;background:var(--navy);color:#fff;font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center;margin-right:10px}
+@media(max-width:960px){.works{grid-template-columns:1fr 1fr}.ctips ol{grid-template-columns:1fr}}
+@media(max-width:640px){.works{grid-template-columns:1fr}.wimg{height:280px}}

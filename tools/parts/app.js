@@ -111,7 +111,7 @@ $('#sectors').innerHTML=[['atlet','#E8F3E3','Market ve Mağaza','Atlet, el geçm
 $('#cats').innerHTML=[['Mağaza Ambalajları','mağaza','#E8F3E3',['Atlet Poşet','El Geçmeli Poşet','Kulplu Poşet','Kargo Poşeti'],['atlet','elgecme','kulplu','kargo']],['Gıda Ambalajları','gıda','#F3EFE6',['Rulo Manav','Bakliyat','Plast Kağıt','Koli-Kasa','Ekmek','Dondurma-Buz'],['rulo','bakliyat','ekmek','buz']],['Tekstil ve Temizlik','tekstil','#E6EAF7',['Kuru Temizleme','Halı Poşeti','OPP-CPP Torba','OPP-CPP Bantlı','OPP-Film Bobin','Jelatin','Taşıma Torbası'],['aski','hali','opp','bobin']],['Endüstriyel Ambalajlar','endüstriyel','#EEF1EC',['Torba','Bantlı Torba','Bardak Poşeti','Fermuarlı Kilitli','Kilitli Torba','Oto Lastik','Film (Bobin)'],['kilitli','bardak','lastik','bobin']]]
   .map(function(c){return '<div class="cat" style="background:'+c[2]+'"><h3 style="font-size:20px;margin:0 0 14px">'+c[0]+'</h3><div class="tags">'+c[3].map(function(p){return '<a href="'+URUN+'">'+p+'</a>'}).join('')+'</div><a href="'+URUN+'" style="margin:10px 0 18px;font-weight:600;font-size:14px">Tüm '+c[1]+' ürünleri →</a><div class="collage" aria-hidden="true">'+c[4].map(function(k,i){return '<span style="transform:rotate('+[-6,4,-3,6][i]+'deg)">'+icon(k,40)+'</span>'}).join('')+'</div></div>'}).join('');
 /* Referanslar: gerçek logolar gelince {ad:'THY', img:'logolar/thy.png'} şeklinde eklenir */
-var REFS=[{ad:'THY'},{ad:'Koçtaş'},{ad:'Volvo'},{ad:'ŞOK'},{ad:'Garanti Bankası'},{ad:'Seyidoğlu'},{ad:'Sultanbacı'},{ad:'Çiğköftem'},{ad:'Zırhlı'}];
+var REFS=[{ad:'THY'},{ad:'İpek Pişmaniye',img:R+'assets/refs/ipek.png'},{ad:'Koçtaş'},{ad:'Volvo'},{ad:'ŞOK'},{ad:'Turkish Support Services',img:R+'assets/refs/turkish-support-services.png'},{ad:'Garanti Bankası'},{ad:'Seyidoğlu'},{ad:'Sultanbacı'},{ad:'Çiğköftem'},{ad:'Zırhlı'}];
 function tile(r){return '<div class="logo-tile" title="'+esc(r.ad)+'">'+(r.img?'<img src="'+r.img+'" alt="'+esc(r.ad)+'">':esc(r.ad))+'</div>'}
 var r1=REFS.map(tile).join(''), r2=REFS.slice(4).concat(REFS.slice(0,4)).map(tile).join('');
 $('#mrow1').innerHTML=r1+r1+r1+r1; $('#mrow2').innerHTML=r2+r2+r2+r2;
@@ -132,19 +132,68 @@ var cc=$('#countries');
 ['mouseover','focusin'].forEach(function(ev){cc.addEventListener(ev,function(e){var b=e.target.closest('[data-p]');if(b)hl(b.getAttribute('data-p'),true)})});
 ['mouseout','focusout'].forEach(function(ev){cc.addEventListener(ev,function(e){var b=e.target.closest('[data-p]');if(b)hl(b.getAttribute('data-p'),false)})});
 cc.addEventListener('click',function(e){var b=e.target.closest('[data-p]');if(!b)return;Array.prototype.forEach.call(document.querySelectorAll('.pin.on'),function(x){x.classList.remove('on')});hl(b.getAttribute('data-p'),true)});
+
+/* yaptığımız işler + renk ipuçları */
+var WORKS=[
+ {id:'atlet',ad:'Atlet Poşet',mus:'ŞOK Market',info:'Sarı zemin · 2 renk baskı',lab:'Zemin rengi',alt:'ŞOK Market için üretilen sarı zeminli, 2 renk baskılı atlet poşet',
+  v:[['sari','Sarı','#F2CF1D','Sarı zemin üzerinde siyah ve kırmızı baskı uzaktan bile okunur; market poşetinde en dikkat çekici kombinasyonlardan biri.'],
+     ['beyaz','Beyaz','#F6F6F4','Beyaz zemin her baskı rengiyle uyumludur; kırmızı baskı daha da canlı görünür.'],
+     ['yesil','Yeşil','#46A055','Orta tonlu zeminde siyah baskı biraz kaybolabilir; bu zeminde beyaz baskı daha net okunur.'],
+     ['mavi','Mavi','#286EC8','Mavi zeminde siyah yazı zor okunur; beyaz ya da sarı baskı önerilir.']]},
+ {id:'kulplu',ad:'Kulplu Poşet',mus:'İpek Pişmaniye',info:'Beyaz zemin · kırmızı kulp · çok renkli baskı',lab:'Kulp rengi',alt:'İpek Pişmaniye için kırmızı kulplu, çizgili baskılı kulplu poşet tasarımı',
+  v:[['kirmizi','Kırmızı','#D51F26','Baskınız kırmızı ise kırmızı kulp tasarımı bütünleştirir; markanız daha güçlü görünür.'],
+     ['lacivert','Lacivert','#2B3787','Kırmızı baskıyla lacivert kulp kontrast yaratır; kurumsal ve klasik bir görünüm verir.'],
+     ['yesil','Yeşil','#33964A','Kırmızı ve yeşil yan yana yorucu durabilir; kulp rengini baskıdaki bir renkle eşlemek daha dengeli olur.'],
+     ['altin','Altın','#BE963C','Logodaki altın çerçeveyle uyumlu; tatlı, şarküteri ve hediyelik ürünlerde şık durur.']]},
+ {id:'elgecme',ad:'El Geçmeli Poşet',mus:'Turkish Support Services',info:'Beyaz zemin · 2 renk baskı',lab:'Zemin rengi',alt:'Turkish Support Services için beyaz zeminli, 2 renk baskılı el geçmeli poşet',
+  v:[['beyaz','Beyaz','#F6F6F4','Beyaz zemin logonuzun renklerini olduğu gibi gösterir; kurumsal işlerde en güvenli seçim.'],
+     ['krem','Krem','#F0E4C8','Krem zemin daha sıcak ve doğal bir his verir; siyah baskı rahat okunur.'],
+     ['sari','Sarı','#F4D03F','Sarı zemin dikkat çeker; siyah baskıyla çok iyi okunur, kırmızı da canlı kalır.'],
+     ['yesil','Açık yeşil','#78BE78','Açık yeşil zemin doğa dostu bir izlenim verir; koyu renkli baskıyla en iyi sonucu alırsınız.']]}
+];
+var IMG=R+'assets/isler/';
+$('#works').innerHTML=WORKS.map(function(w,wi){var v0=w.v[0];return '<article class="work" data-w="'+wi+'">'+
+  '<div class="wimg"><img src="'+IMG+w.id+'-'+v0[0]+'.webp" alt="'+esc(w.alt)+'" loading="lazy"></div>'+
+  '<div class="wbody"><span class="wtag">'+esc(w.ad)+'</span><h3>'+esc(w.mus)+'</h3><p class="muted">'+esc(w.info)+'</p>'+
+  '<p class="wlab">'+w.lab+': <b>'+v0[1]+'</b></p><div class="wsw">'+w.v.map(function(v,vi){return '<button type="button" data-v="'+vi+'" class="'+(vi?'':'on')+'" aria-pressed="'+(vi===0)+'" aria-label="'+w.lab+' '+v[1]+'" title="'+v[1]+'" style="background:'+v[2]+'"></button>'}).join('')+'</div>'+
+  '<p class="wtip"><span aria-hidden="true">💡</span>'+esc(v0[3])+'</p></div></article>'}).join('');
+// ön yükleme: kullanıcı karta gelince diğer renkleri hazırla
+$('#works').addEventListener('mouseover',function(e){var c=e.target.closest('.work');if(!c||c._pre)return;c._pre=1;WORKS[+c.getAttribute('data-w')].v.forEach(function(v){var i=new Image();i.src=IMG+WORKS[+c.getAttribute('data-w')].id+'-'+v[0]+'.webp'})});
+$('#works').addEventListener('click',function(e){var b=e.target.closest('[data-v]');if(!b)return;var c=b.closest('.work'),w=WORKS[+c.getAttribute('data-w')],v=w.v[+b.getAttribute('data-v')];
+  Array.prototype.forEach.call(c.querySelectorAll('[data-v]'),function(x){x.className=x===b?'on':'';x.setAttribute('aria-pressed',x===b)});
+  var img=c.querySelector('img');img.style.opacity=.35;var n=new Image();n.onload=function(){img.src=n.src;img.style.opacity=1};n.src=IMG+w.id+'-'+v[0]+'.webp';
+  c.querySelector('.wlab b').textContent=v[1];c.querySelector('.wtip').innerHTML='<span aria-hidden="true">💡</span>'+esc(v[3])});
 /* poşetinizi tasarlayın */
 var D={color:'Beyaz',ink:'Lacivert',logo:null};
+function hexL(h){if(h.charAt(0)!=='#')return .9;var c=[1,3,5].map(function(i){var v=parseInt(h.substr(i,2),16)/255;return v<=.03928?v/12.92:Math.pow((v+.055)/1.055,2.4)});return .2126*c[0]+.7152*c[1]+.0722*c[2]}
+function cr(a,b){var x=hexL(a),y=hexL(b);return (Math.max(x,y)+.05)/(Math.min(x,y)+.05)}
+var LOGOCOL=null;
+function nearestName(hex){var best=null,bd=1e9;INKS.forEach(function(k){var a=parseInt(hex.substr(1),16),b=parseInt(k[1].substr(1),16);var d=Math.pow((a>>16)-(b>>16),2)+Math.pow(((a>>8)&255)-((b>>8)&255),2)+Math.pow((a&255)-(b&255),2);if(d<bd){bd=d;best=k[0]}});return best}
+function dTip(){
+  var g=find(COLS,D.color)[1], ink=D.logo&&LOGOCOL?LOGOCOL:find(INKS,D.ink)[1], c=cr(g,ink), t;
+  if(D.color==='Şeffaf')t='Şeffaf poşette baskı, içindeki ürünün önünde durur; koyu ve tek renk baskı en net sonucu verir.';
+  else if(c<2.2){var best=INKS.slice().sort(function(a,b){return cr(g,b[1])-cr(g,a[1])})[0];t=D.color+' zemin üzerinde bu baskı rengi zor okunur. '+best[0]+' baskı deneyin.'}
+  else if(c<3.5)t='Okunuyor ama kontrast orta seviyede; yazılarınızı biraz daha kalın tutmanızı öneririz.';
+  else t='Harika seçim: bu zemin ve baskı rengi birbirinden net ayrılıyor, logonuz uzaktan okunur.';
+  if(D.logo&&LOGOCOL)t+=' Logonuzun ana rengi '+nearestName(LOGOCOL).toLocaleLowerCase('tr')+' tonunda; kulplu poşet seçerseniz kulp rengini bu tonda seçmek tasarımı bütünleştirir.';
+  $('#dtip').innerHTML='<span aria-hidden="true">💡</span>'+esc(t);
+}
+function logoColor(src,cb){var im=new Image();im.onload=function(){try{var cv=document.createElement('canvas'),s=48;cv.width=cv.height=s;var x=cv.getContext('2d');x.drawImage(im,0,0,s,s);var d=x.getImageData(0,0,s,s).data,bins={},best=null,bn=0;
+  for(var i=0;i<d.length;i+=4){if(d[i+3]<128)continue;var r=d[i],g=d[i+1],b=d[i+2],mx=Math.max(r,g,b),mn=Math.min(r,g,b);if(mx>235&&mn>225)continue;var k=(r>>5)+','+(g>>5)+','+(b>>5);bins[k]=(bins[k]||0)+1;if(bins[k]>bn){bn=bins[k];best=[r,g,b]}}
+  cb(best?'#'+best.map(function(v){return ('0'+v.toString(16)).slice(-2)}).join(''):null)}catch(e){cb(null)}};im.src=src}
+
 function drawD(){
   $('#dbag').innerHTML=bagRender(find(COLS,D.color)[1],D.color==='Şeffaf',find(INKS,D.ink)[1],D.logo,true);
   $('#dstage').className='dstage'+(D.color==='Şeffaf'?' checker':'');
   $('#dcname').textContent='· '+D.color; $('#diname').textContent=D.logo?'· logonuz':'· '+D.ink;
   $('#dcol').innerHTML=COLS.map(function(c){return '<button type="button" data-dc="'+c[0]+'" class="'+(D.color===c[0]?'on':'')+'" aria-pressed="'+(D.color===c[0])+'" aria-label="Zemin '+c[0]+'" title="'+c[0]+'" style="background:'+c[1]+'"></button>'}).join('');
   $('#dink').innerHTML=INKS.map(function(c){return '<button type="button" data-di="'+c[0]+'" class="'+(D.ink===c[0]?'on':'')+'" aria-pressed="'+(D.ink===c[0])+'" aria-label="Baskı '+c[0]+'" title="'+c[0]+'" style="background:'+c[1]+'"></button>'}).join('');
+  dTip();
   $('#dgo').href=URUN+'?renk='+encodeURIComponent(D.color)+'&baski='+encodeURIComponent(D.ink)+'#teklif';
 }
 $('#tasarla').addEventListener('click',function(e){var t=e.target.closest?e.target.closest('button'):null;if(!t)return;
   if(t.hasAttribute('data-dc'))D.color=t.getAttribute('data-dc');if(t.hasAttribute('data-di')){D.ink=t.getAttribute('data-di');D.logo=null}drawD()});
-$('#dlogo').addEventListener('change',function(){var f=this.files&&this.files[0];if(!f||!/^image\//.test(f.type))return;var fr=new FileReader();fr.onload=function(){D.logo=fr.result;drawD()};fr.readAsDataURL(f)});
+$('#dlogo').addEventListener('change',function(){var f=this.files&&this.files[0];if(!f||!/^image\//.test(f.type))return;var fr=new FileReader();fr.onload=function(){D.logo=fr.result;logoColor(fr.result,function(c){LOGOCOL=c;drawD()})};fr.readAsDataURL(f)});
 drawD();
 }
 if($('#pg-asistan')){
