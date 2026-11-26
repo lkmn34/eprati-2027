@@ -706,3 +706,6 @@ body.xopen .qtab,body.xopen .mbar{display:none}
 .fb3 b{color:#1C6A30}
 @media(max-width:760px){.fb{left:12px;right:12px;width:auto;bottom:calc(84px + env(safe-area-inset-bottom))}}
 body.xopen .fb{display:none}
+.xloc{grid-column:1 / -1;padding:14px 16px;border-radius:12px;background:rgba(255,255,255,.06)}
+.xloc small{display:block;font-size:12px;color:#8CC47A;font-weight:600;margin-bottom:3px}.xloc b{display:block;font-size:15px;line-height:1.45;font-weight:600}
+.xlocb{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}.xlocb a{display:inline-flex;align-items:center;min-height:40px;padding:0 14px;border-radius:10px;background:#fff;color:#14163F!important;font-weight:700;font-size:14px;text-decoration:none}.xlocb a:first-child{background:#33AA47;color:#fff!important}

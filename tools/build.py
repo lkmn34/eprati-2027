@@ -160,9 +160,10 @@ def header(R, H, skip):
           <a href="tel:+902126516669"><small>Telefon</small>0212 651 66 69<br>0212 651 17 99</a>
           <a href="https://wa.me/905357183598"><small>WhatsApp</small>0535 718 35 98</a>
           <a href="mailto:satis@eprati.com"><small>E-posta</small>satis@eprati.com</a>
-          <a href="https://maps.google.com/?q=Beylikd%C3%BCz%C3%BC+OSB+Mermerciler+Sanayi+Sitesi+8.+Cadde+No:10" target="_blank" rel="noopener"><small>Adres · haritada aç ↗</small>Beylikdüzü OSB Mah. Mermerciler San. Sit. 8. Cad. No:10/5, Beylikdüzü / İstanbul</a>
           <a href="https://epratiplastic.trustpass.alibaba.com" target="_blank" rel="noopener"><small>Global alıcılar</small>Alibaba.com mağazamız ↗</a>
           <a href="#"><small>İletişim sayfası</small>Form ve çalışma saatleri {soon}</a>
+          <div class="xloc"><small>Konum</small><b>Beylikdüzü OSB Mah. Mermerciler San. Sit. 8. Cad. No:10/5, 34209 Beylikdüzü / İstanbul</b>
+            <span class="xlocb"><a href="https://www.google.com/maps/search/?api=1&amp;query=Eprati+Plastik+Beylikd%C3%BCz%C3%BC+OSB+Mermerciler+Sanayi+Sitesi+8.+Cadde+No:10%2F5+Beylikd%C3%BCz%C3%BC+%C4%B0stanbul" target="_blank" rel="noopener">📍 Haritada aç</a><a href="https://www.google.com/maps/dir/?api=1&amp;destination=Eprati+Plastik+Beylikd%C3%BCz%C3%BC+OSB+Mermerciler+Sanayi+Sitesi+8.+Cadde+No:10%2F5+Beylikd%C3%BCz%C3%BC+%C4%B0stanbul" target="_blank" rel="noopener">🧭 Yol tarifi al</a><a href="https://yandex.com.tr/harita/?text=Eprati+Plastik+Beylikd%C3%BCz%C3%BC+OSB+Mermerciler+Sanayi+Sitesi+8.+Cadde+No:10%2F5+Beylikd%C3%BCz%C3%BC+%C4%B0stanbul" target="_blank" rel="noopener">Yandex</a></span></div>
         </div></div></section>
     </div>
   </div>
