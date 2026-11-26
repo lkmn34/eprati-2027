@@ -2,7 +2,9 @@
 """Eprati sitesini tools/parts içindeki parçalardan üretir.
 Kullanım: python3 tools/build.py   (depo kök klasöründen)
 Alan adı değişince yalnızca BASE değiştirilir (ör. https://www.eprati.com/)."""
-import json, os, datetime, time
+import json, os, sys, datetime, time
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import pages as PG
 VER = str(int(time.time()))
 
 BASE = 'https://lkmn34.github.io/eprati-2027/'
@@ -56,7 +58,7 @@ for p in PRODS:
   PAGES.append(dict(path=purl(p)+'index.html', url=purl(p), root='../../../', main='urun.html', prod=p,
     title=f"{p['name']} — {cat['short']} Ambalajları | Eprati Plastik",
     desc=(p['desc'][:150] + ' Özel ölçü ve baskı için teklif alın.')[:300],
-    ld=[crumbs([("Ana sayfa", ""), ("Ürünler", "#urunler"), (cat['name'], "#urunler"), (p['name'], purl(p))]),
+    ld=[crumbs([("Ana sayfa", ""), ("Ürünler", "urunler/"), (cat['name'], "#urunler"), (p['name'], purl(p))]),
         {"@context": "https://schema.org", "@type": "Product", "name": p['name'], "category": cat['name'], "description": p['desc'],
          "brand": {"@type": "Brand", "name": "Eprati"}, "manufacturer": {"@id": BASE + "#org"}, "image": BASE + "og-image.png", "url": BASE + purl(p)}]))
 
@@ -67,7 +69,27 @@ CATDESC={'magaza-ambalajlari':'Marketten butiğe, eczaneden e-ticarete: mağazan
 for k,c in CATS.items():
   PAGES.append(dict(path=f'urunler/{k}/index.html', url=f'urunler/{k}/', root='../../', main='kategori.html', catk=k,
     title=f"{c['name']} | Eprati Plastik", desc=CATDESC[k],
-    ld=[crumbs([("Ana sayfa", ""), ("Ürünler", "#urunler"), (c['name'], f'urunler/{k}/')])]))
+    ld=[crumbs([("Ana sayfa", ""), ("Ürünler", "urunler/"), (c['name'], f'urunler/{k}/')])]))
+
+
+SP = [
+  ('hakkimizda/', 'Hakkımızda', PG.HAKKIMIZDA, 'Hakkımızda | Eprati Plastik — 2000\'den Beri Poşet Üretimi', 'Eprati Plastik 2000 yılından beri Beylikdüzü OSB\'deki fabrikasında poşet ve ambalaj üretiyor. Hikâyemiz, üretim sürecimiz, vizyonumuz ve misyonumuz.', []),
+  ('sertifikalarimiz/', 'Sertifikalarımız', PG.SERTIFIKA, 'Sertifikalarımız | Eprati Plastik', 'Gıda tescil belgesi (TR-34-K-282635), ISO 45001 ve diğer kalite belgelerimiz.', [('Hakkımızda','hakkimizda/')]),
+  ('referanslar/', 'Referanslar', PG.refs_html(), 'Referanslar ve Örnek İşler | Eprati Plastik', 'Eprati Plastik\'i tercih eden markalar ve ürettiğimiz baskılı poşetlerden örnekler.', [('Hakkımızda','hakkimizda/')]),
+  ('sss/', 'Sıkça Sorulan Sorular', PG.sss_html(), 'Sıkça Sorulan Sorular | Eprati Plastik', 'Poşet ölçüleri, baskı, gıdaya uygunluk, sipariş süreci ve ihracat hakkında sık sorulan sorular.', []),
+  ('iletisim/', 'İletişim', PG.ILETISIM, 'İletişim | Eprati Plastik — Beylikdüzü / İstanbul', 'Eprati Plastik iletişim: 0212 651 66 69, WhatsApp 0535 718 35 98, satis@eprati.com. Beylikdüzü OSB, İstanbul.', []),
+  ('kvkk/', 'KVKK', PG.KVKK, 'KVKK | Eprati Plastik', 'Kişisel verilerin korunması: aydınlatma metinleri, başvuru formu ve çerez politikası.', []),
+  ('musteri-aydinlatma-metni/', 'Müşteri Aydınlatma Metni', PG.MUSTERI, 'Müşteri Aydınlatma Metni | Eprati Plastik', 'KVKK kapsamında müşterilerimize ait kişisel verilerin işlenmesine ilişkin aydınlatma metni.', [('KVKK','kvkk/')]),
+  ('veri-sorumlusuna-basvuru-formu/', 'Veri Sorumlusuna Başvuru Formu', PG.BASVURU, 'Veri Sorumlusuna Başvuru Formu | Eprati Plastik', 'KVKK 11. madde kapsamındaki haklarınızı kullanmak için başvuru formu.', [('KVKK','kvkk/')]),
+  ('ticari-ileti-acik-riza-metni/', 'Ticari İleti Açık Rıza Metni', PG.TICARI, 'Ticari Elektronik İleti Açık Rıza Metni | Eprati Plastik', 'E-posta ve SMS ile ticari elektronik ileti gönderimine ilişkin açık rıza metni.', [('KVKK','kvkk/')]),
+  ('cerez-politikasi/', 'Çerez Politikası', PG.CEREZ, 'Çerez Politikası | Eprati Plastik', 'Sitemizde kullanılan zorunlu, analiz ve pazarlama çerezleri ve tercihlerinizi nasıl yöneteceğiniz.', [('KVKK','kvkk/')]),
+  ('urunler/', 'Ürünler', PG.urunler_html(CATS, PRODS, purl, esc), 'Tüm Ürünler — Poşet ve Ambalaj Çeşitleri | Eprati Plastik', 'Mağaza, gıda, tekstil-temizlik ve endüstriyel ambalajlar: 24 ürün. Özel ölçü ve baskılı üretim.', []),
+]
+for u, name, html, title, desc, mid in SP:
+  depth = '../' * u.count('/')
+  cr = [("Ana sayfa", "")] + mid + [(name, u)]
+  nav = '<nav class="wrap crumb" aria-label="Sayfa yolu">' + ' › '.join(f'<a href="{{{{R}}}}{x}">{n}</a>' if x else '<a href="{{HOME}}">Ana sayfa</a>' for n, x in cr[:-1]) + f' › <span aria-current="page" style="color:var(--ink);font-weight:600">{name}</span></nav>'
+  PAGES.append(dict(path=u + 'index.html', url=u, root=depth, html='<main id="pg-sayfa">' + nav + html + '</main>', main='sayfa', title=title, desc=desc, ld=[crumbs(cr)]))
 
 def cat_fill(html, k, R):
   c=CATS[k]
@@ -94,6 +116,8 @@ def prod_fill(html, p, R):
     '{{NOTICE}}': NOTICE,
   }
   for k, v in rep.items(): html = html.replace(k, v)
+  if p['id'] == 'kargo-poseti':
+    html = html.replace('<div class="facts">', '<div class="eldmini"><span><b>Hemen satın almak mı istiyorsunuz?</b> Standart ölçülerdeki baskısız kargo poşetleri Eldora mağazamızda, kredi kartıyla.</span><a href="https://www.eldora.com.tr/" target="_blank" rel="noopener">Eldora\'dan al ↗</a></div><div class="facts">', 1)
   return html.replace('<main id="pg-urun">', '<main id="pg-urun" data-product="' + esc(json.dumps(data, ensure_ascii=False)) + '">', 1)
 
 LANGS = '<div class="langsw"><button type="button" class="langbtn" aria-haspopup="true" aria-expanded="false" aria-label="Dil seçimi"><span class="flag f-tr"></span>TR<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button><div class="langmenu" hidden><a href="#" aria-current="true"><span class="flag f-tr"></span>Türkçe</a><a href="#" class="soon" aria-disabled="true"><span class="flag f-en"></span>English <em>yakında</em></a><a href="#" class="soon" aria-disabled="true"><span class="flag f-de"></span>Deutsch <em>yakında</em></a></div></div>'
@@ -107,7 +131,7 @@ def header(R, H, skip):
   secs=[('market','atlet','Market ve mağaza'),('firin','ekmek','Fırın ve pastane'),('manav','rulo','Manav ve pazar'),('gida','bakliyat','Gıda üreticisi'),('eticaret','kargo','E-ticaret ve kargo'),('kt','aski','Kuru temizleme'),('tekstil','opp','Tekstil ve giyim'),('sanayi','lastik','Sanayi ve otomotiv')]
   sec_html=''.join(f'<a class="xsec" href="{R}poset-asistani/?sektor={k}"><span class="xic" data-ic="{ic}"></span>{n}</a>' for k,ic,n in secs)
   cat_html=''.join(f'<a class="xcat" href="{R}urunler/{k}/"><b>{esc(c["name"])}</b><span>{sum(1 for q in PRODS if q["cat"]==k)} ürün →</span></a>' for k,c in CATS.items())
-  prod_html=''.join('<div class="xpc"><a class="xpch" href="'+R+'urunler/'+k+'/">'+esc(c['name'])+'</a>'+''.join(f'<a href="{R}{purl(q)}">{esc(q["name"])}</a>' for q in PRODS if q['cat']==k)+'</div>' for k,c in CATS.items())
+  prod_html='<a class="xpall" href="'+R+'urunler/">Tüm ürünler →</a>'+''.join('<div class="xpc"><a class="xpch" href="'+R+'urunler/'+k+'/">'+esc(c['name'])+'</a>'+''.join(f'<a href="{R}{purl(q)}">{esc(q["name"])}</a>' for q in PRODS if q['cat']==k)+'</div>' for k,c in CATS.items())
   soon='<em class="soon">yakında</em>'
   return f'''<a class="skip" href="#{skip}">İçeriğe geç</a>
 <div class="top"><div class="wrap">
@@ -142,18 +166,19 @@ def header(R, H, skip):
         <div class="xp"><div class="xcards">
           <a class="xcard pri" href="{R}poset-asistani/"><b>Poşet Asistanı</b><span>Poşetinizi seçin, rengini ve yazınızı görün, teklif isteyin. Yaklaşık 1 dakika.</span><i>Başlat →</i></a>
           <a class="xcard" href="https://wa.me/905357183598"><b>WhatsApp'tan yazın</b><span>Bir fotoğraf ya da kısa bir mesaj yeterli; satış ekibimiz dönsün.</span><i>0535 718 35 98 →</i></a>
+          <a class="xcard" href="https://www.eldora.com.tr/" target="_blank" rel="noopener"><b>Hazır kargo poşeti</b><span>Standart ölçülerde baskısız kargo poşetini Eldora mağazamızdan hemen satın alın.</span><i>Eldora'ya git ↗</i></a>
           <a class="xcard" href="tel:+902126516669"><b>Bizi arayın</b><span>Hafta içi satış ekibimizle doğrudan görüşün.</span><i>0212 651 66 69 →</i></a>
         </div></div></section>
       <section class="xi" data-xi="2"><button type="button" class="xh" aria-expanded="false"><span class="xn">03</span>Ürünlere göz atmak istiyorum<span class="xar">→</span></button>
         <div class="xp"><div class="xprods">{prod_html}</div></div></section>
       <section class="xi" data-xi="3"><button type="button" class="xh" aria-expanded="false"><span class="xn">04</span>Eprati'yi tanımak istiyorum<span class="xar">→</span></button>
         <div class="xp"><div class="xlinks">
-          <a href="#">Hakkımızda {soon}<span>2000'den beri entegre poşet ve ambalaj üretimi</span></a>
+          <a href="{R}hakkimizda/">Hakkımızda<span>2000'den beri entegre poşet ve ambalaj üretimi</span></a>
           <a href="{H}#kurumsal">Fabrikamız<span>Hammaddeden bitmiş ürüne tek çatı altında</span></a>
-          <a href="#">Sertifikalarımız {soon}<span>Gıdaya uygunluk ve kalite belgeleri</span></a>
-          <a href="{H}#isler">Referanslar ve örnek işler<span>Bize güvenen markalar</span></a>
+          <a href="{R}sertifikalarimiz/">Sertifikalarımız<span>Gıdaya uygunluk ve kalite belgeleri</span></a>
+          <a href="{R}referanslar/">Referanslar ve örnek işler<span>Bize güvenen markalar</span></a>
           <a href="{H}#ihracat">İhracat<span>Avrupa'dan Amerika'ya</span></a>
-          <a href="{H}#sss">Sıkça sorulan sorular<span>Ölçü, baskı, gıda uygunluğu</span></a>
+          <a href="{R}sss/">Sıkça sorulan sorular<span>Ölçü, baskı, gıda uygunluğu</span></a>
         </div></div></section>
       <section class="xi" data-xi="4"><button type="button" class="xh" aria-expanded="false"><span class="xn">05</span>Size ulaşmak istiyorum<span class="xar">→</span></button>
         <div class="xp"><div class="xcontact">
@@ -161,13 +186,13 @@ def header(R, H, skip):
           <a href="https://wa.me/905357183598"><small>WhatsApp</small>0535 718 35 98</a>
           <a href="mailto:satis@eprati.com"><small>E-posta</small>satis@eprati.com</a>
           <a href="https://epratiplastic.trustpass.alibaba.com" target="_blank" rel="noopener"><small>Global alıcılar</small>Alibaba.com mağazamız ↗</a>
-          <a href="#"><small>İletişim sayfası</small>Form ve çalışma saatleri {soon}</a>
+          <a href="{R}iletisim/"><small>İletişim sayfası</small>Form, saatler ve harita →</a>
           <div class="xloc"><small>Konum</small><b>Beylikdüzü OSB Mah. Mermerciler San. Sit. 8. Cad. No:10/5, 34209 Beylikdüzü / İstanbul</b>
             <span class="xlocb"><a href="https://www.google.com/maps/search/?api=1&amp;query=Eprati+Plastik+Beylikd%C3%BCz%C3%BC+OSB+Mermerciler+Sanayi+Sitesi+8.+Cadde+No:10%2F5+Beylikd%C3%BCz%C3%BC+%C4%B0stanbul" target="_blank" rel="noopener">📍 Haritada aç</a><a href="https://www.google.com/maps/dir/?api=1&amp;destination=Eprati+Plastik+Beylikd%C3%BCz%C3%BC+OSB+Mermerciler+Sanayi+Sitesi+8.+Cadde+No:10%2F5+Beylikd%C3%BCz%C3%BC+%C4%B0stanbul" target="_blank" rel="noopener">🧭 Yol tarifi al</a><a href="https://yandex.com.tr/harita/?text=Eprati+Plastik+Beylikd%C3%BCz%C3%BC+OSB+Mermerciler+Sanayi+Sitesi+8.+Cadde+No:10%2F5+Beylikd%C3%BCz%C3%BC+%C4%B0stanbul" target="_blank" rel="noopener">Yandex</a></span></div>
         </div></div></section>
     </div>
   </div>
-  <div class="xfoot wrap"><a href="{KAT}" target="_blank" rel="noopener">Ürün kataloğu (PDF)</a><a href="https://www.eldora.com.tr/" target="_blank" rel="noopener">Mağaza ↗</a><a href="#">KVKK</a><a href="#">Çerez politikası</a><span class="xlang"><span class="flag f-tr"></span>TR · <span class="flag f-en"></span>EN · <span class="flag f-de"></span>DE <em class="soon">yakında</em></span></div>
+  <div class="xfoot wrap"><a href="{KAT}" target="_blank" rel="noopener">Ürün kataloğu (PDF)</a><a href="https://www.eldora.com.tr/" target="_blank" rel="noopener">Eldora mağaza ↗</a><a href="{R}urunler/">Tüm ürünler</a><a href="{R}kvkk/">KVKK</a><a href="{R}cerez-politikasi/">Çerez politikası</a><span class="xlang"><span class="flag f-tr"></span>TR · <span class="flag f-en"></span>EN · <span class="flag f-de"></span>DE <em class="soon">yakında</em></span></div>
 </div>'''
 
 def mbar(R):
@@ -198,10 +223,10 @@ def page(p):
   R = p['root']; H = R or './'
   canon = BASE + p['url']
   ld = ''.join('<script type="application/ld+json">' + json.dumps(x, ensure_ascii=False) + '</script>\n' for x in p['ld'])
-  main = part(p['main']).replace('{{R}}', R).replace('{{HOME}}', H).replace('{{NOTICE}}', NOTICE)
+  main = (p['html'] if p.get('html') else part(p['main'])).replace('{{R}}', R).replace('{{HOME}}', H).replace('{{NOTICE}}', NOTICE)
   if p.get('prod'): main = prod_fill(main, p['prod'], R)
   if p.get('catk'): main = cat_fill(main, p['catk'], R)
-  pgid = {'home.html': 'pg-home', 'asistan.html': 'pg-asistan', 'urun.html': 'pg-urun', 'kategori.html': 'pg-kat'}[p['main']]
+  pgid = {'home.html': 'pg-home', 'asistan.html': 'pg-asistan', 'urun.html': 'pg-urun', 'kategori.html': 'pg-kat', 'sayfa': 'pg-sayfa'}[p['main']]
   foot = part('footer.html').replace('{{R}}', R).replace('{{HOME}}', H).replace('src="logo-beyaz.svg"', f'src="{R}logo-beyaz.svg"')
   return f'''<!DOCTYPE html>
 <html lang="tr" class="no-js">
