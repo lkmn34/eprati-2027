@@ -155,6 +155,24 @@ if('IntersectionObserver' in window&&!calm){
   window.addEventListener('scroll',vis,{passive:true});window.addEventListener('resize',vis);vis();
   Array.prototype.forEach.call(document.querySelectorAll('.mbar .pri'),function(a){a.addEventListener('click',function(e){e.preventDefault();open(true)})});
 })();
+
+var EP=window.EPR_P||[];var NOTICE='<div class="pnote" role="note"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 8h.01M11 12h1v5h1"/></svg><span><b>Bu bir önizlemedir.</b> Görseller temsilidir; nihai tasarım, renk tonları ve baskı yerleşimi sipariş aşamasında tasarım ekibimizle birlikte netleştirilir.</span></div>';function purlOf(name){for(var i=0;i<EP.length;i++)if(EP[i][0]===name)return R+EP[i][1];return R+'urunler/'}
+/* dil seçici */
+Array.prototype.forEach.call(document.querySelectorAll('.langsw'),function(w){var b=w.querySelector('.langbtn'),m=w.querySelector('.langmenu');
+  b.addEventListener('click',function(e){e.stopPropagation();m.hidden=!m.hidden;b.setAttribute('aria-expanded',!m.hidden)});
+  m.addEventListener('click',function(e){var a=e.target.closest('a');if(a){e.preventDefault();if(a.classList.contains('soon')){a.classList.add('flash');setTimeout(function(){a.classList.remove('flash')},900)}else m.hidden=true}});
+  document.addEventListener('click',function(){m.hidden=true;b.setAttribute('aria-expanded',false)})});
+/* yatay kaydırıcı (ok + sürükleme) */
+function slider(root){if(!root||root._s)return;root._s=1;var tr=root.querySelector('.strack'),pv=root.querySelector('.sprev2'),nx=root.querySelector('.snext');
+  function step(){var c=tr.querySelector('.sitem');return c?c.getBoundingClientRect().width+16:300}
+  function upd(){if(pv)pv.disabled=tr.scrollLeft<4;if(nx)nx.disabled=tr.scrollLeft+tr.clientWidth>=tr.scrollWidth-4}
+  pv&&pv.addEventListener('click',function(){tr.scrollBy({left:-step(),behavior:'smooth'})});nx&&nx.addEventListener('click',function(){tr.scrollBy({left:step(),behavior:'smooth'})});
+  var dn=false,sx=0,sl=0,moved=false;tr.addEventListener('pointerdown',function(e){if(e.pointerType!=='mouse')return;dn=true;moved=false;sx=e.clientX;sl=tr.scrollLeft;tr.classList.add('drag')});
+  window.addEventListener('pointermove',function(e){if(!dn)return;var d=e.clientX-sx;if(Math.abs(d)>4)moved=true;tr.scrollLeft=sl-d});
+  window.addEventListener('pointerup',function(){if(!dn)return;dn=false;tr.classList.remove('drag')});
+  tr.addEventListener('click',function(e){if(moved){e.preventDefault();e.stopPropagation();moved=false}},true);
+  tr.addEventListener('scroll',upd,{passive:true});window.addEventListener('resize',upd);root._upd=upd;upd()}
+Array.prototype.forEach.call(document.querySelectorAll('.relic'),function(el){var k=el.getAttribute('data-ic');if(IC[k])el.innerHTML=icon(k,30)});
 if($('#pg-home')){
 /* ---------- ana sayfa ---------- */
 var P=[['Atlet Poşet','Mağaza','market, hışır, alışveriş, bakkal'],['El Geçmeli Poşet','Mağaza','butik, giyim, mağaza'],['Kulplu Poşet','Mağaza','ayakkabı, kutu, tekstil'],['Kargo Poşeti','Mağaza','e-ticaret, gönderi, kurye'],
@@ -167,7 +185,7 @@ function doSearch(){
   var words=q.split(' ').filter(function(w){return w.length>2});
   var r=P.map(function(p){var n=low(p[0]),t=low(p[0]+' '+p[2]),sc=0;if(n.indexOf(q)===0)sc+=100;else if(n.indexOf(q)>=0)sc+=60;else if(t.indexOf(q)>=0)sc+=30;
       words.forEach(function(w){if(n.indexOf(w)>=0)sc+=10;else if(t.indexOf(w)>=0)sc+=4});return [sc,p]}).filter(function(x){return x[0]>0}).sort(function(a,b){return b[0]-a[0]}).slice(0,5).map(function(x){return x[1]});
-  sres.innerHTML=r.length?r.map(function(p){return '<a href="'+URUN+'"><span><b style="font-weight:600">'+esc(p[0])+'</b><small>'+esc(p[1])+' · '+esc(p[2].split(',')[0])+'</small></span><span style="color:#24803A;font-weight:600;font-size:13px">Gör →</span></a>'}).join('')
+  sres.innerHTML=r.length?r.map(function(p){return '<a href="'+purlOf(p[0])+'"><span><b style="font-weight:600">'+esc(p[0])+'</b><small>'+esc(p[1])+' · '+esc(p[2].split(',')[0])+'</small></span><span style="color:#24803A;font-weight:600;font-size:13px">Gör →</span></a>'}).join('')
     :'<div style="padding:12px;font-size:14px;color:#4D5170">Tam eşleşme bulamadık. <a href="'+ASIST+'">Poşet Asistanı</a> birkaç soruyla size uygun olanı önersin.</div>';
   sres.hidden=false;
 }
@@ -179,8 +197,9 @@ document.addEventListener('click',function(e){if(!e.target.closest||!e.target.cl
 $('#minigrid').innerHTML=[['market','atlet','Market ve mağaza'],['firin','ekmek','Fırın ve pastane'],['manav','rulo','Manav ve pazar'],['eticaret','kargo','E-ticaret ve kargo'],['kt','aski','Kuru temizleme ve halı'],['sanayi','lastik','Sanayi ve otomotiv']].map(function(s){return '<a href="'+ASIST+'?sektor='+s[0]+'"><span class="mi">'+icon(s[1],22)+'</span>'+s[2]+'</a>'}).join('');
 $('#sectors').innerHTML=[['atlet','#E8F3E3','Market ve Mağaza','Atlet, el geçmeli, kulplu poşet'],['ekmek','#F3EFE6','Fırın ve Pastane','Ekmek poşeti, plast kağıt'],['rulo','#E6EAF7','Manav ve Pazar','Rulo manav poşeti, atlet poşet'],['bakliyat','#E8F3E3','Gıda Üreticisi','Bakliyat, koli-kasa, dondurma-buz poşeti'],['kargo','#F3EFE6','E-ticaret ve Kargo','Kargo poşeti, bantlı torba'],['aski','#E6EAF7','Kuru Temizleme ve Halı','Kuru temizleme poşeti, halı poşeti'],['opp','#E8F3E3','Tekstil ve Hazır Giyim','OPP-CPP torba, jelatin, taşıma torbası'],['lastik','#F3EFE6','Sanayi ve Otomotiv','Kilitli torba, oto lastik poşeti, film bobin']]
   .map(function(s,i){return '<a class="card sector" href="'+ASIST+'?sektor='+['market','firin','manav','gida','eticaret','kt','tekstil','sanayi'][i]+'"><span class="badge" style="background:'+s[1]+'">'+icon(s[0],34)+'</span><b>'+s[2]+'</b><span class="muted" style="font-size:14px">'+s[3]+'</span></a>'}).join('');
-$('#cats').innerHTML=[['Mağaza Ambalajları','mağaza','#E8F3E3',['Atlet Poşet','El Geçmeli Poşet','Kulplu Poşet','Kargo Poşeti'],['atlet','elgecme','kulplu','kargo']],['Gıda Ambalajları','gıda','#F3EFE6',['Rulo Manav','Bakliyat','Plast Kağıt','Koli-Kasa','Ekmek','Dondurma-Buz'],['rulo','bakliyat','ekmek','buz']],['Tekstil ve Temizlik','tekstil','#E6EAF7',['Kuru Temizleme','Halı Poşeti','OPP-CPP Torba','OPP-CPP Bantlı','OPP-Film Bobin','Jelatin','Taşıma Torbası'],['aski','hali','opp','bobin']],['Endüstriyel Ambalajlar','endüstriyel','#EEF1EC',['Torba','Bantlı Torba','Bardak Poşeti','Fermuarlı Kilitli','Kilitli Torba','Oto Lastik','Film (Bobin)'],['kilitli','bardak','lastik','bobin']]]
-  .map(function(c){return '<div class="cat" style="background:'+c[2]+'"><h3 style="font-size:20px;margin:0 0 14px">'+c[0]+'</h3><div class="tags">'+c[3].map(function(p){return '<a href="'+URUN+'">'+p+'</a>'}).join('')+'</div><a href="'+URUN+'" style="margin:10px 0 18px;font-weight:600;font-size:14px">Tüm '+c[1]+' ürünleri →</a><div class="collage" aria-hidden="true">'+c[4].map(function(k,i){return '<span style="transform:rotate('+[-6,4,-3,6][i]+'deg)">'+icon(k,40)+'</span>'}).join('')+'</div></div>'}).join('');
+var CATD=[['magaza-ambalajlari','Mağaza Ambalajları','#E8F3E3'],['gida-ambalajlari','Gıda Ambalajları','#F3EFE6'],['tekstil-ve-temizlik-ambalajlari','Tekstil ve Temizlik','#E6EAF7'],['endustriyel-ambalajlar','Endüstriyel Ambalajlar','#EEF1EC']];
+$('#cats').innerHTML=CATD.map(function(c){var ps=EP.filter(function(p){return p[2]===c[0]}),ics=[];ps.forEach(function(p){if(ics.indexOf(p[3])<0&&ics.length<4)ics.push(p[3])});
+  return '<div class="cat" style="background:'+c[2]+'"><h3 style="font-size:20px;margin:0 0 14px">'+c[1]+'</h3><div class="tags">'+ps.map(function(p){return '<a href="'+R+p[1]+'">'+esc(p[0])+'</a>'}).join('')+'</div><div class="collage" aria-hidden="true">'+ics.map(function(k,i){return '<span style="transform:rotate('+[-6,4,-3,6][i]+'deg)">'+icon(k,40)+'</span>'}).join('')+'</div></div>'}).join('');
 /* Referanslar: gerçek logolar gelince {ad:'THY', img:'logolar/thy.png'} şeklinde eklenir */
 var REFS=[{ad:'THY'},{ad:'İpek Pişmaniye',img:R+'assets/refs/ipek.png'},{ad:'Koçtaş'},{ad:'Volvo'},{ad:'ŞOK'},{ad:'Turkish Support Services',img:R+'assets/refs/turkish-support-services.png'},{ad:'Garanti Bankası'},{ad:'Seyidoğlu'},{ad:'Sultanbacı'},{ad:'Çiğköftem'},{ad:'Zırhlı'}];
 function tile(r){return '<div class="logo-tile" title="'+esc(r.ad)+'">'+(r.img?'<img src="'+r.img+'" alt="'+esc(r.ad)+'">':esc(r.ad))+'</div>'}
@@ -223,9 +242,11 @@ var WORKS=[
      ['yesil','Açık yeşil','#78BE78','Açık yeşil zemin doğa dostu bir izlenim verir; koyu renkli baskıyla en iyi sonucu alırsınız.']]}
 ];
 var IMG=R+'assets/isler/';
-$('#works').innerHTML=WORKS.map(function(w){var v0=w.v[0];return '<article class="work">'+
-  '<div class="wimg"><img src="'+IMG+w.id+'-'+v0[0]+'.webp" alt="'+esc(w.alt)+'" loading="lazy"></div>'+
-  '<div class="wbody"><span class="wtag">'+esc(w.ad)+'</span><h3>'+esc(w.mus)+'</h3><p class="muted">'+esc(w.info)+'</p></div></article>'}).join('');
+$('#works').innerHTML=WORKS.map(function(w){var v0=w.v[0];return '<article class="work sitem">'+
+  '<div class="wimg"><img src="'+IMG+w.id+'-'+v0[0]+'.webp" alt="'+esc(w.alt)+'" loading="lazy" draggable="false"></div>'+
+  '<div class="wbody"><span class="wtag">'+esc(w.ad)+'</span><h3>'+esc(w.mus)+'</h3><p class="muted">'+esc(w.info)+'</p></div></article>'}).join('')+
+  [['kargo','Kargo Poşeti'],['ekmek','Ekmek Poşeti'],['aski','Kuru Temizleme Poşeti']].map(function(x){return '<article class="work sitem soonw"><div class="wimg">'+icon(x[0],72,'#9AA3C4')+'</div><div class="wbody"><span class="wtag" style="background:#EEF1F8;color:#4D5170">'+x[1]+'</span><h3>Yeni iş örneği</h3><p class="muted">Yakında eklenecek</p></div></article>'}).join('');
+slider($('#workslider'));
 
 /* fabrika videosu: yakına gelince yükle, masaüstünde, hareket azaltılmamışsa */
 (function(){var bg=$('#fvbg');if(!bg)return;var id=bg.getAttribute('data-vid');
@@ -400,7 +421,8 @@ function drawSteps(){
 function drawQ(){
   var s=A.step,h='';
   if(s===0)h='<h2 class="qh">Merhaba! Hangi işle uğraşıyorsunuz?</h2><p class="muted" style="margin:0 0 24px">Sektörünüzü seçin, size en çok kullanılan poşetlerden başlayalım.</p>'+opts(SEC,'sector');
-  if(s===1)h='<h2 class="qh">Poşete ne koyacaksınız?</h2><p class="muted" style="margin:0 0 24px">Ağırlık ve içerik, poşetin kalınlığını ve malzemesini belirler.</p>'+opts(CON,'content');
+  if(s===1){var SP={market:['Atlet Poşet','El Geçmeli Poşet','Kulplu Poşet'],firin:['Ekmek Poşeti','Plast Kağıt'],manav:['Rulo Manav Poşeti','Atlet Poşet'],gida:['Bakliyat Poşeti','Koli-Kasa Poşeti','Dondurma-Buz Poşeti'],eticaret:['Kargo Poşeti','Bantlı Torba'],kt:['Kuru Temizleme Poşeti'],hali:['Halı Poşeti'],tekstil:['OPP-CPP Torba','OPP-CPP Bantlı Torba','Jelatin','Taşıma Torbası'],sanayi:['Kilitli Torba','Oto Lastik Poşeti','Film (Bobin)']}[A.sector]||[];
+    h=(SP.length?'<div class="secprod"><span>'+esc(find(SEC,A.sector)[1])+' için en çok tercih edilenler:</span>'+SP.map(function(n){return '<a href="'+purlOf(n)+'">'+esc(n)+'</a>'}).join('')+'</div>':'')+'<h2 class="qh">Poşete ne koyacaksınız?</h2><p class="muted" style="margin:0 0 24px">Ağırlık ve içerik, poşetin kalınlığını ve malzemesini belirler.</p>'+opts(CON,'content');}
   if(s===2)h='<h2 class="qh">Nasıl taşınacak?</h2><p class="muted" style="margin:0 0 24px">Emin değilseniz "Siz önerin" deyin, sektörünüze göre seçelim.</p>'+opts(HAN,'handle',true);
   if(s===3){h='<h2 class="qh">Hangi boyutta olsun?</h2><p class="muted" style="margin:0 0 24px">Kabaca seçmeniz yeterli. Kesin ölçüyü teklif aşamasında birlikte netleştiririz.</p>'+opts(SIZ,'size');
     if(A.size==='ozel')h+='<div class="dims"><div class="f3"><label class="fld">En (cm)<input type="number" data-dim="w" value="'+A.w+'"></label><label class="fld">Körük (cm)<input type="number" data-dim="g" value="'+A.g+'"></label><label class="fld">Boy (cm)<input type="number" data-dim="h" value="'+A.h+'"></label><p class="muted full" style="font-size:13px;margin:0">Körük, poşetin yan kıvrımıdır. Ölçü "en + körük + körük × boy" şeklinde yazılır.</p></div><div id="adim">'+dimSvg(A.w,A.g,A.h,sizeStr(A))+'</div></div>';}
@@ -408,7 +430,7 @@ function drawQ(){
     var sw=function(pal,cur,attr){return '<div class="pcolors">'+pal.map(function(c){return '<button type="button" '+attr+'="'+c[0]+'" class="'+(cur===c[0]?'on':'')+'" aria-pressed="'+(cur===c[0])+'" aria-label="'+c[0]+'" title="'+c[0]+'" style="background:'+c[1]+'"></button>'}).join('')+'</div>'};
     h='<h2 class="qh">Rengini seçin, nasıl duracağını görün</h2><p class="muted" style="margin:0 0 20px">'+(mid?'Önizleme gerçek ürün fotoğrafımız üzerinde. ':'')+'Poşet rengini'+(kul?', kulp rengini':'')+' ve baskıyı seçin.</p>'+
       '<div class="pvwrap">'+(mid?'<div class="pv"><canvas id="pvc" role="img" aria-label="Poşet önizlemesi"></canvas><span class="pvnote">Önizleme temsilidir</span>'+((A.print==='logo'||A.print==='foto')?'<button type="button" class="areabtn" id="areabtn">'+(A.showArea===false?'Baskı alanını göster':'Baskı alanını gizle')+'</button>'+(A.side==='ayri'?'<span class="facelab">'+(A.face==='on'?'Ön yüz':'Arka yüz')+'</span>':''):'')+'</div>':'')+
-      '<div class="pvctl"><p class="dlab">Poşet rengi <span>· '+A.color+'</span></p>'+sw(BODY,A.color,'data-body')+
+      '<div class="pvctl">'+NOTICE+'<p class="dlab">Poşet rengi <span>· '+A.color+'</span></p>'+sw(BODY,A.color,'data-body')+
       (kul?'<p class="dlab">Kulp rengi <span>· '+A.kulp+'</span></p>'+sw(HANDLE,A.kulp,'data-kulp'):'')+
       '<div class="ctip" id="ctip"></div>'+
       '<p class="dlab" style="margin-top:18px">Baskı</p>'+opts(PRI,'print')+
@@ -434,7 +456,7 @@ function drawQ(){
       '<div class="qnav"><button type="button" class="btn ghost" data-auact="change">E-postayı değiştir</button><button type="button" class="btn" data-auact="verify">Doğrula ve teklifi gönder</button></div>';
     else h+='<div class="f2"><label class="fld">E-posta<input type="email" data-au="email" autocomplete="email" value="'+esc(V.email)+'"></label><label class="fld">Şifre<input type="password" data-au="pass" autocomplete="current-password" value="'+esc(V.pass)+'"></label></div>'+(V.err?'<p class="errmsg" role="alert">'+esc(V.err)+'</p>':'')+'<p class="demo">Prototip notu: giriş gerçek WordPress sitesinde çalışacak; burada herhangi bir e-posta ve şifreyle deneyebilirsiniz.</p>'+
       '<div class="qnav"><button type="button" class="btn ghost" data-nav="back">← Geri</button><button type="button" class="btn" data-auact="login">Giriş yap ve teklifi gönder</button></div>';}
-  if(s===7){h='<div class="ok"><span class="circ"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#24803A" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg></span><h2 class="qh" style="margin:18px 0 8px">Teşekkürler '+esc(A.name.trim().split(' ')[0])+', talebiniz bize ulaştı.</h2><p class="muted" style="margin:0 0 8px">Tasarımınız <b>'+esc(A.au.email)+'</b> hesabınıza kaydedildi.</p><p class="muted" style="max-width:480px;margin:0 auto 24px">Satış ekibimiz en kısa sürede '+esc(A.phone)+' numarasından size dönecek. Acele ediyorsanız WhatsApp\'tan da yazabilirsiniz.</p><a class="btn ghost" href="'+HOME+'" style="margin:4px">Ana sayfaya dön</a> <a class="btn" href="'+URUN+'" style="margin:4px">'+esc(recommend())+' sayfasına git</a></div>';}
+  if(s===7){h='<div class="ok"><span class="circ"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#24803A" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg></span><h2 class="qh" style="margin:18px 0 8px">Teşekkürler '+esc(A.name.trim().split(' ')[0])+', talebiniz bize ulaştı.</h2><p class="muted" style="margin:0 0 8px">Tasarımınız <b>'+esc(A.au.email)+'</b> hesabınıza kaydedildi.</p><p class="muted" style="max-width:480px;margin:0 auto 24px">Satış ekibimiz en kısa sürede '+esc(A.phone)+' numarasından size dönecek. Acele ediyorsanız WhatsApp\'tan da yazabilirsiniz.</p><a class="btn ghost" href="'+HOME+'" style="margin:4px">Ana sayfaya dön</a> <a class="btn" href="'+purlOf(recommend())+'" style="margin:4px">'+esc(recommend())+' sayfasına git</a></div>';}
   if(s<6){var can=s>=5||!!A[KEYS[s]];
     h+='<div class="qnav"><button type="button" class="btn ghost" data-nav="back" style="visibility:'+(s===0?'hidden':'visible')+'">← Geri</button><div>'+(s===5?'<a class="btn ghost" href="https://wa.me/905357183598" style="border-color:#24803A;color:#24803A">WhatsApp ile gönder</a>':'')+'<button type="button" class="btn" data-nav="next"'+(can?'':' disabled')+'>'+(s===5?'Devam et →':'Devam et →')+'</button></div></div>';}
   $('#qpanel').innerHTML=h; drawSteps(); drawSide(); if(s===4){addFonts();renderAst($('#pvc'),true);bindCanvas();drawTip();FONTS.forEach(function(f){ensureFont(f[0],redrawAst)})}
@@ -485,9 +507,11 @@ drawQ();
 }
 if($('#pg-urun')){
 /* ---------- ürün sayfası ---------- */
-var U={color:'Beyaz',print:'yok',w:30,g:10,h:60,sel:6,fs:0,unit:'adet',name:'',phone:'',file:'',tried:false};
+var PR=JSON.parse($('#pg-urun').getAttribute('data-product')||'{}'),MID=PR.mock||null,PNAME=PR.name||'Ürün';
+var U={color:'Beyaz',kulp:'Siyah',print:'yok',w:30,g:10,h:60,sel:0,fs:0,unit:'adet',name:'',phone:'',file:'',tried:false};
 var PP=[['yok','Baskısız'],['1','1 renk'],['3','2–3 renk'],['cmyk','CMYK / fotoğraf']];
-var SZ=[[1,20,7,35,'Küçük alışveriş, eczane'],[2],[3],[4],[5],[6,30,10,60,'Battal, toplu alışveriş']];
+var SZ=(PR.sizes||[]);(function(){var d=SZ.filter(function(r){return r[3]});if(d.length){var r=d[d.length-1];U.w=r[3][0];U.g=r[3][1];U.h=r[3][2];U.sel=SZ.indexOf(r)+1}else if(MID==='kulplu'){U.w=49;U.g=10;U.h=35}else if(MID==='elgecme'){U.w=35;U.g=0;U.h=45}})();
+if(!SZ.length){var os=$('#olcusec');if(os)os.hidden=true}
 function pname(){return find(PP,U.print)[1]}
 /* ---- Ürün önizleme motoru ----
    Gerçek fotoğraf gelince: beyaz poşetin şeffaf zeminli PNG fotoğrafı PHOTOS'a eklenir,
@@ -495,20 +519,21 @@ function pname(){return find(PP,U.print)[1]}
    ve fotoğrafın kendi şekli maske olarak kullanılarak boyanır; kırışıklık ve gölgeler korunur. */
 U.ink='Lacivert'; U.logoImg=null; U.logoSrc=null; U.tab='pv';
 function uLayer(){if(U.logoImg)return [{c:U.logoImg,k:'logo'}];if(U.print!=='yok')return [{c:placeholderLogo(find(INKS,U.ink)[1]),k:'logo'}];return null}
-function olcuSvg(w,g,h){var sc=Math.min(260/(w+2*g),300/h),W=(w+2*g)*sc,H=h*sc,G=g*sc,x0=(440-W)/2,y0=40,hw=W*.17,cut=Math.min(H*.32,W*.42);
-  var path='M'+x0+' '+(y0+H)+'V'+y0+'h'+hw+'v'+(cut*.45)+'q0 '+(cut*.55)+' '+(W/2-hw)+' '+(cut*.55)+'q'+(W/2-hw)+' 0 '+(W/2-hw)+' '+(-cut*.55)+'V'+y0+'h'+hw+'V'+(y0+H)+'Z';
+function olcuSvg(w,g,h){var sc=Math.min(260/(w+2*g),300/h),W=(w+2*g)*sc,H=h*sc,G=g*sc,x0=(440-W)/2,y0=MID==='kulplu'?80:40,hw=W*.17,cut=MID==='atlet'?Math.min(H*.32,W*.42):0;
+  var path=MID==='atlet'?'M'+x0+' '+(y0+H)+'V'+y0+'h'+hw+'v'+(cut*.45)+'q0 '+(cut*.55)+' '+(W/2-hw)+' '+(cut*.55)+'q'+(W/2-hw)+' 0 '+(W/2-hw)+' '+(-cut*.55)+'V'+y0+'h'+hw+'V'+(y0+H)+'Z':'M'+x0+' '+y0+'h'+W+'v'+H+'h'+(-W)+'Z';
+  var extra=MID==='elgecme'?'<rect x="'+(x0+W/2-W*.14)+'" y="'+(y0+H*.06)+'" width="'+(W*.28)+'" height="'+(H*.07)+'" rx="'+(H*.035)+'" fill="#fff" stroke="#191B45" stroke-width="2"/>':MID==='kulplu'?'<path d="M'+(x0+W*.35)+' '+y0+'v-24a'+(W*.15)+' 30 0 0 1 '+(W*.3)+' 0v24" fill="none" stroke="#191B45" stroke-width="6" stroke-linecap="round"/>':'';
   function ar(x1,y1,x2,y2){return '<line x1="'+x1+'" y1="'+y1+'" x2="'+x2+'" y2="'+y2+'" stroke="#2B3787" stroke-width="1.5" marker-start="url(#ah)" marker-end="url(#ah)"/>'}
   function tx(x,y,t,rot){return '<text x="'+x+'" y="'+y+'" text-anchor="middle" font-family="Inter,sans-serif" font-size="14" font-weight="700" fill="#2B3787"'+(rot?' transform="rotate(-90 '+x+' '+y+')"':'')+'>'+t+'</text>'}
   return '<svg viewBox="0 0 440 '+(y0+H+70)+'" width="100%" role="img" aria-label="Ölçü çizimi: en '+w+' cm, körük '+g+' cm, boy '+h+' cm"><defs><marker id="ah" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 1L9 5L0 9z" fill="#2B3787"/></marker></defs>'+
-   '<path d="'+path+'" fill="#F4F6FB" stroke="#191B45" stroke-width="2" stroke-linejoin="round"/>'+
+   '<path d="'+path+'" fill="#F4F6FB" stroke="#191B45" stroke-width="2" stroke-linejoin="round"/>'+extra+
    '<rect x="'+x0+'" y="'+(y0+cut)+'" width="'+G+'" height="'+(H-cut)+'" fill="#E2E7F3"/><rect x="'+(x0+W-G)+'" y="'+(y0+cut)+'" width="'+G+'" height="'+(H-cut)+'" fill="#E2E7F3"/>'+
    '<line x1="'+(x0+G)+'" y1="'+(y0+cut)+'" x2="'+(x0+G)+'" y2="'+(y0+H)+'" stroke="#9AA3C4" stroke-dasharray="4 4"/><line x1="'+(x0+W-G)+'" y1="'+(y0+cut)+'" x2="'+(x0+W-G)+'" y2="'+(y0+H)+'" stroke="#9AA3C4" stroke-dasharray="4 4"/>'+
    ar(x0+G,y0+H+22,x0+W-G,y0+H+22)+tx(x0+W/2,y0+H+44,'En '+w+' cm')+
-   ar(x0,y0+H+22,x0+G,y0+H+22)+ar(x0+W-G,y0+H+22,x0+W,y0+H+22)+tx(x0+G/2,y0+H+62,'Körük '+g)+tx(x0+W-G/2,y0+H+62,g)+
+   (g>0?ar(x0,y0+H+22,x0+G,y0+H+22)+ar(x0+W-G,y0+H+22,x0+W,y0+H+22)+tx(x0+G/2,y0+H+62,'Körük '+g)+tx(x0+W-G/2,y0+H+62,g):'')+
    ar(x0+W+24,y0,x0+W+24,y0+H)+tx(x0+W+44,y0+H/2,'Boy '+h+' cm',true)+'</svg>'}
 function drawBag(){
   var bg=find(BODY,U.color)[1];
-  drawMock($('#ucv'),'atlet',bg,'#1E1E1E',uLayer());
+  if(MID){drawMock($('#ucv'),MID,bg,find(HANDLE,U.kulp)[1],uLayer())}else{$('#ucv').hidden=true;var np=$('#nophoto');np.hidden=false;if(!np._b){np._b=1;np.innerHTML=(IC[PR.icon]?icon(PR.icon,140,'#2B3787'):'')+'<b>Ürün fotoğrafı yakında</b><span>Bu ürünün fotoğrafları eklenecek. Şimdiden teklif alabilirsiniz.</span>'}}
   $('#vlabel').textContent='Önizleme · '+U.color+(U.logoImg?' · Logonuz':U.print!=='yok'?' · '+U.ink+' baskı':'');
   $('#cname').textContent=U.color; $('#inkname').textContent=U.print==='yok'&&!U.logoImg?'Bir renge tıklayın ya da logonuzu yükleyin':U.ink;
   if(!U._b){U._b=1;$('#dots').innerHTML=BODY.map(function(c){return '<button type="button" data-pc="'+c[0]+'" aria-label="Poşet '+c[0]+'" title="'+c[0]+'" style="background:'+c[1]+'"></button>'}).join('');
@@ -516,15 +541,25 @@ function drawBag(){
   Array.prototype.forEach.call(document.querySelectorAll('#dots [data-pc]'),function(b){var on=b.getAttribute('data-pc')===U.color;b.classList.toggle('on',on);b.setAttribute('aria-pressed',on)});
   Array.prototype.forEach.call(document.querySelectorAll('#inks [data-ink]'),function(b){var on=b.getAttribute('data-ink')===U.ink;b.classList.toggle('on',on);b.setAttribute('aria-pressed',on)});
   $('#logoclr').hidden=!U.logoImg;
+  if(MID==='kulplu'){$('#ukulpw').hidden=false;var uk=$('#ukulp');if(!uk._b){uk._b=1;uk.innerHTML=HANDLE.map(function(c){return '<button type="button" data-uk="'+c[0]+'" aria-label="Kulp '+c[0]+'" title="'+c[0]+'" style="background:'+c[1]+'"></button>'}).join('')}
+    Array.prototype.forEach.call(uk.querySelectorAll('[data-uk]'),function(b){var on=b.getAttribute('data-uk')===U.kulp;b.classList.toggle('on',on);b.setAttribute('aria-pressed',on)});$('#kname').textContent=U.kulp}
+  var tip;if(MID==='kulplu')tip=CLASH[U.color+'|'+U.kulp]?U.color+' poşet ile '+U.kulp.toLocaleLowerCase('tr')+' kulp yan yana yorucu durabilir. '+PAIRTXT[U.color]:PAIRTXT[U.color];
+  else if((U.print!=='yok'||U.logoImg)&&!U.logoImg&&cr(bg,find(INKS,U.ink)[1])<2.2){var bi=INKS.slice().sort(function(a,b){return cr(bg,b[1])-cr(bg,a[1])})[0];tip=U.color+' poşet üzerinde '+U.ink.toLocaleLowerCase('tr')+' baskı zor okunur; '+bi[0].toLocaleLowerCase('tr')+' baskı daha net olur.'}
+  else tip=hexL(bg)<.25?U.color+' poşette beyaz ya da açık renkli baskı en iyi okunur.':U.color+' poşette koyu renkli baskı uzaktan net okunur.';
+  $('#utip').innerHTML='<span aria-hidden="true">💡</span>'+esc(tip);
+  if(!MID){$('#ucolors').hidden=true;var tc=$('.tasarla-cta');if(tc)tc.hidden=true;Array.prototype.forEach.call(document.querySelectorAll('[data-gt="renk"],.vtools,#vlabel,.gal .pnote'),function(x){x.hidden=true})}
   $('#olcu').innerHTML=olcuSvg(U.w,U.g,U.h);
-  $('#utasarla').href=ASIST+'?tip=atlet&renk='+encodeURIComponent(U.color);
+  $('#utasarla').href=ASIST+'?tip='+(MID||'atlet')+'&renk='+encodeURIComponent(U.color)+'&kulp='+encodeURIComponent(U.kulp);
   if(U.tab==='renk')drawGrid();
 }
 function drawGrid(){var g=$('#rgrid');if(!g._b){g._b=1;g.innerHTML=BODY.map(function(c){return '<button type="button" data-rg="'+c[0]+'"><canvas></canvas><span>'+c[0]+'</span></button>'}).join('');
-    Array.prototype.forEach.call(g.querySelectorAll('[data-rg]'),function(b){var c=find(BODY,b.getAttribute('data-rg'));drawMock(b.querySelector('canvas'),'atlet',c[1],'#1E1E1E',null)})}
+    Array.prototype.forEach.call(g.querySelectorAll('[data-rg]'),function(b){var c=find(BODY,b.getAttribute('data-rg'));drawMock(b.querySelector('canvas'),MID,c[1],find(HANDLE,U.kulp)[1],null)})}
   Array.prototype.forEach.call(g.querySelectorAll('[data-rg]'),function(b){b.classList.toggle('on',b.getAttribute('data-rg')===U.color)})}
-function setTab(t){U.tab=t;Array.prototype.forEach.call(document.querySelectorAll('[data-gt]'),function(b){var on=b.getAttribute('data-gt')===t;b.classList.toggle('on',on);b.setAttribute('aria-selected',on)});
-  Array.prototype.forEach.call(document.querySelectorAll('[data-gp]'),function(p){p.hidden=p.getAttribute('data-gp')!==t});if(t==='renk')drawGrid()}
+function drawCar(){var c=$('#ucar');if(c._b)return;c._b=1;var w=(PR.works||[]).map(function(x){return '<figure class="cslide sitem"><img src="'+R+'assets/isler/'+x[0]+'" alt="'+esc(x[1]+' için üretilen '+PNAME)+'" draggable="false"><figcaption><b>'+esc(x[1])+'</b> · '+esc(x[2])+'</figcaption></figure>'});
+  w.push('<figure class="cslide sitem soon">'+(IC[PR.icon]?icon(PR.icon,96,'#9AA3C4'):'')+'<figcaption><b>Yeni iş örnekleri</b> · yakında eklenecek</figcaption></figure>');
+  c.innerHTML='<div class="strack">'+w.join('')+'</div><button type="button" class="carbtn sprev2" aria-label="Önceki">‹</button><button type="button" class="carbtn snext" aria-label="Sonraki">›</button>';slider(c)}
+function setTab(t){U.tab=t;if(t==='is')drawCar();Array.prototype.forEach.call(document.querySelectorAll('[data-gt]'),function(b){var on=b.getAttribute('data-gt')===t;b.classList.toggle('on',on);b.setAttribute('aria-selected',on)});
+  Array.prototype.forEach.call(document.querySelectorAll('[data-gp]'),function(p){p.hidden=p.getAttribute('data-gp')!==t});if(t==='renk')drawGrid();if(t==='is'){var c=$('#ucar');c._upd&&c._upd()}}
 function readLogo(file){
   if(!file||!/^image\//.test(file.type))return;
   var fr=new FileReader(); fr.onload=function(){prepLogo(fr.result,function(im,info){U.logoImg=im;U.logoSrc=fr.result;U.file=file.name;if(U.print==='yok')U.print='1';setTab('pv');drawBag();drawForm()})}; fr.readAsDataURL(file);
@@ -533,10 +568,11 @@ $('#logoin').addEventListener('change',function(){readLogo(this.files&&this.file
 $('#logoclr').addEventListener('click',function(){U.logoImg=null;U.logoSrc=null;U.file='';$('#logoin').value='';drawBag();drawForm()});
 $('#utasarla').addEventListener('click',function(){try{if(U.logoSrc)sessionStorage.setItem('eprLogo',U.logoSrc);else sessionStorage.removeItem('eprLogo')}catch(e){}});
 function drawTable(){
-  $('#sztable').innerHTML=SZ.map(function(r){var k=r.length>1,on=U.sel===r[0];return '<tr class="'+(on?'on':'')+'"><td style="font-weight:600">'+r[0]+'</td><td style="font-weight:600">'+(k?r[1]+'+'+r[2]+'+'+r[2]+' x '+r[3]+' cm':'[ÖLÇÜ]')+'</td><td class="muted">'+(k?r[4]:'[KULLANIM]')+'</td><td style="text-align:right"><button type="button" data-sz="'+r[0]+'" style="border-color:'+(on?'#24803A':'#DDE1EA')+'">'+(on?'Seçildi ✓':'Bu ölçüyü seç')+'</button></td></tr>'}).join('');
+  $('#sztable').innerHTML=SZ.map(function(r,i){var on=U.sel===i+1;return '<tr class="'+(on?'on':'')+'"><td style="font-weight:600">'+esc(r[0])+'</td><td style="font-weight:600">'+esc(r[1])+'</td><td class="muted">'+esc(r[2])+'</td><td style="text-align:right"><button type="button" data-sz="'+(i+1)+'" style="border-color:'+(on?'#24803A':'#DDE1EA')+'">'+(on?'Seçildi ✓':'Bu ölçüyü seç')+'</button></td></tr>'}).join('');
 }
+
 function drawSum(){
-  $('#psum').innerHTML=[['Ürün','Atlet Poşet'],['Ölçü',sizeStr(U)],['Zemin',U.color],['Baskı',pname()]].map(function(r){return '<li style="display:flex;justify-content:space-between;margin-bottom:8px"><span style="color:#CDD0EC">'+r[0]+'</span><b style="font-weight:600">'+esc(r[1])+'</b></li>'}).join('');
+  $('#psum').innerHTML=[['Ürün',PNAME],['Ölçü',sizeStr(U)]].concat(MID?[['Poşet rengi',U.color]].concat(MID==='kulplu'?[['Kulp rengi',U.kulp]]:[]):[]).concat([['Baskı',pname()]]).map(function(r){return '<li style="display:flex;justify-content:space-between;margin-bottom:8px"><span style="color:#CDD0EC">'+r[0]+'</span><b style="font-weight:600">'+esc(r[1])+'</b></li>'}).join('');
 }
 function drawForm(){
   var s=U.fs,h='';
@@ -545,7 +581,7 @@ function drawForm(){
   if(s===1){h='<p style="font-weight:600;font-size:14px;margin:0 0 10px">Baskı</p><div class="popts">'+PP.map(function(p){return '<button type="button" data-pp="'+p[0]+'" class="'+(U.print===p[0]?'on':'')+'">'+p[1]+'</button>'}).join('')+'</div><p style="font-weight:600;font-size:14px;margin:22px 0 10px">Zemin rengi</p>'+'<div class="pcolors">'+BODY.map(function(c){var on=U.color===c[0];return '<button type="button" data-pc="'+c[0]+'" class="'+(on?'on':'')+'" aria-pressed="'+on+'" aria-label="'+c[0]+'" title="'+c[0]+'" style="background:'+c[1]+'"></button>'}).join('')+'</div>';
     if(U.print!=='yok'&&false)h+='<label class="drop"><b>'+(U.file?'Yüklendi: '+esc(U.file):'Logonuzu veya tasarımınızı buraya bırakın')+'</b><span class="muted" style="font-size:13px">PDF, AI, PNG veya JPG</span><input type="file" data-file="u"></label>';}
   if(s===2){var e=U.tried;h='<div class="f2"><label class="fld">Ad soyad<em class="req">Zorunlu</em><input data-uin="name" value="'+esc(U.name)+'" class="'+(e&&!U.name.trim()?'err':'')+'"></label><label class="fld">Telefon<em class="req">Zorunlu</em><input type="tel" data-uin="phone" placeholder="05xx xxx xx xx" value="'+esc(U.phone)+'" class="'+(e&&U.phone.trim().length<7?'err':'')+'"></label><label class="fld">Firma<em>İsteğe bağlı</em><input></label><label class="fld">Şehir<em>İsteğe bağlı</em><input></label><label class="fld">Miktar<em>Tahmini yeterli</em><input type="number" placeholder="ör. 5000"></label><div><span style="font-size:14px;font-weight:600;display:block">Birim</span><div class="seg"><button type="button" data-unit="adet" class="'+(U.unit==='adet'?'on':'')+'">Adet</button><button type="button" data-unit="kg" class="'+(U.unit==='kg'?'on':'')+'">Kg</button></div></div><label class="fld full">Eklemek istedikleriniz<em>İsteğe bağlı</em><textarea rows="3"></textarea></label></div>'+(e&&(!U.name.trim()||U.phone.trim().length<7)?'<p class="errmsg" role="alert">Size dönebilmemiz için ad soyad ve telefon gerekli.</p>':'');}
-  if(s===3)h='<div class="ok"><h3 style="font-size:24px;margin-bottom:8px">Teşekkürler, talebiniz alındı.</h3><p class="muted" style="margin:0">Atlet Poşet · '+sizeStr(U)+' · '+U.color+' · '+pname()+'. En kısa sürede size dönüyoruz.</p></div>';
+  if(s===3)h='<div class="ok"><h3 style="font-size:24px;margin-bottom:8px">Teşekkürler, talebiniz alındı.</h3><p class="muted" style="margin:0">'+esc(PNAME)+' · '+sizeStr(U)+' · '+U.color+' · '+pname()+'. En kısa sürede size dönüyoruz.</p></div>';
   if(s<3)h+='<div class="qnav"><button type="button" class="btn ghost" data-unav="back" style="visibility:'+(s===0?'hidden':'visible')+'">← Geri</button><button type="button" class="btn" data-unav="next">'+(s===2?'Teklif iste':'Devam et →')+'</button></div>';
   $('#fbody').innerHTML=h; drawSum();
 }
@@ -556,7 +592,9 @@ pu.addEventListener('click',function(e){
   if(t.hasAttribute('data-rg')){U.color=t.getAttribute('data-rg');setTab('pv');drawBag();drawForm();return}
   if(t.hasAttribute('data-pc')||(t.hasAttribute('data-color')&&pu.contains(t))){U.color=t.getAttribute('data-pc')||t.getAttribute('data-color');drawBag();if(t.closest('#fbody'))drawForm();else drawSum();return}
   if(t.hasAttribute('data-ink')){U.ink=t.getAttribute('data-ink');if(U.print==='yok'&&!U.logoImg)U.print='1';drawBag();if(t.closest('#fbody'))drawForm();else drawSum();return}
-  if(t.hasAttribute('data-sz')){var r=SZ[+t.getAttribute('data-sz')-1];U.sel=r[0];if(r.length>1){U.w=r[1];U.g=r[2];U.h=r[3];U.fs=0;setTab('olcu');$('#olcu').innerHTML=olcuSvg(U.w,U.g,U.h)}drawTable();drawForm();return}
+  if(t.hasAttribute('data-sz')){var i=+t.getAttribute('data-sz'),r=SZ[i-1];U.sel=i;if(r[3]){U.w=r[3][0];U.g=r[3][1];U.h=r[3][2];U.fs=0;setTab('olcu');$('#olcu').innerHTML=olcuSvg(U.w,U.g,U.h)}drawTable();drawForm();return}
+  if(t.hasAttribute('data-uk')){U.kulp=t.getAttribute('data-uk');drawBag();drawSum();return}
+  if(t.hasAttribute('data-cs')){var tr=$('#ucar .strack');tr.scrollBy({left:(+t.getAttribute('data-cs'))*tr.clientWidth,behavior:'smooth'});return}
   if(t.hasAttribute('data-pp')){U.print=t.getAttribute('data-pp');drawBag();drawForm();return}
   if(t.hasAttribute('data-unit')){U.unit=t.getAttribute('data-unit');drawForm();return}
   var n=t.getAttribute('data-unav');
@@ -570,7 +608,7 @@ pu.addEventListener('input',function(e){
 });
 pu.addEventListener('change',function(e){var t=e.target;if(t.getAttribute('data-file')==='u'){var f=t.files&&t.files[0];U.file=f?f.name:'';if(f&&/^image\//.test(f.type))readLogo(f);else drawForm()}});
 var pr=location.search;function qv(k){var m=pr.match(new RegExp('[?&]'+k+'=([^&#]+)'));return m?decodeURIComponent(m[1]):null}
-if(qv('renk')&&find(BODY,qv('renk')))U.color=qv('renk');if(qv('baski')&&find(INKS,qv('baski'))){U.ink=qv('baski');U.print='1'}
+if(qv('renk')&&find(BODY,qv('renk')))U.color=qv('renk');if(!MID&&U.tab!=='is'){}if(qv('baski')&&find(INKS,qv('baski'))){U.ink=qv('baski');U.print='1'}
 drawBag();drawTable();drawForm();
 }
 })();

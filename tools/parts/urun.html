@@ -1,5 +1,5 @@
 <main id="pg-urun">
-  <nav class="wrap crumb" aria-label="Sayfa yolu"><a href="{{HOME}}">Ana sayfa</a> › <a href="{{HOME}}#urunler">Ürünler</a> › <a href="{{HOME}}#urunler">Mağaza Ambalajları</a> › <span aria-current="page" style="color:var(--ink);font-weight:600">Atlet Poşet</span></nav>
+  <nav class="wrap crumb" aria-label="Sayfa yolu"><a href="{{HOME}}">Ana sayfa</a> › <a href="{{HOME}}#urunler">Ürünler</a> › <a href="{{HOME}}#urunler">{{P_CAT}}</a> › <span aria-current="page" style="color:var(--ink);font-weight:600">{{P_NAME}}</span></nav>
   <section class="wrap ptop">
     <div class="gal">
       <div class="gtabs" role="tablist" aria-label="Ürün görselleri">
@@ -11,7 +11,8 @@
       <div class="viewer" id="viewer">
         <div class="gp" data-gp="pv">
           <span class="vlabel" id="vlabel">Önizleme · Beyaz</span>
-          <canvas id="ucv" role="img" aria-label="Atlet poşet önizlemesi"></canvas>
+          <canvas id="ucv" role="img" aria-label="{{P_NAME}} önizlemesi"></canvas>
+          <div class="nophoto" id="nophoto" hidden></div>
           <div class="vtools">
             <label class="chipb">⬆ Logonuzu deneyin<input type="file" accept="image/*" id="logoin" aria-label="Logo yükle"></label>
             <button type="button" class="chipb" id="logoclr" hidden>Logoyu kaldır</button>
@@ -19,42 +20,40 @@
         </div>
         <div class="gp" data-gp="olcu" hidden><div id="olcu" style="width:100%;max-width:440px"></div></div>
         <div class="gp" data-gp="renk" hidden><div class="rgrid" id="rgrid"></div></div>
-        <div class="gp" data-gp="is" hidden>
-          <figure class="isfig"><img src="{{R}}assets/isler/atlet-sari.webp" alt="ŞOK Market için üretilen sarı zeminli, 2 renk baskılı atlet poşet" loading="lazy"><figcaption><b>ŞOK Market</b> · Sarı zemin, 2 renk baskı</figcaption></figure>
-        </div>
+        <div class="gp" data-gp="is" hidden><div class="car" id="ucar"></div></div>
       </div>
       <div class="tasarla-cta">
         <div><b>Yazılarınızı ekleyin, yerini ayarlayın</b><span>Firma adı, telefon, adres, yazı tipi ve renkleri tasarım aracında.</span></div>
-        <a class="btn" id="utasarla" href="{{R}}poset-asistani/?tip=atlet">Bu poşeti tasarla →</a>
+        <a class="btn" id="utasarla" href="{{R}}poset-asistani/">Bu poşeti tasarla →</a>
       </div>
-      <p class="muted" style="font-size:13px;margin:10px 4px 0">Önizleme temsilidir; gerçek renk ve baskı tonu numune ile onaylanır.</p>
+      {{NOTICE}}
     </div>
     <div class="pinfo">
-      <div><span class="tag" style="background:#E8F3E3;color:#1C6A30">Gıdaya uygun</span><span class="tag" style="background:#E6EAF7;color:#2B3787">Özel ölçü</span><span class="tag" style="background:#F3EFE6;color:#6A4B12">Baskılı yapılabilir</span></div>
-      <h1 style="font-size:46px;margin:10px 0 14px">Atlet Poşet</h1>
-      <p class="muted" style="font-size:17px;margin:0 0 18px">Körüklü yapısı sayesinde geniş iç hacim sunan, marketten butiğe en çok kullanılan poşet. Farklı hammaddelerle üretilir; logonuzla basıldığında her alışverişte markanızı taşır.</p>
+      <div>{{P_TAGS}}</div>
+      <h1 style="font-size:46px;margin:10px 0 14px">{{P_NAME}}</h1>
+      <p class="muted" style="font-size:17px;margin:0 0 18px">{{P_DESC}}</p>
+      <div id="ucolors">
       <p style="font-weight:600;font-size:14px;margin:0 0 10px">Poşet rengi: <span class="muted" id="cname"></span></p>
       <div class="pcolors" id="dots"></div>
+      <div id="ukulpw" hidden><p style="font-weight:600;font-size:14px;margin:6px 0 10px">Kulp rengi: <span class="muted" id="kname"></span></p>
+      <div class="pcolors" id="ukulp"></div></div>
       <p style="font-weight:600;font-size:14px;margin:6px 0 10px">Baskı rengi: <span class="muted" id="inkname"></span></p>
       <div class="pcolors" id="inks"></div>
-      <div class="facts">
-        <div><span>Standart ölçü</span><b>6 seçenek + özel ölçü</b></div>
-        <div><span>Baskı</span><b>Baskısız · 1–3 renk · CMYK</b></div>
-        <div><span>Gıda belgesi</span><b>TR-34-K-282635</b></div>
-        <div><span>Varyantlar</span><b>Küçük · Battal · Dökme · Eczane</b></div>
+      <p class="dtip" id="utip" aria-live="polite" style="min-height:0;margin:4px 0 14px"></p>
       </div>
+      <div class="facts">{{P_FACTS}}</div>
       <a class="btn" href="#teklif" style="margin:0 10px 10px 0">Bu üründen teklif al</a><a class="btn ghost" href="https://wa.me/905357183598">WhatsApp'tan sor</a>
     </div>
   </section>
 
-  <section style="background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line)">
+  <section id="olcusec" style="background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line)">
     <div class="wrap" style="padding-top:56px;padding-bottom:56px">
       <div class="row" style="justify-content:space-between;align-items:flex-end;margin-bottom:16px">
         <h2 style="font-size:30px;margin-bottom:8px">Standart ölçüler</h2>
         <p class="muted" style="font-size:14px">Ölçü formatı: en + körük + körük × boy (cm). Bir ölçü seçin, teklif formuna aktarılsın.</p>
       </div>
       <div style="overflow-x:auto"><table class="sz"><thead><tr><th>No</th><th>Ölçü</th><th>Tipik kullanım</th><th></th></tr></thead><tbody id="sztable"></tbody></table></div>
-      <p class="muted" style="font-size:13px;margin:12px 0 0">2–5 numaralı ölçüler ve kullanım notları mevcut SSS içeriğinden aktarılacak.</p>
+      <p class="muted" style="font-size:13px;margin:12px 0 0">{{P_SIZENOTE}}</p>
     </div>
   </section>
 
@@ -81,11 +80,7 @@
   </section>
 
   <section class="wrap" style="padding-bottom:72px">
-    <h2 style="font-size:26px;margin-bottom:18px">Mağaza ambalajlarında diğer ürünler</h2>
-    <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(240px,1fr))">
-      <a class="card" href="{{R}}urunler/magaza-ambalajlari/atlet-poset/" style="text-decoration:none;color:var(--ink)"><b style="font-family:'Plus Jakarta Sans',Inter,sans-serif;font-size:19px">El Geçmeli Poşet</b><p class="muted" style="margin:6px 0 0;font-size:14px">Butik ve giyim mağazaları için</p></a>
-      <a class="card" href="{{R}}urunler/magaza-ambalajlari/atlet-poset/" style="text-decoration:none;color:var(--ink)"><b style="font-family:'Plus Jakarta Sans',Inter,sans-serif;font-size:19px">Kulplu Poşet</b><p class="muted" style="margin:6px 0 0;font-size:14px">Ayakkabı kutusu ve tekstil için</p></a>
-      <a class="card" href="{{R}}urunler/magaza-ambalajlari/atlet-poset/" style="text-decoration:none;color:var(--ink)"><b style="font-family:'Plus Jakarta Sans',Inter,sans-serif;font-size:19px">Kargo Poşeti</b><p class="muted" style="margin:6px 0 0;font-size:14px">E-ticaret gönderileri için</p></a>
-    </div>
+    <h2 style="font-size:26px;margin-bottom:18px">{{P_CATSHORT}} ambalajlarında diğer ürünler</h2>
+    <div class="grid" style="grid-template-columns:repeat(auto-fill,minmax(220px,1fr))">{{P_RELATED}}</div>
   </section>
 </main>

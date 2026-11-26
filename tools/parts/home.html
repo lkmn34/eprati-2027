@@ -66,6 +66,7 @@
           <a class="btn" id="dgo" href="{{R}}urunler/magaza-ambalajlari/atlet-poset/" style="margin:0 10px 10px 0">Bu tasarımla devam et →</a>
           <a class="btn ghost" href="{{R}}urunler/magaza-ambalajlari/atlet-poset/">Ürünleri incele</a>
         </div>
+        {{NOTICE}}
         <p class="muted" style="font-size:13px;margin:8px 0 0">Logonuz yalnızca tarayıcınızda gösterilir, hiçbir yere yüklenmez.</p>
       </div>
     </div>
@@ -74,7 +75,8 @@
 
 <section id="urunler" style="background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line)">
   <div class="wrap sec">
-    <span class="eyebrow">ÜRÜN GRUPLARI</span><h2 class="h2">24 ürün, 4 ana grup</h2>
+    <div class="row" style="justify-content:space-between;align-items:flex-end"><div><span class="eyebrow">ÜRÜN GRUPLARI</span><h2 class="h2">24 ürün, 4 ana grup</h2></div>
+    <a class="katlink" href="https://eprati.com/wp-content/uploads/2022/12/EPRAT%C4%B0-PLAST%C4%B0K-%C3%9CR%C3%9CN-KATALO%C4%9EU-2022.pdf" target="_blank" rel="noopener"><svg width="34" height="42" viewBox="0 0 34 42" aria-hidden="true"><path d="M2 2h22l8 8v30H2z" fill="#fff" stroke="#2B3787" stroke-width="2"/><path d="M24 2v8h8" fill="none" stroke="#2B3787" stroke-width="2"/><rect x="6" y="24" width="22" height="10" rx="2" fill="#C62828"/><text x="17" y="32" text-anchor="middle" font-family="Inter,Arial" font-size="7" font-weight="800" fill="#fff">PDF</text></svg><span><b>Ürün kataloğu</b><small>Tüm ürünler tek dosyada · İndir</small></span></a></div>
     <div class="grid" id="cats" style="grid-template-columns:repeat(auto-fit,minmax(260px,1fr));grid-gap:16px"></div>
   </div>
 
@@ -131,7 +133,8 @@
       <div><span class="eyebrow">ÖRNEK İŞLER</span><h2 class="h2">Her poşet tipinde markanızı taşıyoruz</h2></div>
       <p class="muted" style="max-width:440px;margin-bottom:24px">Müşterilerimiz için ürettiğimiz poşetlerden örnekler.</p>
     </div>
-    <div class="works" id="works"></div>
+    <div class="sl" id="workslider"><div class="strack" id="works"></div>
+      <div class="slnav"><button type="button" class="carbtn sprev2" aria-label="Önceki işler">‹</button><button type="button" class="carbtn snext" aria-label="Sonraki işler">›</button></div></div>
   </div>
 </section>
 
@@ -157,24 +160,6 @@
   </div>
 </section>
 
-<section class="wrap" style="padding-top:8px">
-    <div class="catalog">
-      <div class="cover" aria-hidden="true">
-        <div class="cv">
-          <img src="{{R}}logo-beyaz.svg" alt="" width="120">
-          <div class="cvt">ÜRÜN<br>KATALOĞU</div>
-          <div class="cvi" id="cvicons"></div>
-          <div class="cvf">Poşet ve ambalaj</div>
-        </div>
-      </div>
-      <div class="ctx">
-        <span class="eyebrow">ÜRÜN KATALOĞU</span>
-        <h3>Ürün kataloğumuzu inceleyin</h3>
-        <p class="muted">Mağaza, gıda, tekstil ve endüstriyel ambalaj ürünlerimizi tek dosyada görün; ekibinizle paylaşın ya da çıktı alın.</p>
-        <div class="row" style="align-items:center"><a class="btn" href="https://eprati.com/wp-content/uploads/2022/12/EPRAT%C4%B0-PLAST%C4%B0K-%C3%9CR%C3%9CN-KATALO%C4%9EU-2022.pdf" target="_blank" rel="noopener" style="margin:0 14px 10px 0"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true" style="margin-right:8px"><path d="M12 4v12M6 11l6 6 6-6M5 20h14"/></svg>Kataloğu indir</a><span class="muted" style="font-size:13px;margin-bottom:10px">PDF</span></div>
-      </div>
-    </div>
-</section>
 
 <section class="wrap sec" id="iletisim">
   <div class="cta">
