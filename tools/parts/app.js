@@ -132,8 +132,6 @@ var cc=$('#countries');
 ['mouseover','focusin'].forEach(function(ev){cc.addEventListener(ev,function(e){var b=e.target.closest('[data-p]');if(b)hl(b.getAttribute('data-p'),true)})});
 ['mouseout','focusout'].forEach(function(ev){cc.addEventListener(ev,function(e){var b=e.target.closest('[data-p]');if(b)hl(b.getAttribute('data-p'),false)})});
 cc.addEventListener('click',function(e){var b=e.target.closest('[data-p]');if(!b)return;Array.prototype.forEach.call(document.querySelectorAll('.pin.on'),function(x){x.classList.remove('on')});hl(b.getAttribute('data-p'),true)});
-/* hero: yüzen poşetler */
-[['#fb1','#FFFFFF',true],['#fb2','#F6D34A',true],['#fb3','#5FAE6E',false]].forEach(function(b){var el=$(b[0]);if(el)el.innerHTML=bagRender(b[1],false,'#2B3787',null,b[2])});
 /* poşetinizi tasarlayın */
 var D={color:'Beyaz',ink:'Lacivert',logo:null};
 function drawD(){
