@@ -401,3 +401,8 @@ img{max-width:100%}
 .sprev{background:#fff;border-radius:16px;padding:14px;margin-bottom:16px;display:flex;justify-content:center}
 .sprev canvas{max-height:220px}
 @media(max-width:860px){.pvwrap{grid-template-columns:1fr}.pv{min-height:0}.pv canvas{max-height:320px}}
+
+.ptx .f2{grid-gap:10px}
+.ptx label.fld{font-size:13px}.ptx label.fld input{min-height:46px;font-size:15px}
+.pcolors button.autoink{background:conic-gradient(#2B3787 0 33%,#1E1E1E 0 66%,#fff 0);color:#fff;font:700 12px Inter,sans-serif;text-shadow:0 0 3px #000}
+@media(min-width:861px){.pv{position:sticky;top:112px}}
