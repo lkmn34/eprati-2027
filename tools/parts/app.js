@@ -81,7 +81,7 @@ function swatches(cur){return '<div class="swatches">'+COLS.map(function(c){retu
 
 function sizeStr(o){return o.w+'+'+o.g+'+'+o.g+' x '+o.h+' cm'}
 var PHOTOS={atlet:null};
-var INKS=[['Lacivert','#2B3787'],['Siyah','#1E1E1E'],['Kırmızı','#C62828'],['Yeşil','#2E7D32'],['Mavi','#1565C0'],['Altın','#B08A2E']];
+var INKS=[['Lacivert','#2B3787'],['Siyah','#1E1E1E'],['Beyaz','#FFFFFF'],['Kırmızı','#C62828'],['Yeşil','#2E7D32'],['Mavi','#1565C0'],['Altın','#B08A2E']];
 var BAG='M40 30Q40 18 52 18L88 18Q96 18 96 30L96 92Q96 128 150 128Q204 128 204 92L204 30Q204 18 212 18L248 18Q260 18 260 30L265 352Q265 368 249 368L51 368Q35 368 35 352Z';
 function bagRender(hex,clear,ink,logo,showPrint){
   if(PHOTOS.atlet){ // gerçek fotoğraf modu
@@ -148,7 +148,7 @@ if('IntersectionObserver' in window&&!calm){
 (function(){var qt=$('#qtab'),qp=$('#qpop');if(!qt||!qp)return;
   var hero=$('.asist'),closed=false;try{closed=sessionStorage.getItem('eprQ')==='0'}catch(e){}
   function open(v){qp.classList.toggle('show',v);qt.setAttribute('aria-expanded',v);qt.classList.toggle('hide',v);if(window.innerWidth<=760)document.documentElement.style.overflow=v?'hidden':''}
-  function vis(){var past=!hero||hero.getBoundingClientRect().bottom<0;qt.classList.toggle('in',past);if(window.innerWidth>760){if(!past){qp.classList.remove('show');qt.classList.remove('hide')}else if(!closed&&!qp.classList.contains('show')&&!qp._shown){qp._shown=1;open(true)}}}
+  function vis(){var past=!hero||hero.getBoundingClientRect().bottom<0;qt.classList.toggle('in',past);if(window.innerWidth>760){if(!past){qp.classList.remove('show');qt.classList.remove('hide')}else if(!closed&&window.innerWidth>=1880&&!qp.classList.contains('show')&&!qp._shown){qp._shown=1;open(true)}}}
   qt.addEventListener('click',function(){open(true)});
   document.addEventListener('click',function(e){if(e.target.closest&&e.target.closest('[data-qclose]')){open(false);closed=true;try{sessionStorage.setItem('eprQ','0')}catch(x){}}});
   document.addEventListener('keydown',function(e){if(e.key==='Escape'&&qp.classList.contains('show'))open(false)});
@@ -252,7 +252,7 @@ function drawD(){var bg=find(BODY,D.color)[1];
     $('#dtype').innerHTML=DTYPES.map(function(t){return '<button type="button" role="tab" data-dt="'+t[0]+'">'+t[1]+'</button>'}).join('');
     $('#dcol').innerHTML=dSw(BODY,'','data-dc','Poşet');$('#dkulp').innerHTML=dSw(HANDLE,'','data-dk','Kulp');$('#dink').innerHTML=dSw(INKS,'','data-di','Baskı')}
   dMark($('#dtype'),'data-dt',D.type);dMark($('#dcol'),'data-dc',D.color);dMark($('#dkulp'),'data-dk',D.kulp);dMark($('#dink'),'data-di',D.ink);
-  $('#dcname').textContent='· '+D.color;$('#dkulpw').style.visibility=D.type==='kulplu'?'visible':'hidden';$('#dkname').textContent='· '+D.kulp;
+  $('#dcname').textContent='· '+D.color;$('#dkulpw').style.display=D.type==='kulplu'?'':'none';$('#dkname').textContent='· '+D.kulp;
   $('#dinkw').style.display=D.logoImg?'none':'';$('#diname').textContent='· '+D.ink;
   dTip();
   $('#dgo').href=ASIST+'?tip='+D.type+'&renk='+encodeURIComponent(D.color)+'&kulp='+encodeURIComponent(D.kulp);
