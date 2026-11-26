@@ -21,7 +21,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../../../assets/site.css?v=1795694776">
+<link rel="stylesheet" href="../../../assets/site.css?v=1795696290">
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Ana sayfa", "item": "https://lkmn34.github.io/eprati-2027/"}, {"@type": "ListItem", "position": 2, "name": "Ürünler", "item": "https://lkmn34.github.io/eprati-2027/#urunler"}, {"@type": "ListItem", "position": 3, "name": "Mağaza Ambalajları", "item": "https://lkmn34.github.io/eprati-2027/#urunler"}, {"@type": "ListItem", "position": 4, "name": "Atlet Poşet", "item": "https://lkmn34.github.io/eprati-2027/urunler/magaza-ambalajlari/atlet-poset/"}]}</script>
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Product", "name": "Atlet Poşet", "category": "Mağaza Ambalajları", "description": "Körüklü yapısıyla geniş iç hacim sunan, baskılı veya baskısız üretilebilen atlet poşet. Özel ölçü ve gıdaya uygun üretim.", "brand": {"@type": "Brand", "name": "Eprati"}, "manufacturer": {"@id": "https://lkmn34.github.io/eprati-2027/#org"}, "image": "https://lkmn34.github.io/eprati-2027/logo.svg", "url": "https://lkmn34.github.io/eprati-2027/urunler/magaza-ambalajlari/atlet-poset/"}</script>
 </head>
@@ -55,22 +55,38 @@
   <nav class="wrap crumb" aria-label="Sayfa yolu"><a href="../../../">Ana sayfa</a> › <a href="../../../#urunler">Ürünler</a> › <a href="../../../#urunler">Mağaza Ambalajları</a> › <span aria-current="page" style="color:var(--ink);font-weight:600">Atlet Poşet</span></nav>
   <section class="wrap ptop">
     <div class="gal">
+      <div class="gtabs" role="tablist" aria-label="Ürün görselleri">
+        <button type="button" role="tab" data-gt="pv" aria-selected="true" class="on">Önizleme</button>
+        <button type="button" role="tab" data-gt="olcu" aria-selected="false">Ölçü görseli</button>
+        <button type="button" role="tab" data-gt="renk" aria-selected="false">Renk skalası</button>
+        <button type="button" role="tab" data-gt="is" aria-selected="false">İş örnekleri</button>
+      </div>
       <div class="viewer" id="viewer">
-        <span class="vlabel" id="vlabel">Önizleme · Beyaz</span>
-        <div id="bagstage" style="width:300px;height:380px;position:relative"></div>
-        <div class="vtools">
-          <label class="chipb">⬆ Logonuzu poşette deneyin<input type="file" accept="image/*" id="logoin" aria-label="Logo yükle"></label>
-          <button type="button" class="chipb" id="logoclr" hidden>Logoyu kaldır</button>
+        <div class="gp" data-gp="pv">
+          <span class="vlabel" id="vlabel">Önizleme · Beyaz</span>
+          <canvas id="ucv" role="img" aria-label="Atlet poşet önizlemesi"></canvas>
+          <div class="vtools">
+            <label class="chipb">⬆ Logonuzu deneyin<input type="file" accept="image/*" id="logoin" aria-label="Logo yükle"></label>
+            <button type="button" class="chipb" id="logoclr" hidden>Logoyu kaldır</button>
+          </div>
+        </div>
+        <div class="gp" data-gp="olcu" hidden><div id="olcu" style="width:100%;max-width:440px"></div></div>
+        <div class="gp" data-gp="renk" hidden><div class="rgrid" id="rgrid"></div></div>
+        <div class="gp" data-gp="is" hidden>
+          <figure class="isfig"><img src="../../../assets/isler/atlet-sari.webp" alt="ŞOK Market için üretilen sarı zeminli, 2 renk baskılı atlet poşet" loading="lazy"><figcaption><b>ŞOK Market</b> · Sarı zemin, 2 renk baskı</figcaption></figure>
         </div>
       </div>
+      <div class="tasarla-cta">
+        <div><b>Yazılarınızı ekleyin, yerini ayarlayın</b><span>Firma adı, telefon, adres, yazı tipi ve renkleri tasarım aracında.</span></div>
+        <a class="btn" id="utasarla" href="../../../poset-asistani/?tip=atlet">Bu poşeti tasarla →</a>
+      </div>
       <p class="muted" style="font-size:13px;margin:10px 4px 0">Önizleme temsilidir; gerçek renk ve baskı tonu numune ile onaylanır.</p>
-      <div class="thumbs"><span class="on">Önizleme</span><span>Ölçü görseli</span><span>Renk skalası</span><span>İş örnekleri</span></div>
     </div>
     <div class="pinfo">
       <div><span class="tag" style="background:#E8F3E3;color:#1C6A30">Gıdaya uygun</span><span class="tag" style="background:#E6EAF7;color:#2B3787">Özel ölçü</span><span class="tag" style="background:#F3EFE6;color:#6A4B12">Baskılı yapılabilir</span></div>
       <h1 style="font-size:46px;margin:10px 0 14px">Atlet Poşet</h1>
       <p class="muted" style="font-size:17px;margin:0 0 18px">Körüklü yapısı sayesinde geniş iç hacim sunan, marketten butiğe en çok kullanılan poşet. Farklı hammaddelerle üretilir; logonuzla basıldığında her alışverişte markanızı taşır.</p>
-      <p style="font-weight:600;font-size:14px;margin:0 0 10px">Zemin rengi: <span class="muted" id="cname"></span></p>
+      <p style="font-weight:600;font-size:14px;margin:0 0 10px">Poşet rengi: <span class="muted" id="cname"></span></p>
       <div class="pcolors" id="dots"></div>
       <p style="font-weight:600;font-size:14px;margin:6px 0 10px">Baskı rengi: <span class="muted" id="inkname"></span></p>
       <div class="pcolors" id="inks"></div>
@@ -149,6 +165,6 @@
   <a class="btn" href="../../../poset-asistani/">Asistanı başlat →</a>
   <div class="qalt"><a href="tel:+902126516669">0212 651 66 69</a><a href="https://wa.me/905357183598">WhatsApp</a></div>
 </div><div class="qbg" data-qclose></div>
-<script src="../../../assets/app.js?v=1795694776" defer></script>
+<script src="../../../assets/app.js?v=1795696290" defer></script>
 </body>
 </html>

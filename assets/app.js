@@ -493,23 +493,45 @@ function pname(){return find(PP,U.print)[1]}
    Gerçek fotoğraf gelince: beyaz poşetin şeffaf zeminli PNG fotoğrafı PHOTOS'a eklenir,
    örn. PHOTOS.atlet='urunler/atlet-beyaz.png'. Renk, fotoğrafın üzerine "multiply" ile
    ve fotoğrafın kendi şekli maske olarak kullanılarak boyanır; kırışıklık ve gölgeler korunur. */
-U.ink='Lacivert'; U.logo=null;
+U.ink='Lacivert'; U.logoImg=null; U.logoSrc=null; U.tab='pv';
+function uLayer(){if(U.logoImg)return [{c:U.logoImg,k:'logo'}];if(U.print!=='yok')return [{c:placeholderLogo(find(INKS,U.ink)[1]),k:'logo'}];return null}
+function olcuSvg(w,g,h){var sc=Math.min(260/(w+2*g),300/h),W=(w+2*g)*sc,H=h*sc,G=g*sc,x0=(440-W)/2,y0=40,hw=W*.17,cut=Math.min(H*.32,W*.42);
+  var path='M'+x0+' '+(y0+H)+'V'+y0+'h'+hw+'v'+(cut*.45)+'q0 '+(cut*.55)+' '+(W/2-hw)+' '+(cut*.55)+'q'+(W/2-hw)+' 0 '+(W/2-hw)+' '+(-cut*.55)+'V'+y0+'h'+hw+'V'+(y0+H)+'Z';
+  function ar(x1,y1,x2,y2){return '<line x1="'+x1+'" y1="'+y1+'" x2="'+x2+'" y2="'+y2+'" stroke="#2B3787" stroke-width="1.5" marker-start="url(#ah)" marker-end="url(#ah)"/>'}
+  function tx(x,y,t,rot){return '<text x="'+x+'" y="'+y+'" text-anchor="middle" font-family="Inter,sans-serif" font-size="14" font-weight="700" fill="#2B3787"'+(rot?' transform="rotate(-90 '+x+' '+y+')"':'')+'>'+t+'</text>'}
+  return '<svg viewBox="0 0 440 '+(y0+H+70)+'" width="100%" role="img" aria-label="Ölçü çizimi: en '+w+' cm, körük '+g+' cm, boy '+h+' cm"><defs><marker id="ah" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 1L9 5L0 9z" fill="#2B3787"/></marker></defs>'+
+   '<path d="'+path+'" fill="#F4F6FB" stroke="#191B45" stroke-width="2" stroke-linejoin="round"/>'+
+   '<rect x="'+x0+'" y="'+(y0+cut)+'" width="'+G+'" height="'+(H-cut)+'" fill="#E2E7F3"/><rect x="'+(x0+W-G)+'" y="'+(y0+cut)+'" width="'+G+'" height="'+(H-cut)+'" fill="#E2E7F3"/>'+
+   '<line x1="'+(x0+G)+'" y1="'+(y0+cut)+'" x2="'+(x0+G)+'" y2="'+(y0+H)+'" stroke="#9AA3C4" stroke-dasharray="4 4"/><line x1="'+(x0+W-G)+'" y1="'+(y0+cut)+'" x2="'+(x0+W-G)+'" y2="'+(y0+H)+'" stroke="#9AA3C4" stroke-dasharray="4 4"/>'+
+   ar(x0+G,y0+H+22,x0+W-G,y0+H+22)+tx(x0+W/2,y0+H+44,'En '+w+' cm')+
+   ar(x0,y0+H+22,x0+G,y0+H+22)+ar(x0+W-G,y0+H+22,x0+W,y0+H+22)+tx(x0+G/2,y0+H+62,'Körük '+g)+tx(x0+W-G/2,y0+H+62,g)+
+   ar(x0+W+24,y0,x0+W+24,y0+H)+tx(x0+W+44,y0+H/2,'Boy '+h+' cm',true)+'</svg>'}
 function drawBag(){
-  var hex=find(COLS,U.color)[1], ink=find(INKS,U.ink)[1];
-  $('#bagstage').innerHTML=bagRender(hex,U.color==='Şeffaf',ink,U.logo,U.print!=='yok');
-  $('#viewer').className='viewer'+(U.color==='Şeffaf'?' checker':'');
-  $('#vlabel').textContent='Önizleme · '+U.color+(U.logo?' · Logonuz':U.print!=='yok'?' · '+U.ink+' baskı':'');
-  $('#cname').textContent=U.color; $('#inkname').textContent=U.print==='yok'&&!U.logo?'Önce baskı türü seçin (aşağıda) ya da logonuzu yükleyin':U.ink;
-  $('#dots').innerHTML=COLS.map(function(c){return '<button type="button" data-pc="'+c[0]+'" class="'+(U.color===c[0]?'on':'')+'" aria-label="Zemin '+c[0]+'" aria-pressed="'+(U.color===c[0])+'" title="'+c[0]+'" style="background:'+c[1]+'"></button>'}).join('');
-  $('#inks').innerHTML=INKS.map(function(c){return '<button type="button" data-ink="'+c[0]+'" class="'+(U.ink===c[0]?'on':'')+'" aria-label="Baskı '+c[0]+'" aria-pressed="'+(U.ink===c[0])+'" title="'+c[0]+'" style="background:'+c[1]+'"></button>'}).join('');
-  $('#logoclr').hidden=!U.logo;
+  var bg=find(BODY,U.color)[1];
+  drawMock($('#ucv'),'atlet',bg,'#1E1E1E',uLayer());
+  $('#vlabel').textContent='Önizleme · '+U.color+(U.logoImg?' · Logonuz':U.print!=='yok'?' · '+U.ink+' baskı':'');
+  $('#cname').textContent=U.color; $('#inkname').textContent=U.print==='yok'&&!U.logoImg?'Bir renge tıklayın ya da logonuzu yükleyin':U.ink;
+  if(!U._b){U._b=1;$('#dots').innerHTML=BODY.map(function(c){return '<button type="button" data-pc="'+c[0]+'" aria-label="Poşet '+c[0]+'" title="'+c[0]+'" style="background:'+c[1]+'"></button>'}).join('');
+    $('#inks').innerHTML=INKS.map(function(c){return '<button type="button" data-ink="'+c[0]+'" aria-label="Baskı '+c[0]+'" title="'+c[0]+'" style="background:'+c[1]+'"></button>'}).join('')}
+  Array.prototype.forEach.call(document.querySelectorAll('#dots [data-pc]'),function(b){var on=b.getAttribute('data-pc')===U.color;b.classList.toggle('on',on);b.setAttribute('aria-pressed',on)});
+  Array.prototype.forEach.call(document.querySelectorAll('#inks [data-ink]'),function(b){var on=b.getAttribute('data-ink')===U.ink;b.classList.toggle('on',on);b.setAttribute('aria-pressed',on)});
+  $('#logoclr').hidden=!U.logoImg;
+  $('#olcu').innerHTML=olcuSvg(U.w,U.g,U.h);
+  $('#utasarla').href=ASIST+'?tip=atlet&renk='+encodeURIComponent(U.color);
+  if(U.tab==='renk')drawGrid();
 }
+function drawGrid(){var g=$('#rgrid');if(!g._b){g._b=1;g.innerHTML=BODY.map(function(c){return '<button type="button" data-rg="'+c[0]+'"><canvas></canvas><span>'+c[0]+'</span></button>'}).join('');
+    Array.prototype.forEach.call(g.querySelectorAll('[data-rg]'),function(b){var c=find(BODY,b.getAttribute('data-rg'));drawMock(b.querySelector('canvas'),'atlet',c[1],'#1E1E1E',null)})}
+  Array.prototype.forEach.call(g.querySelectorAll('[data-rg]'),function(b){b.classList.toggle('on',b.getAttribute('data-rg')===U.color)})}
+function setTab(t){U.tab=t;Array.prototype.forEach.call(document.querySelectorAll('[data-gt]'),function(b){var on=b.getAttribute('data-gt')===t;b.classList.toggle('on',on);b.setAttribute('aria-selected',on)});
+  Array.prototype.forEach.call(document.querySelectorAll('[data-gp]'),function(p){p.hidden=p.getAttribute('data-gp')!==t});if(t==='renk')drawGrid()}
 function readLogo(file){
   if(!file||!/^image\//.test(file.type))return;
-  var fr=new FileReader(); fr.onload=function(){U.logo=fr.result;U.file=file.name;if(U.print==='yok')U.print='1';drawBag();drawForm()}; fr.readAsDataURL(file);
+  var fr=new FileReader(); fr.onload=function(){prepLogo(fr.result,function(im,info){U.logoImg=im;U.logoSrc=fr.result;U.file=file.name;if(U.print==='yok')U.print='1';setTab('pv');drawBag();drawForm()})}; fr.readAsDataURL(file);
 }
 $('#logoin').addEventListener('change',function(){readLogo(this.files&&this.files[0])});
-$('#logoclr').addEventListener('click',function(){U.logo=null;U.file='';$('#logoin').value='';drawBag();drawForm()});
+$('#logoclr').addEventListener('click',function(){U.logoImg=null;U.logoSrc=null;U.file='';$('#logoin').value='';drawBag();drawForm()});
+$('#utasarla').addEventListener('click',function(){try{if(U.logoSrc)sessionStorage.setItem('eprLogo',U.logoSrc);else sessionStorage.removeItem('eprLogo')}catch(e){}});
 function drawTable(){
   $('#sztable').innerHTML=SZ.map(function(r){var k=r.length>1,on=U.sel===r[0];return '<tr class="'+(on?'on':'')+'"><td style="font-weight:600">'+r[0]+'</td><td style="font-weight:600">'+(k?r[1]+'+'+r[2]+'+'+r[2]+' x '+r[3]+' cm':'[ÖLÇÜ]')+'</td><td class="muted">'+(k?r[4]:'[KULLANIM]')+'</td><td style="text-align:right"><button type="button" data-sz="'+r[0]+'" style="border-color:'+(on?'#24803A':'#DDE1EA')+'">'+(on?'Seçildi ✓':'Bu ölçüyü seç')+'</button></td></tr>'}).join('');
 }
@@ -520,8 +542,8 @@ function drawForm(){
   var s=U.fs,h='';
   $('#fsteps').innerHTML=['Ölçü','Renk ve baskı','İletişim'].map(function(l,i){return '<li class="'+(i<s?'done':i===s?'cur':'')+'"><span></span>'+(i+1)+'. '+l+'</li>'}).join('');
   if(s===0)h='<div class="dims" style="margin-top:0;background:#fff;padding:0"><div class="f3"><label class="fld">En (cm)<input type="number" data-ud="w" value="'+U.w+'"></label><label class="fld">Körük (cm)<input type="number" data-ud="g" value="'+U.g+'"></label><label class="fld">Boy (cm)<input type="number" data-ud="h" value="'+U.h+'"></label><p class="muted full" style="font-size:13px;margin:0">Seçili ölçü: <b style="color:#191B45" id="ustr">'+sizeStr(U)+'</b>. Körük, poşetin yanlardaki kıvrımıdır.</p></div><div id="udim">'+dimSvg(U.w,U.g,U.h,sizeStr(U))+'</div></div>';
-  if(s===1){h='<p style="font-weight:600;font-size:14px;margin:0 0 10px">Baskı</p><div class="popts">'+PP.map(function(p){return '<button type="button" data-pp="'+p[0]+'" class="'+(U.print===p[0]?'on':'')+'">'+p[1]+'</button>'}).join('')+'</div><p style="font-weight:600;font-size:14px;margin:22px 0 10px">Zemin rengi</p>'+swatches(U.color);
-    if(U.print!=='yok')h+='<label class="drop"><b>'+(U.file?'Yüklendi: '+esc(U.file):'Logonuzu veya tasarımınızı buraya bırakın')+'</b><span class="muted" style="font-size:13px">PDF, AI, PNG veya JPG</span><input type="file" data-file="u"></label>';}
+  if(s===1){h='<p style="font-weight:600;font-size:14px;margin:0 0 10px">Baskı</p><div class="popts">'+PP.map(function(p){return '<button type="button" data-pp="'+p[0]+'" class="'+(U.print===p[0]?'on':'')+'">'+p[1]+'</button>'}).join('')+'</div><p style="font-weight:600;font-size:14px;margin:22px 0 10px">Zemin rengi</p>'+'<div class="pcolors">'+BODY.map(function(c){var on=U.color===c[0];return '<button type="button" data-pc="'+c[0]+'" class="'+(on?'on':'')+'" aria-pressed="'+on+'" aria-label="'+c[0]+'" title="'+c[0]+'" style="background:'+c[1]+'"></button>'}).join('')+'</div>';
+    if(U.print!=='yok'&&false)h+='<label class="drop"><b>'+(U.file?'Yüklendi: '+esc(U.file):'Logonuzu veya tasarımınızı buraya bırakın')+'</b><span class="muted" style="font-size:13px">PDF, AI, PNG veya JPG</span><input type="file" data-file="u"></label>';}
   if(s===2){var e=U.tried;h='<div class="f2"><label class="fld">Ad soyad<em class="req">Zorunlu</em><input data-uin="name" value="'+esc(U.name)+'" class="'+(e&&!U.name.trim()?'err':'')+'"></label><label class="fld">Telefon<em class="req">Zorunlu</em><input type="tel" data-uin="phone" placeholder="05xx xxx xx xx" value="'+esc(U.phone)+'" class="'+(e&&U.phone.trim().length<7?'err':'')+'"></label><label class="fld">Firma<em>İsteğe bağlı</em><input></label><label class="fld">Şehir<em>İsteğe bağlı</em><input></label><label class="fld">Miktar<em>Tahmini yeterli</em><input type="number" placeholder="ör. 5000"></label><div><span style="font-size:14px;font-weight:600;display:block">Birim</span><div class="seg"><button type="button" data-unit="adet" class="'+(U.unit==='adet'?'on':'')+'">Adet</button><button type="button" data-unit="kg" class="'+(U.unit==='kg'?'on':'')+'">Kg</button></div></div><label class="fld full">Eklemek istedikleriniz<em>İsteğe bağlı</em><textarea rows="3"></textarea></label></div>'+(e&&(!U.name.trim()||U.phone.trim().length<7)?'<p class="errmsg" role="alert">Size dönebilmemiz için ad soyad ve telefon gerekli.</p>':'');}
   if(s===3)h='<div class="ok"><h3 style="font-size:24px;margin-bottom:8px">Teşekkürler, talebiniz alındı.</h3><p class="muted" style="margin:0">Atlet Poşet · '+sizeStr(U)+' · '+U.color+' · '+pname()+'. En kısa sürede size dönüyoruz.</p></div>';
   if(s<3)h+='<div class="qnav"><button type="button" class="btn ghost" data-unav="back" style="visibility:'+(s===0?'hidden':'visible')+'">← Geri</button><button type="button" class="btn" data-unav="next">'+(s===2?'Teklif iste':'Devam et →')+'</button></div>';
@@ -530,9 +552,11 @@ function drawForm(){
 var pu=$('#pg-urun');
 pu.addEventListener('click',function(e){
   var t=e.target.closest?e.target.closest('button'):null; if(!t)return;
-  if(t.hasAttribute('data-pc')||(t.hasAttribute('data-color')&&pu.contains(t))){U.color=t.getAttribute('data-pc')||t.getAttribute('data-color');drawBag();drawForm();return}
-  if(t.hasAttribute('data-ink')){U.ink=t.getAttribute('data-ink');if(U.print==='yok'&&!U.logo)U.print='1';drawBag();drawForm();return}
-  if(t.hasAttribute('data-sz')){var r=SZ[+t.getAttribute('data-sz')-1];U.sel=r[0];if(r.length>1){U.w=r[1];U.g=r[2];U.h=r[3];U.fs=0}drawTable();drawForm();return}
+  if(t.hasAttribute('data-gt')){setTab(t.getAttribute('data-gt'));return}
+  if(t.hasAttribute('data-rg')){U.color=t.getAttribute('data-rg');setTab('pv');drawBag();drawForm();return}
+  if(t.hasAttribute('data-pc')||(t.hasAttribute('data-color')&&pu.contains(t))){U.color=t.getAttribute('data-pc')||t.getAttribute('data-color');drawBag();if(t.closest('#fbody'))drawForm();else drawSum();return}
+  if(t.hasAttribute('data-ink')){U.ink=t.getAttribute('data-ink');if(U.print==='yok'&&!U.logoImg)U.print='1';drawBag();if(t.closest('#fbody'))drawForm();else drawSum();return}
+  if(t.hasAttribute('data-sz')){var r=SZ[+t.getAttribute('data-sz')-1];U.sel=r[0];if(r.length>1){U.w=r[1];U.g=r[2];U.h=r[3];U.fs=0;setTab('olcu');$('#olcu').innerHTML=olcuSvg(U.w,U.g,U.h)}drawTable();drawForm();return}
   if(t.hasAttribute('data-pp')){U.print=t.getAttribute('data-pp');drawBag();drawForm();return}
   if(t.hasAttribute('data-unit')){U.unit=t.getAttribute('data-unit');drawForm();return}
   var n=t.getAttribute('data-unav');
@@ -541,12 +565,12 @@ pu.addEventListener('click',function(e){
 });
 pu.addEventListener('input',function(e){
   var t=e.target;
-  if(t.hasAttribute('data-ud')){U[t.getAttribute('data-ud')]=Math.max(0,+t.value||0);U.sel=0;$('#udim').innerHTML=dimSvg(U.w,U.g,U.h,sizeStr(U));$('#ustr').textContent=sizeStr(U);drawTable();drawSum()}
+  if(t.hasAttribute('data-ud')){U[t.getAttribute('data-ud')]=Math.max(0,+t.value||0);U.sel=0;$('#udim').innerHTML=dimSvg(U.w,U.g,U.h,sizeStr(U));$('#olcu').innerHTML=olcuSvg(U.w,U.g,U.h);$('#ustr').textContent=sizeStr(U);drawTable();drawSum()}
   if(t.hasAttribute('data-uin'))U[t.getAttribute('data-uin')]=t.value;
 });
 pu.addEventListener('change',function(e){var t=e.target;if(t.getAttribute('data-file')==='u'){var f=t.files&&t.files[0];U.file=f?f.name:'';if(f&&/^image\//.test(f.type))readLogo(f);else drawForm()}});
 var pr=location.search;function qv(k){var m=pr.match(new RegExp('[?&]'+k+'=([^&#]+)'));return m?decodeURIComponent(m[1]):null}
-if(qv('renk')&&find(COLS,qv('renk')))U.color=qv('renk');if(qv('baski')&&find(INKS,qv('baski'))){U.ink=qv('baski');U.print='1'}
+if(qv('renk')&&find(BODY,qv('renk')))U.color=qv('renk');if(qv('baski')&&find(INKS,qv('baski'))){U.ink=qv('baski');U.print='1'}
 drawBag();drawTable();drawForm();
 }
 })();
