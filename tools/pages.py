@@ -380,12 +380,12 @@ def refs_html():
   tiles = ''.join((f'<div class="rtile"><img src="{{{{R}}}}assets/refs/{f}.png" alt="{n}" loading="lazy"></div>' if f else f'<div class="rtile txt"><span>{n}</span></div>') for n, f in REFS)
   tiles += ''.join('<div class="rtile ph2"><span>Logo eklenecek</span></div>' for _ in range(4))
   works = [('atlet-sari','Atlet poşet','ŞOK Market'),('kulplu-kirmizi','Kulplu poşet','İpek Pişmaniye'),('elgecme-beyaz','El geçmeli poşet','Turkish Support Services')]
-  w = ''.join(f'<figure class="work"><img src="{{{{R}}}}assets/isler/{f}.webp" alt="{t} örnek iş" loading="lazy"><figcaption><b>{t}</b><span>{d}</span></figcaption></figure>' for f, t, d in works)
-  w += ''.join(f'<figure class="work">{photo("İş örneği eklenecek", "4/5")}<figcaption><b>{ph("Ürün adı")}</b><span>{ph("Müşteri / sektör")}</span></figcaption></figure>' for _ in range(3))
+  w = ''.join(f'<figure class="rwork"><img src="{{{{R}}}}assets/isler/{f}.webp" alt="{t} örnek iş" loading="lazy"><figcaption><b>{t}</b><span>{d}</span></figcaption></figure>' for f, t, d in works)
+  w += ''.join(f'<figure class="rwork">{photo("İş örneği eklenecek", "4/5")}<figcaption><b>{ph("Ürün adı")}</b><span>{ph("Müşteri / sektör")}</span></figcaption></figure>' for _ in range(3))
   return f'''<section class="wrap shero sm"><div><span class="eyebrow">REFERANSLAR</span><h1>Bize güvenen markalar</h1>
   <p>Mahalle fırınından ulusal zincirlere, bankalardan ihracatçı üreticilere; farklı sektörlerden binlerce kurum poşetlerini bize emanet ediyor.</p></div></section>
 <section class="wrap" style="padding-bottom:40px"><div class="rgrid2">{tiles}</div></section>
-<section class="band"><div class="wrap sec2"><span class="eyebrow">ÖRNEK İŞLER</span><h2 class="h2">Ürettiklerimizden bazıları</h2><div class="works">{w}</div></div></section>
+<section class="band"><div class="wrap sec2"><span class="eyebrow">ÖRNEK İŞLER</span><h2 class="h2">Ürettiklerimizden bazıları</h2><div class="rworks">{w}</div></div></section>
 <section class="wrap sec2"><div class="cta2"><div><h2>Sıradaki marka sizinki olsun.</h2><p>Poşetinizi seçin, logonuzu ekleyin, nasıl duracağını görün.</p></div><a class="btn green" href="{{{{R}}}}poset-asistani/">Poşetimi tasarla →</a></div></section>'''
 
 def urunler_html(CATS, PRODS, purl, esc):
