@@ -22,7 +22,7 @@ var COLS=[['Şeffaf','#EEF3F0'],['Beyaz','#FFFFFF'],['Krem','#F3E9D2'],['Sarı',
 
 /* ---------- gerçek fotoğraf mockup motoru ----------
    assets/mockup/{id}.png: R=gölge (x2), G=gövde maskesi, B=kulp maskesi, A=şeffaflık */
-var MOCK={atlet:{logo:[.5,.6,.62]},elgecme:{logo:[.5,.56,.7]},kulplu:{logo:[.5,.56,.56]}};
+var MOCK={atlet:{logo:[.5,.56,.62,.27],foot:[.5,.885,.6,.075]},elgecme:{logo:[.5,.47,.72,.27],foot:[.5,.87,.72,.075]},kulplu:{logo:[.5,.5,.58,.3],foot:[.5,.855,.7,.075]}};
 var BODY=[['Beyaz','#F6F6F4'],['Krem','#EFE3C8'],['Sarı','#F2CF1D'],['Turuncu','#EE7D22'],['Kırmızı','#D42A2A'],['Yeşil','#3E9B50'],['Mavi','#2A6FC9'],['Lacivert','#2B3787'],['Siyah','#242424']];
 var HANDLE=[['Siyah','#1E1E1E'],['Beyaz','#F4F4F2'],['Kırmızı','#D42A2A'],['Sarı','#F2CF1D'],['Lacivert','#2B3787'],['Yeşil','#3E9B50'],['Mavi','#2A6FC9'],['Altın','#C29A45']];
 var MC={},MW={};
@@ -35,7 +35,9 @@ function drawMock(cv,id,body,handle,logo){
   var tok=(cv._tok||0)+1;cv._tok=tok;
   loadMock(id,function(M){if(cv._tok!==tok)return;
     cv.width=M.w;cv.height=M.h;var x=cv.getContext('2d'),out=x.createImageData(M.w,M.h),o=out.data,d=M.d,B=hexRGB(body),H=hexRGB(handle||'#1E1E1E'),L=null;
-    if(logo){var lc=document.createElement('canvas');lc.width=M.w;lc.height=M.h;var lx=lc.getContext('2d'),p=MOCK[id].logo,sw=logo.naturalWidth||logo.width,sh=logo.naturalHeight||logo.height,sc=Math.min(M.w*p[2]/sw,M.h*.30/sh),dw=sw*sc,dh=sh*sc;lx.drawImage(logo,M.w*p[0]-dw/2,M.h*p[1]-dh/2,dw,dh);L=lx.getImageData(0,0,M.w,M.h).data}
+    if(logo){var layers=logo.length!==undefined&&!logo.getContext&&!logo.naturalWidth?logo:[{c:logo,k:'logo'}];var lc=document.createElement('canvas');lc.width=M.w;lc.height=M.h;var lx=lc.getContext('2d');
+      layers.forEach(function(Ly){if(!Ly||!Ly.c)return;var p=MOCK[id][Ly.k],im=Ly.c,sw=im.naturalWidth||im.width,sh=im.naturalHeight||im.height,sc=Math.min(M.w*p[2]/sw,M.h*p[3]/sh),dw=sw*sc,dh=sh*sc;lx.drawImage(im,M.w*p[0]-dw/2,M.h*p[1]-dh/2,dw,dh)});
+      L=lx.getImageData(0,0,M.w,M.h).data}
     for(var i=0;i<d.length;i+=4){var a=d[i+3];o[i+3]=a;if(!a)continue;var s=d[i]/127.5,bm=d[i+1]/255,hm=d[i+2]/255,sb=s<1?s:1;
       var r=B[0]*sb,g=B[1]*sb,b=B[2]*sb;
       if(L&&L[i+3]&&bm>.5){var la=L[i+3]/255;r=r*(1-la)+L[i]/255*sb*la;g=g*(1-la)+L[i+1]/255*sb*la;b=b*(1-la)+L[i+2]/255*sb*la}
@@ -245,18 +247,20 @@ function recommend(){
 function mockId(){var m={atlet:'atlet',el:'elgecme',kulp:'kulplu'};if(m[A.handle])return m[A.handle];if(A.handle==='oneri'||!A.handle){var r=recommend();if(/^Atlet/.test(r))return 'atlet';if(/^El Geçmeli/.test(r))return 'elgecme';if(/^Kulplu/.test(r))return 'kulplu'}return null}
 var AINKS=[['Otomatik','auto'],['Lacivert','#2B3787'],['Siyah','#1E1E1E'],['Beyaz','#FFFFFF'],['Kırmızı','#C62828'],['Yeşil','#2E7D32'],['Mavi','#1565C0'],['Altın','#B08A2E']];
 function inkHex(){var bg=find(BODY,A.color)[1];if(A.ink!=='Otomatik')return find(AINKS,A.ink)[1];return ['#2B3787','#1E1E1E','#FFFFFF'].sort(function(a,b){return cr(bg,b)-cr(bg,a)})[0]}
-function aLogo(){if(A.print!=='logo'&&A.print!=='foto')return null;var p=A.pt,has=p.firma||p.slogan||p.tel||p.adres||p.web;
-  if(!has)return A.logoImg||placeholderLogo(inkHex());
-  var ink=inkHex(),W=640,c=document.createElement('canvas'),x=c.getContext('2d'),lines=[],y=0,F='"Plus Jakarta Sans",Inter,Arial,sans-serif';
-  var lh=0;if(A.logoImg){var sc=Math.min(420/A.logoImg.naturalWidth,190/A.logoImg.naturalHeight);lh=A.logoImg.naturalHeight*sc}
-  if(p.firma)lines.push(['800 64px '+F,p.firma,78]);if(p.slogan)lines.push(['500 30px Inter,Arial,sans-serif',p.slogan,44]);
-  var sm=[p.tel,p.web].filter(Boolean).join('   ·   ');if(sm)lines.push(['600 30px Inter,Arial,sans-serif',sm,44]);if(p.adres)lines.push(['500 26px Inter,Arial,sans-serif',p.adres,38]);
-  var mx=c.getContext('2d'),wid=0;lines.forEach(function(l){mx.font=l[0];wid=Math.max(wid,mx.measureText(l[1]).width)});W=Math.min(900,Math.max(lh?A.logoImg.naturalWidth*sc:0,wid+24,200));
-  var H=(lh?lh+24:0)+lines.reduce(function(t,l){return t+l[2]},0)+10;c.width=W;c.height=Math.max(60,H);x=c.getContext('2d');
-  if(lh){var lw=A.logoImg.naturalWidth*sc;x.drawImage(A.logoImg,(W-lw)/2,0,lw,lh);y=lh+24}
-  x.fillStyle=ink;x.textAlign='center';x.textBaseline='alphabetic';
-  lines.forEach(function(l){x.font=l[0];var t=l[1],mw=W-20;while(x.measureText(t).width>mw&&t.length>3)t=t.slice(0,-1);if(t!==l[1])t=t.slice(0,-1)+'…';y+=l[2];x.fillText(t,W/2,y-l[2]*.22)});
-  return c}
+function textBlock(lines,ink,img){var F='"Plus Jakarta Sans",Inter,Arial,sans-serif',t=document.createElement('canvas').getContext('2d'),wid=0,lh=0,sc=1;
+  lines=lines.filter(function(l){return l[1]});
+  if(img){sc=Math.min(520/img.naturalWidth,230/img.naturalHeight);lh=img.naturalHeight*sc}
+  lines.forEach(function(l){t.font=l[0].replace('F',F);wid=Math.max(wid,t.measureText(l[1]).width)});
+  if(!lines.length&&!img)return null;
+  var W=Math.min(1100,Math.max(img?img.naturalWidth*sc:0,wid+24,120)),H=(lh?lh+(lines.length?26:0):0)+lines.reduce(function(a,l){return a+l[2]},0)+8;
+  var c=document.createElement('canvas');c.width=W;c.height=H;var x=c.getContext('2d'),y=0;
+  if(img){var lw=img.naturalWidth*sc;x.drawImage(img,(W-lw)/2,0,lw,lh);y=lh+(lines.length?26:0)}
+  x.fillStyle=ink;x.textAlign='center';lines.forEach(function(l){x.font=l[0].replace('F',F);y+=l[2];x.fillText(l[1],W/2,y-l[2]*.22)});return c}
+function aLogo(){if(A.print!=='logo'&&A.print!=='foto')return null;var p=A.pt,ink=inkHex(),has=p.firma||p.slogan||p.tel||p.adres||p.web;
+  if(!has&&!A.logoImg)return [{c:placeholderLogo(ink),k:'logo'},{c:textBlock([['600 34px Inter,Arial,sans-serif','0212 000 00 00  ·  Adresiniz, İlçe / İl',46]],ink),k:'foot'}];
+  var main=textBlock([['800 96px F',p.firma,112],['500 40px Inter,Arial,sans-serif',p.slogan,56]],ink,A.logoImg);
+  var foot=textBlock([['600 34px Inter,Arial,sans-serif',[p.tel,p.web].filter(Boolean).join('   ·   '),46],['500 30px Inter,Arial,sans-serif',p.adres,42]],ink);
+  return [{c:main,k:'logo'},{c:foot,k:'foot'}]}
 function drawSide(){
   var sec=find(SEC,A.sector);
   $('#rec').textContent=recommend();var mr=$('#mrec');if(mr)mr.innerHTML='<span>Önerimiz</span><b>'+esc(recommend())+'</b><a href="#oneri">Özet ↓</a>';
@@ -308,10 +312,10 @@ function drawQ(){
       (kul?'<p class="dlab">Kulp rengi <span>· '+A.kulp+'</span></p>'+sw(HANDLE,A.kulp,'data-kulp'):'')+
       '<div class="ctip" id="ctip"></div>'+
       '<p class="dlab" style="margin-top:18px">Baskı</p>'+opts(PRI,'print')+
-      ((A.print==='logo'||A.print==='foto')?'<div class="ptx"><p class="dlab" style="margin-top:18px">Poşetin üzerine yazılacaklar <span>· yazdıkça önizlemede görünür</span></p><div class="f2">'+
-        [['firma','Firma adı','ör. Yıldız Market'],['slogan','Slogan / alt satır','ör. Taze ve uygun'],['tel','Telefon','ör. 0212 000 00 00'],['web','Web / sosyal medya','ör. yildizmarket.com'],['adres','Adres','ör. Beylikdüzü / İstanbul']].map(function(f){return '<label class="fld'+(f[0]==='adres'?' full':'')+'">'+f[1]+'<input data-pt="'+f[0]+'" value="'+esc(A.pt[f[0]])+'" placeholder="'+f[2]+'" maxlength="60"></label>'}).join('')+
+      ((A.print==='logo'||A.print==='foto')?'<div class="ptx"><p class="dlab" style="margin-top:18px">Poşetin üzerine yazılacaklar</p><p class="muted" style="font-size:13px;margin:-4px 0 10px">Logonuz yoksa sorun değil: firma adınızı ve iletişim bilgilerinizi yazın, poşette nasıl duracağını görün. Bu bir önizlemedir; son tasarımı sipariş aşamasında birlikte netleştiririz.</p><div class="f2">'+
+        [['firma','Firma adı <em>ortada, büyük</em>','ör. Yıldız Market'],['slogan','Slogan <em>isteğe bağlı</em>','ör. Taze ve uygun'],['tel','Telefon <em>alt kısım</em>','ör. 0212 000 00 00'],['web','Web / sosyal medya <em>alt kısım</em>','ör. yildizmarket.com'],['adres','Adres <em>alt kısım</em>','ör. Cumhuriyet Mah. Atatürk Cad. No:5 Beylikdüzü / İstanbul']].map(function(f){return '<label class="fld'+(f[0]==='adres'?' full':'')+'">'+f[1]+'<input data-pt="'+f[0]+'" value="'+esc(A.pt[f[0]])+'" placeholder="'+f[2]+'" maxlength="80"></label>'}).join('')+
         '</div><p class="dlab" style="margin-top:14px">Baskı rengi <span>· '+A.ink+'</span></p><div class="pcolors">'+AINKS.map(function(c){var on=A.ink===c[0];return '<button type="button" data-ink="'+c[0]+'" class="'+(on?'on':'')+(c[1]==='auto'?' autoink':'')+'" aria-pressed="'+on+'" aria-label="Baskı rengi '+c[0]+'" title="'+c[0]+'"'+(c[1]==='auto'?'':' style="background:'+c[1]+'"')+'>'+(c[1]==='auto'?'A':'')+'</button>'}).join('')+'</div>'+
-        '<label class="drop"><b>'+(A.file?'Yüklendi: '+esc(A.file):'Logonuz varsa yükleyin (isteğe bağlı)')+'</b><span class="muted" style="font-size:13px">PNG, JPG ya da SVG. Logo üstte, yazılar altında yer alır.</span><input type="file" accept="image/*,.pdf,.ai" data-file="a"></label></div>':'')+
+        '<label class="drop"><b>'+(A.file?'Yüklendi: '+esc(A.file):'Logonuz varsa yükleyin (isteğe bağlı)')+'</b><span class="muted" style="font-size:13px">PNG, JPG ya da SVG. Logonuz ortada, firma adının üstünde yer alır.</span><input type="file" accept="image/*,.pdf,.ai" data-file="a"></label></div>':'')+
       '</div></div>';}
   if(s===5){var e=A.tried;h='<h2 class="qh">Son adım: size nasıl ulaşalım?</h2><p class="muted" style="margin:0 0 24px">Sadece iki alan zorunlu. Gerisini telefonda konuşabiliriz.</p><div class="f2">'+
     '<label class="fld">Ad soyad<em class="req">Zorunlu</em><input data-in="name" autocomplete="name" value="'+esc(A.name)+'" class="'+(e&&!A.name.trim()?'err':'')+'"></label>'+
