@@ -589,3 +589,4 @@ img{max-width:100%}
 .feats{list-style:none;margin:0 0 18px;padding:0;display:grid;grid-gap:6px}
 .feats li{position:relative;padding-left:24px;font-size:15px;color:var(--ink)}
 .feats li:before{content:'';position:absolute;left:2px;top:6px;width:12px;height:7px;border-left:2.5px solid var(--green);border-bottom:2.5px solid var(--green);transform:rotate(-45deg)}
+.codeinfo{display:flex;align-items:flex-start;background:#EEF1F8;border:1px solid #CFD5EA;border-radius:12px;padding:12px 14px;margin:18px 0 0;font-size:14px;line-height:1.5;color:#2B3060}.codeinfo svg{flex:none;margin:1px 10px 0 0;color:var(--navy)}
