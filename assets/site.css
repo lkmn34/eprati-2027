@@ -762,12 +762,12 @@ a.ccard:hover{border-color:#B9C0DD}
 .ccard.soc a{margin:0 14px 4px 0;font-weight:600;font-size:14px}
 .cform{padding:28px}
 .f2{display:grid;grid-template-columns:1fr 1fr;grid-gap:14px}
-.chips{display:flex;flex-wrap:wrap;margin:0 -4px}
-.chips label{margin:0 4px 8px;cursor:pointer}
-.chips input{position:absolute;opacity:0;width:1px;height:1px}
-.chips span{display:inline-flex;align-items:center;min-height:40px;padding:0 14px;border:2px solid var(--line);border-radius:999px;font-size:14px;font-weight:500;background:#fff}
-.chips input:checked+span{border-color:var(--navy);background:#EEF0FA;color:var(--navy);font-weight:600}
-.chips input:focus-visible+span{outline:3px solid #8CC47A;outline-offset:2px}
+.cform .chips{display:flex;flex-wrap:wrap;margin:0 -4px}
+.cform .chips label{margin:0 4px 8px;cursor:pointer}
+.cform .chips input{position:absolute;opacity:0;width:1px;height:1px}
+.cform .chips span{display:inline-flex;align-items:center;min-height:40px;padding:0 14px;border:2px solid var(--line);border-radius:999px;font-size:14px;font-weight:500;background:#fff}
+.cform .chips input:checked+span{border-color:var(--navy);background:#EEF0FA;color:var(--navy);font-weight:600}
+.cform .chips input:focus-visible+span{outline:3px solid #8CC47A;outline-offset:2px}
 .cbx{display:flex;align-items:flex-start;font-size:14px;margin-top:14px;cursor:pointer;line-height:1.45}
 .cbx input{width:20px;height:20px;margin:1px 10px 0 0;flex:0 0 auto;accent-color:var(--navy)}
 .cbx em.req{font-style:normal;color:#B42318;margin-left:3px}
@@ -994,3 +994,16 @@ body.lbopen{overflow:hidden}
 .ujump{top:99px}
 @media (max-width:980px){.ujump{top:89px}}
 @media (max-width:640px){.ujump{top:75px}}
+/* mobil düzeltmeler 2 */
+.s3sum{display:flex;align-items:center;width:100%;text-align:left;background:var(--sel);border:1.5px solid #BFE3C7;border-radius:14px;padding:12px 16px;margin:0 0 20px;cursor:pointer;font:inherit;color:var(--ink)}
+.s3sum span{font-size:13px;color:var(--mut);margin-right:10px}
+.s3sum b{font-size:15px;flex:1;min-width:0}
+.s3sum i{font-style:normal;font-weight:600;font-size:13px;color:var(--green);text-decoration:underline}
+@media (max-width:760px){
+  .hact>*,.hact .hquote{margin:0 0 0 10px}
+  .hact>*:first-child{margin-left:0}
+  .mbar{grid-template-columns:minmax(0,.8fr) minmax(0,1.15fr) minmax(0,1.2fr)}
+  .mbar a{font-size:14px;padding:0 8px;white-space:nowrap;min-width:0}
+  .mbar a svg{flex:0 0 auto;margin-right:6px}
+}
+@media (max-width:360px){.mbar a{font-size:13px}.mbar a svg{margin-right:4px}}
