@@ -406,3 +406,6 @@ img{max-width:100%}
 .ptx label.fld{font-size:13px}.ptx label.fld input{min-height:46px;font-size:15px}
 .pcolors button.autoink{background:conic-gradient(#2B3787 0 33%,#1E1E1E 0 66%,#fff 0);color:#fff;font:700 12px Inter,sans-serif;text-shadow:0 0 3px #000}
 @media(min-width:861px){.pv{position:sticky;top:112px}}
+.sprev{background:radial-gradient(circle at 50% 40%,#F1F3F8 0%,#D3DAE8 85%);border:1px solid rgba(255,255,255,.15)}
+.sprev canvas{filter:drop-shadow(0 10px 14px rgba(25,27,69,.28))}
+.pv{background:radial-gradient(circle at 50% 42%,#F7F8FB 0%,#DCE2EE 82%)}
