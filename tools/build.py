@@ -72,7 +72,7 @@ def header(R, H, skip):
     <a href="{H}#urunler">Ürünler</a><a href="{H}#sektorler">Sektörler</a><a href="{R}poset-asistani/">Poşet Asistanı</a><a href="{H}#kurumsal">Kurumsal</a><a href="{H}#sss">SSS</a><a href="{H}#iletisim">İletişim</a>
   </nav>
   <div class="navbtns">
-    <a class="btn ghost" href="#">Katalog İndir</a><a class="btn" href="{R}poset-asistani/">Teklif Al</a>
+    <a class="btn ghost" href="https://eprati.com/wp-content/uploads/2022/12/EPRAT%C4%B0-PLAST%C4%B0K-%C3%9CR%C3%9CN-KATALO%C4%9EU-2022.pdf" target="_blank" rel="noopener">Katalog İndir</a><a class="btn" href="{R}poset-asistani/">Teklif Al</a>
     <button type="button" id="menubtn" aria-label="Menüyü aç" aria-expanded="false" aria-controls="mobilemenu"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
   </div>
 </div></header>
@@ -81,7 +81,7 @@ def header(R, H, skip):
   <nav aria-label="Mobil menü">
     <a href="{H}#urunler">Ürünler</a><a href="{H}#sektorler">Sektörünüze göre</a><a href="{R}urunler/magaza-ambalajlari/atlet-poset/">Atlet Poşet</a><a href="{H}#kurumsal">Kurumsal</a><a href="{H}#sss">Sıkça sorulanlar</a><a href="{H}#iletisim">İletişim</a>
   </nav>
-  <div class="mcta"><a class="btn" href="{R}poset-asistani/">Poşet Asistanı ile teklif al</a><a class="btn ghost" href="#">Katalog İndir (PDF)</a></div>
+  <div class="mcta"><a class="btn" href="{R}poset-asistani/">Poşet Asistanı ile teklif al</a><a class="btn ghost" href="https://eprati.com/wp-content/uploads/2022/12/EPRAT%C4%B0-PLAST%C4%B0K-%C3%9CR%C3%9CN-KATALO%C4%9EU-2022.pdf" target="_blank" rel="noopener">Katalog İndir (PDF)</a></div>
   <div class="mcontact"><a href="tel:+902126516669">0212 651 66 69</a> · <a href="tel:+902126511799">0212 651 17 99</a><br><a href="https://wa.me/905357183598">WhatsApp 0535 718 35 98</a><br><a href="mailto:satis@eprati.com">satis@eprati.com</a><br>Beylikdüzü OSB, İstanbul</div>
 </div>'''
 

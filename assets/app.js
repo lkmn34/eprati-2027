@@ -226,6 +226,14 @@ var IMG=R+'assets/isler/';
 $('#works').innerHTML=WORKS.map(function(w){var v0=w.v[0];return '<article class="work">'+
   '<div class="wimg"><img src="'+IMG+w.id+'-'+v0[0]+'.webp" alt="'+esc(w.alt)+'" loading="lazy"></div>'+
   '<div class="wbody"><span class="wtag">'+esc(w.ad)+'</span><h3>'+esc(w.mus)+'</h3><p class="muted">'+esc(w.info)+'</p></div></article>'}).join('');
+
+/* fabrika videosu: yakına gelince yükle, masaüstünde, hareket azaltılmamışsa */
+(function(){var bg=$('#fvbg');if(!bg)return;var id=bg.getAttribute('data-vid');
+  function load(){if(bg._ok||window.innerWidth<760||calm)return;bg._ok=1;var f=document.createElement('iframe');
+    f.src='https://www.youtube-nocookie.com/embed/'+id+'?autoplay=1&mute=1&controls=0&loop=1&playlist='+id+'&playsinline=1&modestbranding=1&rel=0&showinfo=0&iv_load_policy=3&disablekb=1';
+    f.title='Eprati fabrika videosu';f.tabIndex=-1;f.setAttribute('allow','autoplay; encrypted-media');f.setAttribute('loading','lazy');f.onload=function(){setTimeout(function(){bg.classList.add('playing')},1200)};bg.appendChild(f)}
+  if('IntersectionObserver' in window){var o=new IntersectionObserver(function(es){if(es[0].isIntersecting){load();o.disconnect()}},{rootMargin:'300px'});o.observe(bg)}else load()})();
+$('#cvicons')&&($('#cvicons').innerHTML=['atlet','kulplu','elgecme','rulo','kilitli','bobin'].map(function(k){return '<span>'+icon(k,30,'#fff')+'</span>'}).join(''));
 /* poşetinizi tasarlayın */
 var D={type:'atlet',color:'Beyaz',kulp:'Siyah',ink:'Lacivert',logoImg:null,logoSrc:null,logoCol:null};
 var DTYPES=[['atlet','Atlet'],['elgecme','El geçmeli'],['kulplu','Kulplu']];

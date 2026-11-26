@@ -475,3 +475,25 @@ img{max-width:100%}
 .dtip{min-height:68px;align-items:flex-start}
 .hero .wrap.top-part{z-index:5}
 .sres{max-height:360px;overflow:auto}
+
+/* fabrika videosu */
+.fvsec{position:relative;overflow:hidden}
+.fvbg{position:absolute;top:0;left:0;right:0;bottom:0;overflow:hidden;z-index:0}
+.fvposter{position:absolute;top:0;left:0;right:0;bottom:0;background-size:cover;background-position:center;transform:scale(1.15);filter:saturate(.8);transition:opacity 1s}
+.fvbg iframe{position:absolute;top:50%;left:50%;width:177.78vh;height:56.25vw;min-width:135%;min-height:135%;transform:translate(-50%,-50%);border:0;pointer-events:none;opacity:0;transition:opacity 1.2s}
+.fvbg.playing iframe{opacity:1}.fvbg.playing .fvposter{opacity:0}
+.fvshade{position:absolute;top:0;left:0;right:0;bottom:0;z-index:1;background:linear-gradient(90deg,rgba(27,29,92,.95) 0%,rgba(27,29,92,.86) 45%,rgba(27,29,92,.62) 100%)}
+.fvsec .dcard{background:rgba(39,42,120,.78);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+@media(max-width:760px){.fvshade{background:rgba(27,29,92,.88)}}
+/* katalog */
+.catalog{display:flex;flex-wrap:wrap;align-items:center;margin-top:28px;background:linear-gradient(90deg,#EEF1F8,#F7F9F6);border:1px solid var(--line);border-radius:24px;padding:28px 32px;overflow:hidden}
+.cover{flex:none;width:190px;margin:0 40px 0 10px;perspective:900px}
+.cv{height:250px;border-radius:6px 12px 12px 6px;background:linear-gradient(160deg,#2B3787 0%,#1B1D5C 100%);color:#fff;padding:20px 16px;display:flex;flex-direction:column;transform:rotateY(-14deg) rotateZ(-2deg);box-shadow:16px 20px 34px rgba(25,27,69,.28),inset 6px 0 0 rgba(255,255,255,.12);transition:transform .4s;position:relative}
+.catalog:hover .cv{transform:rotateY(-4deg) rotateZ(0)}
+.cv img{width:110px;height:auto}
+.cvt{font-family:'Plus Jakarta Sans',Inter,sans-serif;font-weight:800;font-size:22px;line-height:1.05;margin-top:22px;letter-spacing:.02em}
+.cvi{display:grid;grid-template-columns:repeat(3,1fr);grid-gap:6px;margin-top:auto;opacity:.85}
+.cvi span{display:flex;align-items:center;justify-content:center;height:34px;border-radius:8px;background:rgba(255,255,255,.1)}
+.cvf{font-size:9px;margin-top:10px;opacity:.75;border-top:2px solid #33AA47;padding-top:6px}
+.ctx{flex:1 1 320px;min-width:0;padding:16px 0}.ctx h3{font-size:26px;margin:6px 0 8px}.ctx p{margin:0 0 18px;max-width:520px}
+@media(max-width:760px){.catalog{padding:24px 20px}.cover{margin:0 auto 10px}.ctx{text-align:center}.ctx .row{justify-content:center}}
