@@ -400,7 +400,7 @@ img{max-width:100%}
 .ctb button:hover{background:#FFF3C4}
 .sprev{background:#fff;border-radius:16px;padding:14px;margin-bottom:16px;display:flex;justify-content:center}
 .sprev canvas{max-height:220px}
-@media(max-width:860px){.pvwrap{grid-template-columns:1fr}.pv{min-height:0}.pv canvas{max-height:320px}}
+@media(max-width:860px){.pvwrap{grid-template-columns:minmax(0,1fr)}.pv{min-height:0}.pv canvas{max-height:320px}}
 
 .ptx .f2{grid-gap:10px}
 .ptx label.fld{font-size:13px}.ptx label.fld input{min-height:46px;font-size:15px}

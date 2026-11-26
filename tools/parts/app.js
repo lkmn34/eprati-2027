@@ -271,7 +271,7 @@ function buildPrint(mid,M){var ar=printArea(mid,M),c=document.createElement('can
   if(A.logoImg){var e=A.els.logo,lh=e.size*ar.ppc,lw=A.logoImg.naturalWidth*lh/A.logoImg.naturalHeight;if(lw>aw){lw=aw;lh=A.logoImg.naturalHeight*lw/A.logoImg.naturalWidth}var cy=place('logo',lw,lh);x.drawImage(A.logoImg,cx-lw/2,cy-lh/2,lw,lh)}
   ELN.forEach(function(n){var k=n[0],e=A.els[k],t=e.text||(ph?n[3]:'');if(!t)return;var px=e.size*ar.ppc/0.72;x.font=fontW(e.font)+' '+px+'px "'+e.font+'",Inter,Arial,sans-serif';var w=x.measureText(t).width;
     if(w>aw){px=px*aw/w;x.font=fontW(e.font)+' '+px+'px "'+e.font+'",Inter,Arial,sans-serif';w=aw;e.fit=true}else e.fit=false;
-    var h=px*.95,cy=place(k,w,h);x.globalAlpha=ph?.55:1;x.fillStyle=elInk(k);x.textAlign='center';x.textBaseline='middle';x.fillText(t,cx,cy+px*.04);x.globalAlpha=1});
+    var h=px*.95,cy=place(k,w,h);x.globalAlpha=ph?0.55:1;x.fillStyle=elInk(k);x.textAlign='center';x.textBaseline='middle';x.fillText(t,cx,cy+px*.04);x.globalAlpha=1});
   return {c:c,boxes:boxes,ar:ar}}
 /* poşet tabanı önbelleği */
 var BASE={};
