@@ -473,3 +473,5 @@ img{max-width:100%}
 }
 @media(prefers-reduced-motion:reduce){.qtab,.qpop{transition:none}}
 .dtip{min-height:68px;align-items:flex-start}
+.hero .wrap.top-part{z-index:5}
+.sres{max-height:360px;overflow:auto}

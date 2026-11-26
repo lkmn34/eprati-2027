@@ -165,7 +165,8 @@ var ara=$('#ara'), sres=$('#sres');
 function doSearch(){
   var q=low(ara.value.trim()); if(!q){sres.hidden=true;return}
   var words=q.split(' ').filter(function(w){return w.length>2});
-  var r=P.filter(function(p){var t=low(p[0]+' '+p[2]);return t.indexOf(q)>=0||words.some(function(w){return t.indexOf(w)>=0})}).slice(0,5);
+  var r=P.map(function(p){var n=low(p[0]),t=low(p[0]+' '+p[2]),sc=0;if(n.indexOf(q)===0)sc+=100;else if(n.indexOf(q)>=0)sc+=60;else if(t.indexOf(q)>=0)sc+=30;
+      words.forEach(function(w){if(n.indexOf(w)>=0)sc+=10;else if(t.indexOf(w)>=0)sc+=4});return [sc,p]}).filter(function(x){return x[0]>0}).sort(function(a,b){return b[0]-a[0]}).slice(0,5).map(function(x){return x[1]});
   sres.innerHTML=r.length?r.map(function(p){return '<a href="'+URUN+'"><span><b style="font-weight:600">'+esc(p[0])+'</b><small>'+esc(p[1])+' · '+esc(p[2].split(',')[0])+'</small></span><span style="color:#24803A;font-weight:600;font-size:13px">Gör →</span></a>'}).join('')
     :'<div style="padding:12px;font-size:14px;color:#4D5170">Tam eşleşme bulamadık. <a href="'+ASIST+'">Poşet Asistanı</a> birkaç soruyla size uygun olanı önersin.</div>';
   sres.hidden=false;
