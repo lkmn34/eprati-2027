@@ -60,6 +60,21 @@ for p in PRODS:
         {"@context": "https://schema.org", "@type": "Product", "name": p['name'], "category": cat['name'], "description": p['desc'],
          "brand": {"@type": "Brand", "name": "Eprati"}, "manufacturer": {"@id": BASE + "#org"}, "image": BASE + "og-image.png", "url": BASE + purl(p)}]))
 
+CATDESC={'magaza-ambalajlari':'Marketten butiğe, eczaneden e-ticarete: mağazanızın adını her müşterinizle birlikte dışarı taşıyan poşetler.',
+ 'gida-ambalajlari':'Gıdaya uygun hammaddeden, TR-34-K-282635 kayıt numaralı belgeyle üretilen ekmek, manav, bakliyat ve buz poşetleri.',
+ 'tekstil-ve-temizlik-ambalajlari':'Kuru temizlemeden halı yıkamaya, hazır giyimden ürün paketlemeye: ürünlerinizi toz ve kirden koruyan ambalajlar.',
+ 'endustriyel-ambalajlar':'Beyaz eşya, hırdavat, otomotiv ve seri üretim için dayanıklı torba, kilitli torba ve film çözümleri.'}
+for k,c in CATS.items():
+  PAGES.append(dict(path=f'urunler/{k}/index.html', url=f'urunler/{k}/', root='../../', main='kategori.html', catk=k,
+    title=f"{c['name']} | Eprati Plastik", desc=CATDESC[k],
+    ld=[crumbs([("Ana sayfa", ""), ("Ürünler", "#urunler"), (c['name'], f'urunler/{k}/')])]))
+
+def cat_fill(html, k, R):
+  c=CATS[k]
+  cards=''.join(f'<a class="pcard" href="{R}{purl(q)}"><span class="pcic" data-ic="{q["icon"]}"></span><b>{esc(q["name"])}</b><p>{esc(q["use"])}</p>'+('<em>Gıdaya uygun</em>' if q.get('food') else '')+'<i>İncele →</i></a>' for q in PRODS if q['cat']==k)
+  other=''.join(f'<a href="{R}urunler/{kk}/">{esc(cc["name"])}</a>' for kk,cc in CATS.items() if kk!=k)
+  return html.replace('{{C_NAME}}',esc(c['name'])).replace('{{C_DESC}}',esc(CATDESC[k])).replace('{{C_CARDS}}',cards).replace('{{C_OTHER}}',other).replace('{{C_BG}}',c['bg'])
+
 def prod_fill(html, p, R):
   cat = CATS[p['cat']]
   tags = []
@@ -69,7 +84,7 @@ def prod_fill(html, p, R):
   rel = [q for q in PRODS if q['cat'] == p['cat'] and q['id'] != p['id']]
   data = {k: p.get(k) for k in ('id', 'name', 'mock', 'icon', 'sizes', 'works')}
   rep = {
-    '{{P_NAME}}': esc(p['name']), '{{P_CAT}}': esc(cat['name']), '{{P_CATSHORT}}': esc(cat['short']), '{{P_DESC}}': esc(p['desc']),
+    '{{P_CATK}}': p['cat'], '{{P_NAME}}': esc(p['name']), '{{P_CAT}}': esc(cat['name']), '{{P_CATSHORT}}': esc(cat['short']), '{{P_DESC}}': esc(p['desc']),
     '{{P_TAGS}}': ''.join(f'<span class="tag" style="background:{bg};color:{fg}">{t}</span>' for t, bg, fg in tags),
     '{{P_FACTS}}': ''.join(f'<div><span>{esc(k)}</span><b>{esc(v)}</b></div>' for k, v in facts),
     '{{P_FEATS}}': ('<ul class="feats">' + ''.join(f'<li>{esc(x)}</li>' for x in p.get('feats', [])) + '</ul>') if p.get('feats') else '',
@@ -88,6 +103,12 @@ ICON_WA = '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" a
 ICON_MAIL = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 6l-10 7L2 6"/></svg>'
 
 def header(R, H, skip):
+  KAT='https://eprati.com/wp-content/uploads/2022/12/EPRAT%C4%B0-PLAST%C4%B0K-%C3%9CR%C3%9CN-KATALO%C4%9EU-2022.pdf'
+  secs=[('market','atlet','Market ve mağaza'),('firin','ekmek','Fırın ve pastane'),('manav','rulo','Manav ve pazar'),('gida','bakliyat','Gıda üreticisi'),('eticaret','kargo','E-ticaret ve kargo'),('kt','aski','Kuru temizleme'),('tekstil','opp','Tekstil ve giyim'),('sanayi','lastik','Sanayi ve otomotiv')]
+  sec_html=''.join(f'<a class="xsec" href="{R}poset-asistani/?sektor={k}"><span class="xic" data-ic="{ic}"></span>{n}</a>' for k,ic,n in secs)
+  cat_html=''.join(f'<a class="xcat" href="{R}urunler/{k}/"><b>{esc(c["name"])}</b><span>{sum(1 for q in PRODS if q["cat"]==k)} ürün →</span></a>' for k,c in CATS.items())
+  prod_html=''.join('<div class="xpc"><a class="xpch" href="'+R+'urunler/'+k+'/">'+esc(c['name'])+'</a>'+''.join(f'<a href="{R}{purl(q)}">{esc(q["name"])}</a>' for q in PRODS if q['cat']==k)+'</div>' for k,c in CATS.items())
+  soon='<em class="soon">yakında</em>'
   return f'''<a class="skip" href="#{skip}">İçeriğe geç</a>
 <div class="top"><div class="wrap">
   <a class="ico" href="tel:+902126516669">{ICON_PHONE}0212 651 66 69</a>
@@ -97,22 +118,55 @@ def header(R, H, skip):
 </div></div>
 <header class="hdr"><div class="wrap">
   <a class="logo" href="{H}" aria-label="Eprati Plastik ana sayfa"><img src="{R}logo.svg" alt="Eprati Plastik ve Ambalaj San. Tic. A.Ş." width="190" height="78"></a>
-  <nav class="menu" aria-label="Ana menü">
-    <a href="{H}#urunler">Ürünler</a><a href="{H}#sektorler">Sektörler</a><a href="{R}poset-asistani/">Poşet Asistanı</a><a href="{H}#kurumsal">Kurumsal</a><a href="{H}#sss">SSS</a><a href="{H}#iletisim">İletişim</a>
-  </nav>
-  <div class="navbtns">
-    <a class="btn ghost" href="https://eprati.com/wp-content/uploads/2022/12/EPRAT%C4%B0-PLAST%C4%B0K-%C3%9CR%C3%9CN-KATALO%C4%9EU-2022.pdf" target="_blank" rel="noopener">Katalog İndir</a><a class="btn" href="{R}poset-asistani/">Teklif Al</a>
-    <button type="button" id="menubtn" aria-label="Menüyü aç" aria-expanded="false" aria-controls="mobilemenu"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+  <div class="gsearch" role="search">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>
+    <input id="gq" type="search" autocomplete="off" placeholder="Ne arıyorsunuz? ör. ekmek poşeti" aria-label="Sitede ara">
+    <kbd class="hide-m">/</kbd>
+    <div class="gres" id="gres" hidden></div>
+  </div>
+  <div class="hact">
+    <button type="button" class="hbtn hsearch" id="gsbtn" aria-label="Ara"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg></button>
+    <a class="btn hquote" href="{R}poset-asistani/">Teklif Al</a>
+    <button type="button" class="hbtn hmenu" id="xbtn" aria-expanded="false" aria-controls="xmenu"><span class="hm-l" aria-hidden="true"><i></i><i></i></span><span class="hm-t">Menü</span></button>
   </div>
 </div></header>
-<div class="mmenu" id="mobilemenu" hidden role="dialog" aria-modal="true" aria-label="Menü">
-  <div class="mtop"><img src="{R}logo.svg" alt="Eprati Plastik" width="140" height="58"><button type="button" class="mclose" data-close aria-label="Menüyü kapat">×</button></div>
-  <nav aria-label="Mobil menü">
-    <a href="{H}#urunler">Ürünler</a><a href="{H}#sektorler">Sektörünüze göre</a><a href="{R}urunler/magaza-ambalajlari/atlet-poset/">Atlet Poşet</a><a href="{H}#kurumsal">Kurumsal</a><a href="{H}#sss">Sıkça sorulanlar</a><a href="{H}#iletisim">İletişim</a>
-  </nav>
-  <div class="mcta"><a class="btn" href="{R}poset-asistani/">Poşet Asistanı ile teklif al</a><a class="btn ghost" href="https://eprati.com/wp-content/uploads/2022/12/EPRAT%C4%B0-PLAST%C4%B0K-%C3%9CR%C3%9CN-KATALO%C4%9EU-2022.pdf" target="_blank" rel="noopener">Katalog İndir (PDF)</a></div>
-  <div class="mlang"><span class="flag f-tr"></span>Türkçe · <span class="flag f-en"></span>English <em>yakında</em> · <span class="flag f-de"></span>Deutsch <em>yakında</em></div>
-  <div class="mcontact"><a href="tel:+902126516669">0212 651 66 69</a> · <a href="tel:+902126511799">0212 651 17 99</a><br><a href="https://wa.me/905357183598">WhatsApp 0535 718 35 98</a><br><a href="mailto:satis@eprati.com">satis@eprati.com</a><br>Beylikdüzü OSB, İstanbul</div>
+<div class="xmenu" id="xmenu" hidden role="dialog" aria-modal="true" aria-label="Menü">
+  <div class="xtop wrap"><img src="{R}logo-beyaz.svg" alt="Eprati Plastik" width="150" height="62"><button type="button" class="xclose" data-xclose aria-label="Menüyü kapat"><span>Kapat</span>×</button></div>
+  <div class="xbody wrap">
+    <p class="xq">Ne yapmak istiyorsunuz?</p>
+    <div class="xlist">
+      <section class="xi on" data-xi="0"><button type="button" class="xh" aria-expanded="true"><span class="xn">01</span>Poşetimi bulmak istiyorum<span class="xar">→</span></button>
+        <div class="xp"><p class="xpl">Sektörünüzü seçin, size uygun poşeti birlikte bulalım</p><div class="xsecs">{sec_html}</div>
+          <p class="xpl" style="margin-top:22px">ya da poşet tipine göre</p><div class="xcats">{cat_html}</div></div></section>
+      <section class="xi" data-xi="1"><button type="button" class="xh" aria-expanded="false"><span class="xn">02</span>Teklif almak istiyorum<span class="xar">→</span></button>
+        <div class="xp"><div class="xcards">
+          <a class="xcard pri" href="{R}poset-asistani/"><b>Poşet Asistanı</b><span>Poşetinizi seçin, rengini ve yazınızı görün, teklif isteyin. Yaklaşık 1 dakika.</span><i>Başlat →</i></a>
+          <a class="xcard" href="https://wa.me/905357183598"><b>WhatsApp'tan yazın</b><span>Bir fotoğraf ya da kısa bir mesaj yeterli; satış ekibimiz dönsün.</span><i>0535 718 35 98 →</i></a>
+          <a class="xcard" href="tel:+902126516669"><b>Bizi arayın</b><span>Hafta içi satış ekibimizle doğrudan görüşün.</span><i>0212 651 66 69 →</i></a>
+        </div></div></section>
+      <section class="xi" data-xi="2"><button type="button" class="xh" aria-expanded="false"><span class="xn">03</span>Ürünlere göz atmak istiyorum<span class="xar">→</span></button>
+        <div class="xp"><div class="xprods">{prod_html}</div></div></section>
+      <section class="xi" data-xi="3"><button type="button" class="xh" aria-expanded="false"><span class="xn">04</span>Eprati'yi tanımak istiyorum<span class="xar">→</span></button>
+        <div class="xp"><div class="xlinks">
+          <a href="#">Hakkımızda {soon}<span>2000'den beri entegre poşet ve ambalaj üretimi</span></a>
+          <a href="{H}#kurumsal">Fabrikamız<span>Hammaddeden bitmiş ürüne tek çatı altında</span></a>
+          <a href="#">Sertifikalarımız {soon}<span>Gıdaya uygunluk ve kalite belgeleri</span></a>
+          <a href="{H}#isler">Referanslar ve örnek işler<span>Bize güvenen markalar</span></a>
+          <a href="{H}#ihracat">İhracat<span>Avrupa'dan Amerika'ya</span></a>
+          <a href="{H}#sss">Sıkça sorulan sorular<span>Ölçü, baskı, gıda uygunluğu</span></a>
+        </div></div></section>
+      <section class="xi" data-xi="4"><button type="button" class="xh" aria-expanded="false"><span class="xn">05</span>Bize ulaşmak istiyorum<span class="xar">→</span></button>
+        <div class="xp"><div class="xcontact">
+          <a href="tel:+902126516669"><small>Telefon</small>0212 651 66 69<br>0212 651 17 99</a>
+          <a href="https://wa.me/905357183598"><small>WhatsApp</small>0535 718 35 98</a>
+          <a href="mailto:satis@eprati.com"><small>E-posta</small>satis@eprati.com</a>
+          <a href="https://maps.google.com/?q=Beylikd%C3%BCz%C3%BC+OSB+Mermerciler+Sanayi+Sitesi+8.+Cadde+No:10" target="_blank" rel="noopener"><small>Adres · haritada aç ↗</small>Beylikdüzü OSB Mah. Mermerciler San. Sit. 8. Cad. No:10/5, Beylikdüzü / İstanbul</a>
+          <a href="https://epratiplastic.trustpass.alibaba.com" target="_blank" rel="noopener"><small>Global alıcılar</small>Alibaba.com mağazamız ↗</a>
+          <a href="#"><small>İletişim sayfası</small>Form ve çalışma saatleri {soon}</a>
+        </div></div></section>
+    </div>
+  </div>
+  <div class="xfoot wrap"><a href="{KAT}" target="_blank" rel="noopener">Ürün kataloğu (PDF)</a><a href="https://www.eldora.com.tr/" target="_blank" rel="noopener">Mağaza ↗</a><a href="#">KVKK</a><a href="#">Çerez politikası</a><span class="xlang"><span class="flag f-tr"></span>TR · <span class="flag f-en"></span>EN · <span class="flag f-de"></span>DE <em class="soon">yakında</em></span></div>
 </div>'''
 
 def mbar(R):
@@ -145,7 +199,8 @@ def page(p):
   ld = ''.join('<script type="application/ld+json">' + json.dumps(x, ensure_ascii=False) + '</script>\n' for x in p['ld'])
   main = part(p['main']).replace('{{R}}', R).replace('{{HOME}}', H).replace('{{NOTICE}}', NOTICE)
   if p.get('prod'): main = prod_fill(main, p['prod'], R)
-  pgid = {'home.html': 'pg-home', 'asistan.html': 'pg-asistan', 'urun.html': 'pg-urun'}[p['main']]
+  if p.get('catk'): main = cat_fill(main, p['catk'], R)
+  pgid = {'home.html': 'pg-home', 'asistan.html': 'pg-asistan', 'urun.html': 'pg-urun', 'kategori.html': 'pg-kat'}[p['main']]
   foot = part('footer.html').replace('{{R}}', R).replace('{{HOME}}', H).replace('src="logo-beyaz.svg"', f'src="{R}logo-beyaz.svg"')
   return f'''<!DOCTYPE html>
 <html lang="tr" class="no-js">
@@ -177,7 +232,7 @@ def page(p):
 {main}
 {foot}
 {mbar(R)}
-{quick(R, p['main']!='asistan.html')}
+{quick(R, p['main'] not in ('asistan.html',))}
 <script>window.EPR_P={PJS};</script>
 <script src="{R}assets/app.js?v={VER}" defer></script>
 </body>

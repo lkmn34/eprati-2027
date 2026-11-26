@@ -590,3 +590,102 @@ img{max-width:100%}
 .feats li{position:relative;padding-left:24px;font-size:15px;color:var(--ink)}
 .feats li:before{content:'';position:absolute;left:2px;top:6px;width:12px;height:7px;border-left:2.5px solid var(--green);border-bottom:2.5px solid var(--green);transform:rotate(-45deg)}
 .codeinfo{display:flex;align-items:flex-start;background:#EEF1F8;border:1px solid #CFD5EA;border-radius:12px;padding:12px 14px;margin:18px 0 0;font-size:14px;line-height:1.5;color:#2B3060}.codeinfo svg{flex:none;margin:1px 10px 0 0;color:var(--navy)}
+
+/* ===== yeni header ===== */
+.hdr .wrap{gap:20px}
+.gsearch{position:relative;flex:1 1 auto;max-width:520px;display:flex;align-items:center;background:#F2F4F8;border:1.5px solid transparent;border-radius:14px;padding:0 12px;color:var(--mut);transition:border-color .2s,background .2s}
+.gsearch:focus-within{background:#fff;border-color:var(--navy)}
+.gsearch input{flex:1;min-width:0;min-height:46px;border:0;outline:0;background:transparent;margin-left:8px;font:500 15px Inter,sans-serif;color:var(--ink)}
+.gsearch kbd{font:600 12px Inter,sans-serif;border:1px solid var(--line);border-radius:6px;padding:2px 7px;background:#fff;color:var(--mut)}
+.gres{position:absolute;left:0;right:0;top:calc(100% + 8px);background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:0 20px 50px rgba(25,27,69,.16);padding:6px;z-index:70;max-height:70vh;overflow:auto}
+.gres a{display:flex;align-items:center;padding:9px 10px;border-radius:10px;text-decoration:none;color:var(--ink)}
+.gres a:hover,.gres a.sel{background:#F1F3F8}
+.gres b{display:block;font-weight:600;font-size:14.5px}.gres small{display:block;font-size:12px;color:var(--mut)}
+.gric{width:38px;height:38px;flex:none;border-radius:10px;background:#EEF1F8;display:flex;align-items:center;justify-content:center;margin-right:12px;color:var(--navy)}
+.gres .gall{border-top:1px solid var(--line);border-radius:0 0 10px 10px;margin-top:4px;font-size:13px;color:var(--mut)}.gres .gall b{display:inline;color:var(--navy);font-size:13px}
+.gnone{padding:14px;font-size:14px;color:var(--mut)}
+.hact{display:flex;align-items:center;margin-left:auto}
+.hact .hquote{min-height:46px;margin:0 10px}
+.hbtn{display:inline-flex;align-items:center;justify-content:center;min-height:46px;border-radius:14px;border:1.5px solid var(--line);background:#fff;color:var(--ink);cursor:pointer;font:700 14px Inter,sans-serif}
+.hsearch{display:none;width:46px}
+.hmenu{padding:0 16px 0 14px}.hmenu:hover{border-color:var(--navy)}
+.hm-l{display:inline-flex;flex-direction:column;justify-content:center;width:18px;margin-right:9px}.hm-l i{display:block;height:2.2px;background:currentColor;border-radius:2px;margin:2.5px 0}.hm-l i:last-child{width:12px}
+.menu,.navbtns{display:none!important}
+
+/* ===== niyete göre menü ===== */
+.xmenu{position:fixed;top:0;left:0;right:0;bottom:0;z-index:80;background:#14163F;color:#fff;overflow-y:auto;-webkit-overflow-scrolling:touch;display:flex;flex-direction:column;animation:xin .3s ease}
+@keyframes xin{from{opacity:0}to{opacity:1}}
+.xmenu[hidden]{display:none}
+.xmenu:before{content:'';position:fixed;width:700px;height:700px;right:-200px;top:-260px;border-radius:50%;background:radial-gradient(circle,rgba(51,170,71,.22),rgba(51,170,71,0) 65%);pointer-events:none}
+.xtop{display:flex;justify-content:space-between;align-items:center;padding-top:18px;padding-bottom:18px;position:relative}
+.xclose{display:inline-flex;align-items:center;min-height:46px;padding:0 16px;border-radius:14px;border:1.5px solid rgba(255,255,255,.25);background:transparent;color:#fff;font:600 14px Inter,sans-serif;cursor:pointer;font-size:24px;line-height:1}
+.xclose span{font-size:14px;margin-right:10px}
+.xbody{flex:1;position:relative;padding-top:24px;padding-bottom:30px}
+.xq{font-size:14px;font-weight:600;color:#8CC47A;letter-spacing:.06em;text-transform:uppercase;margin:0 0 18px}
+.xlist{position:relative;width:42%;min-height:440px}
+.xi{border-top:1px solid rgba(255,255,255,.1)}
+.xh{display:flex;align-items:center;width:100%;background:none;border:0;color:rgba(255,255,255,.55);text-align:left;cursor:pointer;padding:18px 0;font:700 clamp(20px,2.3vw,30px)/1.15 'Plus Jakarta Sans',Inter,sans-serif;letter-spacing:-.02em;transition:color .2s}
+.xh:hover,.xi.on .xh{color:#fff}
+.xn{font:600 13px Inter,sans-serif;color:#8CC47A;width:44px;flex:none;letter-spacing:0}
+.xar{margin-left:auto;font-size:22px;opacity:0;transform:translateX(-8px);transition:all .25s}.xi.on .xar{opacity:1;transform:none;color:#8CC47A}
+.xp{position:absolute;left:calc(100% + 6vw);top:0;width:calc(138% + 0px);max-width:640px;display:none;animation:xpin .3s ease}
+.xi.on .xp{display:block}
+@keyframes xpin{from{opacity:0;transform:translateX(12px)}to{opacity:1;transform:none}}
+.xpl{font-size:14px;color:rgba(255,255,255,.65);margin:0 0 12px}
+.xsecs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-gap:8px}
+.xsec{display:flex;align-items:center;min-height:54px;padding:0 12px;border-radius:12px;background:rgba(255,255,255,.06);color:#fff;text-decoration:none;font-weight:600;font-size:15px;transition:background .2s}
+.xsec:hover{background:rgba(255,255,255,.14)}
+.xic{width:34px;height:34px;flex:none;border-radius:9px;background:#fff;display:flex;align-items:center;justify-content:center;margin-right:12px}.xic svg{width:24px;height:24px}
+.xcats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-gap:8px}
+.xcat{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;border:1px solid rgba(255,255,255,.18);border-radius:12px;color:#fff;text-decoration:none;font-size:14px}.xcat span{color:#8CC47A;font-size:13px;white-space:nowrap;margin-left:8px}.xcat:hover{border-color:#8CC47A}
+.xcards{display:grid;grid-gap:10px}
+.xcard{display:block;padding:18px 20px;border-radius:16px;background:rgba(255,255,255,.06);color:#fff;text-decoration:none;transition:background .2s}
+.xcard:hover{background:rgba(255,255,255,.13)}.xcard.pri{background:#33AA47}.xcard.pri:hover{background:#2C9A3F}
+.xcard b{display:block;font-size:19px;font-family:'Plus Jakarta Sans',Inter,sans-serif}.xcard span{display:block;font-size:14px;opacity:.8;margin:4px 0 8px}.xcard i{font-style:normal;font-weight:600;font-size:14px}
+.xprods{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-gap:22px 28px}
+.xpc a{display:block;color:rgba(255,255,255,.75);text-decoration:none;font-size:14px;padding:4px 0}.xpc a:hover{color:#fff}
+.xpc .xpch{color:#8CC47A;font-weight:700;font-size:13px;letter-spacing:.04em;text-transform:uppercase;margin-bottom:4px}
+.xlinks{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-gap:8px}
+.xlinks a,.xcontact a{display:block;padding:14px 16px;border-radius:12px;background:rgba(255,255,255,.06);color:#fff;text-decoration:none;font-weight:600;font-size:16px}
+.xlinks a span{display:block;font-weight:400;font-size:13px;opacity:.7;margin-top:3px}
+.xlinks a:hover,.xcontact a:hover{background:rgba(255,255,255,.13)}
+.xcontact{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-gap:8px}.xcontact small{display:block;font-size:12px;color:#8CC47A;font-weight:600;margin-bottom:3px}.xcontact a{font-size:15px;line-height:1.45}
+.soon{font-style:normal;font-size:11px;font-weight:600;background:rgba(255,255,255,.14);color:#fff;border-radius:999px;padding:2px 8px;margin-left:6px;vertical-align:2px}
+.xfoot{display:flex;flex-wrap:wrap;align-items:center;gap:10px 22px;padding-top:18px;padding-bottom:calc(22px + env(safe-area-inset-bottom));border-top:1px solid rgba(255,255,255,.1);font-size:13px;position:relative}
+.xfoot a{color:rgba(255,255,255,.7);text-decoration:none}.xfoot a:hover{color:#fff}.xlang{margin-left:auto;color:rgba(255,255,255,.7);display:flex;align-items:center}.xlang .flag{margin:0 4px 0 6px}
+body.xopen .qtab,body.xopen .mbar{display:none}
+
+/* ===== kategori sayfası ===== */
+.khero{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;border-radius:26px;padding:36px 40px;margin-bottom:24px}
+.khero h1{font-size:44px;margin:6px 0 10px}.khero p{margin:0;max-width:620px;color:var(--mut);font-size:17px}.khero .btn{margin-top:16px}
+.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));grid-gap:14px}
+.pcard{position:relative;display:flex;flex-direction:column;background:#fff;border:1px solid var(--line);border-radius:20px;padding:22px;text-decoration:none;color:var(--ink);transition:transform .25s,box-shadow .25s,border-color .25s}
+.pcard:hover{transform:translateY(-4px);box-shadow:0 16px 34px rgba(25,27,69,.1);border-color:#C9CEE3}
+.pcic{width:64px;height:64px;border-radius:16px;background:#EEF1F8;display:flex;align-items:center;justify-content:center;margin-bottom:14px}
+.pcard b{font-family:'Plus Jakarta Sans',Inter,sans-serif;font-size:19px}.pcard p{margin:6px 0 14px;font-size:14px;color:var(--mut)}
+.pcard em{position:absolute;top:18px;right:18px;font-style:normal;font-size:11px;font-weight:600;background:#E8F3E3;color:#1C6A30;border-radius:999px;padding:4px 9px}
+.pcard i{margin-top:auto;font-style:normal;font-weight:600;font-size:14px;color:var(--navy)}
+.kother{display:flex;flex-wrap:wrap;align-items:center;margin-top:28px;font-size:14px;color:var(--mut)}.kother a{margin:4px 0 4px 12px;font-weight:600}
+
+/* ===== mobil ===== */
+@media(max-width:1060px){.gsearch{max-width:none}}
+@media(max-width:900px){
+  .xlist{width:auto;min-height:0}
+  .xp{position:static;width:auto;max-width:none;padding:0 0 22px}
+  .xh{padding:16px 0;font-size:22px;color:#fff}
+  .xar{opacity:.6;transform:rotate(90deg)}.xi.on .xar{transform:rotate(-90deg)}
+  .xlang{margin-left:0}
+}
+@media(max-width:760px){
+  .gsearch{display:none;position:absolute;left:12px;right:12px;top:calc(100% + 8px);max-width:none;background:#fff;border-color:var(--navy);box-shadow:0 12px 30px rgba(25,27,69,.18);z-index:60}
+  body.sopen .gsearch{display:flex}
+  .hsearch{display:inline-flex}
+  .hact .hquote{padding:0 14px;margin:0 8px}
+  .hm-t{display:none}.hmenu{width:46px;padding:0}.hm-l{margin:0}
+  .xsecs,.xcats,.xprods,.xlinks,.xcontact{grid-template-columns:1fr}
+  .xsecs{grid-template-columns:1fr 1fr}.xsec{font-size:13.5px;padding:0 8px;min-height:50px}.xic{width:30px;height:30px;margin-right:8px}.xic svg{width:20px;height:20px}
+  .khero{padding:24px 20px}.khero h1{font-size:30px}.khero p{font-size:15px}
+  .hdr .wrap{position:relative;gap:0}
+}
+@media(max-width:380px){.hact .hquote{display:none}}
+.xmenu>.wrap{width:100%;box-sizing:border-box}

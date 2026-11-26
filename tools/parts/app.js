@@ -4,14 +4,6 @@ function esc(t){return String(t).replace(/[&<>"]/g,function(c){return{'&':'&amp;
 function low(s){return s.toLocaleLowerCase('tr')}
 var R=document.body.getAttribute('data-root')||'',HOME=R||'./',ASIST=R+'poset-asistani/',URUN=R+'urunler/magaza-ambalajlari/atlet-poset/';
 
-/* ---------- mobil menü ---------- */
-var mb=$('#menubtn'),mm=$('#mobilemenu');
-if(mb&&mm){
-  function setMenu(o){mm.hidden=!o;mb.setAttribute('aria-expanded',o);document.documentElement.style.overflow=o?'hidden':''}
-  mb.addEventListener('click',function(){setMenu(mm.hidden)});
-  mm.addEventListener('click',function(e){if(e.target.closest&&(e.target.closest('a')||e.target.closest('[data-close]')))setMenu(false)});
-  document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!mm.hidden){setMenu(false);mb.focus()}});
-}
 function find(arr,k){for(var i=0;i<arr.length;i++)if(arr[i][0]===k)return arr[i];return null}
 /* ---------- ölçü çizimi (ortak) ---------- */
 function dimSvg(w,g,h,label){
@@ -173,12 +165,46 @@ function slider(root){if(!root||root._s)return;root._s=1;var tr=root.querySelect
   tr.addEventListener('click',function(e){if(moved){e.preventDefault();e.stopPropagation();moved=false}},true);
   tr.addEventListener('scroll',upd,{passive:true});window.addEventListener('resize',upd);root._upd=upd;upd()}
 Array.prototype.forEach.call(document.querySelectorAll('.relic'),function(el){var k=el.getAttribute('data-ic');if(IC[k])el.innerHTML=icon(k,30)});
-if($('#pg-home')){
-/* ---------- ana sayfa ---------- */
 var P=[['Atlet Poşet','Mağaza','market, hışır, alışveriş, bakkal'],['El Geçmeli Poşet','Mağaza','butik, giyim, mağaza'],['Kulplu Poşet','Mağaza','ayakkabı, kutu, tekstil'],['Kargo Poşeti','Mağaza','e-ticaret, gönderi, kurye'],
 ['Rulo Manav Poşeti','Gıda','manav, meyve, sebze, pazar'],['Bakliyat Poşeti','Gıda','pirinç, mercimek, kuru gıda'],['Plast Kağıt','Gıda','kasap, şarküteri, peynir'],['Koli-Kasa Poşeti','Gıda','kasa, koli içi, toptan'],['Ekmek Poşeti','Gıda','fırın, pastane, simit'],['Dondurma-Buz Poşeti','Gıda','buz, dondurma, soğuk'],
 ['Kuru Temizleme Poşeti','Tekstil ve Temizlik','askı, elbise, ütü'],['Halı Poşeti','Tekstil ve Temizlik','halı yıkama, rulo'],['OPP-CPP Torba','Tekstil ve Temizlik','şeffaf, gömlek, ürün paketleme'],['OPP-CPP Bantlı Torba','Tekstil ve Temizlik','yapışkan, bantlı, şeffaf'],['OPP-Film Bobin','Tekstil ve Temizlik','bobin, makine'],['Jelatin','Tekstil ve Temizlik','ambalaj, sarma'],['Taşıma Torbası','Tekstil ve Temizlik','çamaşır, büyük torba'],
 ['Torba','Endüstriyel','sanayi, depo'],['Bantlı Torba','Endüstriyel','yapışkan kapama'],['Bardak Poşeti','Endüstriyel','karton bardak, tek kullanımlık'],['Fermuarlı Kilitli Torba','Endüstriyel','ziplock, fermuar'],['Kilitli Torba','Endüstriyel','buzdolabı, kilitli, numune'],['Oto Lastik Poşeti','Endüstriyel','lastik, otomotiv, depolama'],['Film (Bobin)','Endüstriyel','streç, bobin']];
+/* ---------- menü (niyete göre) ---------- */
+(function(){var xb=$('#xbtn'),xm=$('#xmenu');if(!xb||!xm)return;
+  Array.prototype.forEach.call(xm.querySelectorAll('[data-ic]'),function(el){var k=el.getAttribute('data-ic');if(IC[k])el.innerHTML=icon(k,26)});
+  function open(o){xm.hidden=!o;xb.setAttribute('aria-expanded',o);document.documentElement.style.overflow=o?'hidden':'';document.body.classList.toggle('xopen',o);if(o){var f=xm.querySelector('.xi.on .xh');f&&f.focus()}else xb.focus()}
+  xb.addEventListener('click',function(){open(xm.hidden)});
+  xm.addEventListener('click',function(e){if(e.target.closest('[data-xclose]')){open(false);return}var a=e.target.closest('a');if(a&&a.getAttribute('href')!=='#'){open(false);return}if(a)e.preventDefault();
+    var h=e.target.closest('.xh');if(!h)return;var it=h.parentNode,wide=window.innerWidth>900;
+    Array.prototype.forEach.call(xm.querySelectorAll('.xi'),function(x){var on=x===it?(wide?true:!x.classList.contains('on')):false;x.classList.toggle('on',on);x.querySelector('.xh').setAttribute('aria-expanded',on)})});
+  xm.addEventListener('mouseover',function(e){if(window.innerWidth<=900)return;var h=e.target.closest('.xh');if(!h||h.parentNode.classList.contains('on'))return;var it=h.parentNode;
+    Array.prototype.forEach.call(xm.querySelectorAll('.xi'),function(x){x.classList.toggle('on',x===it);x.querySelector('.xh').setAttribute('aria-expanded',x===it)})});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!xm.hidden)open(false)});
+})();
+/* ---------- site içi arama ---------- */
+(function(){var q=$('#gq'),res=$('#gres'),box=$('.gsearch'),sb=$('#gsbtn');if(!q)return;
+  var SECN=[['market','Market ve mağaza'],['firin','Fırın ve pastane'],['manav','Manav ve pazar'],['gida','Gıda üreticisi'],['eticaret','E-ticaret ve kargo'],['kt','Kuru temizleme'],['hali','Halı yıkama'],['tekstil','Tekstil ve hazır giyim'],['sanayi','Sanayi ve otomotiv']];
+  var PAGES=[['Poşet Asistanı','teklif al fiyat öneri tasarım',ASIST,'Sayfa'],['Ürün kataloğu','pdf katalog indir','https://eprati.com/wp-content/uploads/2022/12/EPRAT%C4%B0-PLAST%C4%B0K-%C3%9CR%C3%9CN-KATALO%C4%9EU-2022.pdf','Sayfa'],['Sıkça sorulan sorular','sss soru ölçü gıda belge',HOME+'#sss','Sayfa'],['Fabrikamız','tesis üretim fabrika',HOME+'#kurumsal','Sayfa'],['İhracat','yurt dışı ihracat ülke alibaba',HOME+'#ihracat','Sayfa'],['Referanslar','referans müşteri marka',HOME+'#isler','Sayfa'],['WhatsApp','whatsapp mesaj iletişim','https://wa.me/905357183598','İletişim'],['Telefon','telefon ara iletişim','tel:+902126516669','İletişim']];
+  var CATN={'magaza-ambalajlari':'Mağaza','gida-ambalajlari':'Gıda','tekstil-ve-temizlik-ambalajlari':'Tekstil ve Temizlik','endustriyel-ambalajlar':'Endüstriyel'};
+  var IDX=EP.map(function(e){var kw=(find(P,e[0])||[0,0,''])[2];return {t:e[0],k:low(e[0]+' '+kw+' '+CATN[e[2]]),u:R+e[1],g:'Ürün · '+CATN[e[2]],ic:e[3]}})
+    .concat(SECN.map(function(x){return {t:x[1],k:low(x[1]+' sektör'),u:ASIST+'?sektor='+x[0],g:'Sektör · asistanla başla',ic:null}}))
+    .concat(PAGES.map(function(x){return {t:x[0],k:low(x[0]+' '+x[1]),u:x[2],g:x[3],ic:null}}));
+  var sel=-1,cur=[];
+  function run(){var v=low(q.value.trim());if(!v){res.hidden=true;return}var ws=v.split(/\s+/).filter(function(w){return w.length>1});
+    cur=IDX.map(function(it){var n=low(it.t),sc=0;if(n.indexOf(v)===0)sc+=100;else if(n.indexOf(v)>=0)sc+=60;else if(it.k.indexOf(v)>=0)sc+=30;ws.forEach(function(w){if(n.indexOf(w)>=0)sc+=10;else if(it.k.indexOf(w)>=0)sc+=4});return [sc,it]}).filter(function(x){return x[0]>0}).sort(function(a,b){return b[0]-a[0]}).slice(0,7).map(function(x){return x[1]});
+    sel=-1;res.innerHTML=cur.length?cur.map(function(it,i){return '<a href="'+it.u+'" data-gi="'+i+'"><span class="gric">'+(it.ic&&IC[it.ic]?icon(it.ic,22):'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>')+'</span><span><b>'+esc(it.t)+'</b><small>'+esc(it.g)+'</small></span></a>'}).join('')+'<a class="gall" href="'+ASIST+'">Aradığınızı bulamadınız mı? <b>Poşet Asistanı size önersin →</b></a>'
+      :'<div class="gnone">Sonuç bulunamadı. <a href="'+ASIST+'">Poşet Asistanı</a> birkaç soruyla size uygun olanı önersin.</div>';res.hidden=false}
+  function mark(){Array.prototype.forEach.call(res.querySelectorAll('[data-gi]'),function(a,i){a.classList.toggle('sel',i===sel)})}
+  q.addEventListener('input',run);q.addEventListener('focus',function(){if(q.value)run()});
+  q.addEventListener('keydown',function(e){if(e.key==='ArrowDown'){sel=Math.min(cur.length-1,sel+1);mark();e.preventDefault()}else if(e.key==='ArrowUp'){sel=Math.max(0,sel-1);mark();e.preventDefault()}else if(e.key==='Enter'){var it=cur[sel<0?0:sel];if(it)location.href=it.u}else if(e.key==='Escape'){res.hidden=true;q.blur();document.body.classList.remove('sopen')}});
+  document.addEventListener('click',function(e){if(!e.target.closest('.gsearch')&&!e.target.closest('#gsbtn')){res.hidden=true;document.body.classList.remove('sopen')}});
+  document.addEventListener('keydown',function(e){if(e.key==='/'&&!/input|textarea|select/i.test(document.activeElement.tagName)){e.preventDefault();q.focus()}});
+  sb&&sb.addEventListener('click',function(){document.body.classList.toggle('sopen');if(document.body.classList.contains('sopen'))setTimeout(function(){q.focus()},50)});
+})();
+Array.prototype.forEach.call(document.querySelectorAll('.pcic'),function(el){var k=el.getAttribute('data-ic');if(IC[k])el.innerHTML=icon(k,40)});
+if($('#pg-home')){
+/* ---------- ana sayfa ---------- */
+
 var ara=$('#ara'), sres=$('#sres');
 function doSearch(){
   var q=low(ara.value.trim()); if(!q){sres.hidden=true;return}
