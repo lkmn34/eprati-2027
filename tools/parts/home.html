@@ -47,21 +47,24 @@
   <div class="wrap sec">
     <div class="dsgrid">
       <div class="dstage" id="dstage">
-        <div class="dbag" id="dbag"></div>
+        <canvas class="dbag" id="dbag" role="img" aria-label="Poşet önizlemesi"></canvas>
         <label class="dlogo">Logonuzu yükleyin<input type="file" accept="image/*" id="dlogo" aria-label="Logo yükle"></label>
       </div>
       <div class="dctl">
         <span class="eyebrow">POŞETİNİZİ TASARLAYIN</span>
         <h2 class="h2" style="margin-bottom:12px">Teklif almadan önce nasıl görüneceğini görün</h2>
-        <p class="muted" style="margin:0 0 24px">Zemin rengini ve baskı rengini seçin, isterseniz logonuzu yükleyin. Beğendiğiniz tasarımla tek tıkla teklif isteyin.</p>
-        <p class="dlab">Zemin rengi <span id="dcname"></span></p>
+        <p class="muted" style="margin:0 0 18px">Poşet tipini ve rengini seçin, isterseniz logonuzu yükleyin. Önizleme gerçek ürün fotoğrafımız üzerinde. Beğendiğinizde Poşet Asistanı ile yazılarınızı ekleyip teklif isteyin.</p>
+        <div class="faces" id="dtype" role="tablist" aria-label="Poşet tipi" style="margin:0 0 18px"></div>
+        <p class="dlab">Poşet rengi <span id="dcname"></span></p>
         <div class="pcolors" id="dcol"></div>
-        <p class="dlab">Baskı rengi <span id="diname"></span></p>
-        <div class="pcolors" id="dink"></div>
+        <div id="dkulpw"><p class="dlab">Kulp rengi <span id="dkname"></span></p>
+        <div class="pcolors" id="dkulp"></div></div>
+        <div id="dinkw"><p class="dlab">Baskı rengi <span id="diname"></span></p>
+        <div class="pcolors" id="dink"></div></div>
         <p class="dtip" id="dtip" aria-live="polite"></p>
         <div style="display:flex;flex-wrap:wrap;margin-top:18px">
-          <a class="btn" id="dgo" href="{{R}}urunler/magaza-ambalajlari/atlet-poset/" style="margin:0 10px 10px 0">Bu tasarımla teklif al →</a>
-          <a class="btn ghost" href="{{R}}urunler/magaza-ambalajlari/atlet-poset/">Ölçüleri gör</a>
+          <a class="btn" id="dgo" href="{{R}}urunler/magaza-ambalajlari/atlet-poset/" style="margin:0 10px 10px 0">Bu tasarımla devam et →</a>
+          <a class="btn ghost" href="{{R}}urunler/magaza-ambalajlari/atlet-poset/">Ürünleri incele</a>
         </div>
         <p class="muted" style="font-size:13px;margin:8px 0 0">Logonuz yalnızca tarayıcınızda gösterilir, hiçbir yere yüklenmez.</p>
       </div>

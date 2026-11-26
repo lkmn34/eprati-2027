@@ -2,7 +2,8 @@
 """Eprati sitesini tools/parts içindeki parçalardan üretir.
 Kullanım: python3 tools/build.py   (depo kök klasöründen)
 Alan adı değişince yalnızca BASE değiştirilir (ör. https://www.eprati.com/)."""
-import json, os, datetime
+import json, os, datetime, time
+VER = str(int(time.time()))
 
 BASE = 'https://lkmn34.github.io/eprati-2027/'
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -121,14 +122,14 @@ def page(p):
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="{R}assets/site.css">
+<link rel="stylesheet" href="{R}assets/site.css?v={VER}">
 {ld}</head>
 <body data-root="{R}">
 {header(R, H, pgid)}
 {main}
 {foot}
 {mbar(R)}
-<script src="{R}assets/app.js" defer></script>
+<script src="{R}assets/app.js?v={VER}" defer></script>
 </body>
 </html>
 '''

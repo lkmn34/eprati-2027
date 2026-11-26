@@ -439,3 +439,8 @@ img{max-width:100%}
 .faces button{min-height:40px;padding:0 20px;border-radius:9px;border:0;background:transparent;font:700 14px Inter,sans-serif;color:var(--mut);cursor:pointer}
 .faces button.on{background:var(--navy);color:#fff}
 @media(max-width:560px){.sides{grid-template-columns:1fr}}
+
+.dbag{display:block;width:auto!important;height:auto!important;max-width:88%;max-height:380px;filter:drop-shadow(0 14px 18px rgba(25,27,69,.18))}
+.dtip{margin-top:4px}
+.dstage{background:radial-gradient(circle at 50% 42%,#F7F8FB 0%,#DCE2EE 82%)}
+@media(max-width:760px){.dbag{max-height:300px}}
