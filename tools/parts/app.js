@@ -19,6 +19,40 @@ function dimSvg(w,g,h,label){
   return '<svg width="170" height="190" viewBox="0 0 170 190" role="img" aria-label="Ölçü çizimi"><rect x="'+bx+'" y="'+by+'" width="'+bw+'" height="'+bh+'" rx="4" fill="#E8F3E3" stroke="#24803A" stroke-width="2"/><rect x="'+bx+'" y="'+by+'" width="'+gw+'" height="'+bh+'" fill="#CFE6C8" stroke="#24803A"/><rect x="'+(bx+bw-gw)+'" y="'+by+'" width="'+gw+'" height="'+bh+'" fill="#CFE6C8" stroke="#24803A"/><text x="85" y="186" text-anchor="middle" font-size="12" font-family="Inter" fill="#191B45">'+esc(label)+'</text></svg>';
 }
 var COLS=[['Şeffaf','#EEF3F0'],['Beyaz','#FFFFFF'],['Krem','#F3E9D2'],['Sarı','#F6D34A'],['Yeşil','#5FAE6E'],['Diğer','#BFD6FA']];
+
+/* ---------- gerçek fotoğraf mockup motoru ----------
+   assets/mockup/{id}.png: R=gölge (x2), G=gövde maskesi, B=kulp maskesi, A=şeffaflık */
+var MOCK={atlet:{logo:[.5,.6,.5]},elgecme:{logo:[.5,.56,.62]},kulplu:{logo:[.5,.56,.4]}};
+var BODY=[['Beyaz','#F6F6F4'],['Krem','#EFE3C8'],['Sarı','#F2CF1D'],['Turuncu','#EE7D22'],['Kırmızı','#D42A2A'],['Yeşil','#3E9B50'],['Mavi','#2A6FC9'],['Lacivert','#2B3787'],['Siyah','#242424']];
+var HANDLE=[['Siyah','#1E1E1E'],['Beyaz','#F4F4F2'],['Kırmızı','#D42A2A'],['Sarı','#F2CF1D'],['Lacivert','#2B3787'],['Yeşil','#3E9B50'],['Mavi','#2A6FC9'],['Altın','#C29A45']];
+var MC={},MW={};
+function loadMock(id,cb){if(MC[id])return cb(MC[id]);(MW[id]=MW[id]||[]).push(cb);if(MW[id].length>1)return;var im=new Image();im.onload=function(){var c=document.createElement('canvas');c.width=im.width;c.height=im.height;var x=c.getContext('2d');x.drawImage(im,0,0);MC[id]={w:im.width,h:im.height,d:x.getImageData(0,0,im.width,im.height).data};MW[id].forEach(function(f){f(MC[id])});MW[id]=[]};im.src=R+'assets/mockup/'+id+'.png'}
+function hexRGB(h){var n=parseInt(h.slice(1),16);return[(n>>16)/255,((n>>8)&255)/255,(n&255)/255]}
+function placeholderLogo(ink){var c=document.createElement('canvas');c.width=420;c.height=230;var x=c.getContext('2d');x.fillStyle=ink;x.strokeStyle=ink;
+  x.save();x.translate(210,62);x.beginPath();x.moveTo(-34,40);x.bezierCurveTo(-34,-10,0,-44,44,-46);x.bezierCurveTo(44,4,10,40,-34,40);x.fill();x.restore();
+  x.textAlign='center';x.font='800 58px "Plus Jakarta Sans",Inter,Arial,sans-serif';x.fillText('FİRMA ADI',210,172);x.font='500 26px Inter,Arial,sans-serif';x.fillText('0212 000 00 00',210,214);return c}
+function drawMock(cv,id,body,handle,logo){
+  var tok=(cv._tok||0)+1;cv._tok=tok;
+  loadMock(id,function(M){if(cv._tok!==tok)return;
+    cv.width=M.w;cv.height=M.h;var x=cv.getContext('2d'),out=x.createImageData(M.w,M.h),o=out.data,d=M.d,B=hexRGB(body),H=hexRGB(handle||'#1E1E1E'),L=null;
+    if(logo){var lc=document.createElement('canvas');lc.width=M.w;lc.height=M.h;var lx=lc.getContext('2d'),p=MOCK[id].logo,sw=logo.naturalWidth||logo.width,sh=logo.naturalHeight||logo.height,sc=Math.min(M.w*p[2]/sw,M.h*.26/sh),dw=sw*sc,dh=sh*sc;lx.drawImage(logo,M.w*p[0]-dw/2,M.h*p[1]-dh/2,dw,dh);L=lx.getImageData(0,0,M.w,M.h).data}
+    for(var i=0;i<d.length;i+=4){var a=d[i+3];o[i+3]=a;if(!a)continue;var s=d[i]/127.5,bm=d[i+1]/255,hm=d[i+2]/255,sb=s<1?s:1;
+      var r=B[0]*sb,g=B[1]*sb,b=B[2]*sb;
+      if(L&&L[i+3]&&bm>.5){var la=L[i+3]/255;r=r*(1-la)+L[i]/255*sb*la;g=g*(1-la)+L[i+1]/255*sb*la;b=b*(1-la)+L[i+2]/255*sb*la}
+      var hl=(s-1)/.6;hl=hl<0?0:hl>1?1:hl;r=r*(1-hl)+hl;g=g*(1-hl)+hl;b=b*(1-hl)+hl;
+      if(hm>0){var h2=(s-1)/.8;h2=h2<0?0:h2>1?1:h2;var hr=H[0]*sb*(1-h2)+h2,hg=H[1]*sb*(1-h2)+h2,hb=H[2]*sb*(1-h2)+h2;r=r*bm+hr*hm;g=g*bm+hg*hm;b=b*bm+hb*hm}
+      o[i]=r*255;o[i+1]=g*255;o[i+2]=b*255}
+    x.putImageData(out,0,0)})}
+/* renk uyumu önerileri (poşet → önerilen kulplar) */
+var PAIR={'Beyaz':['Siyah','Lacivert','Kırmızı'],'Krem':['Altın','Siyah','Lacivert'],'Sarı':['Siyah','Kırmızı','Lacivert'],'Turuncu':['Siyah','Beyaz','Lacivert'],'Kırmızı':['Sarı','Beyaz','Siyah'],'Yeşil':['Beyaz','Sarı','Siyah'],'Mavi':['Beyaz','Sarı','Lacivert'],'Lacivert':['Beyaz','Sarı','Altın'],'Siyah':['Altın','Kırmızı','Beyaz']};
+var PAIRTXT={'Beyaz':'Beyaz poşette siyah ya da lacivert kulp kurumsal durur; logonuzun rengine uyan bir kulp da çok iyi bir seçim.','Krem':'Krem poşette altın ya da siyah kulp doğal ve şık bir görünüm verir.','Sarı':'Sarı poşette siyah ya da kırmızı kulp enerjik ve dikkat çekici durur.','Turuncu':'Turuncu poşette siyah ya da beyaz kulp rengi dengeler.','Kırmızı':'Kırmızı poşette sarı kulp canlı ve dikkat çekici, beyaz kulp ise ferah durur.','Yeşil':'Yeşil poşette beyaz ya da sarı kulp doğal ve taze bir his verir.','Mavi':'Mavi poşette beyaz ya da sarı kulp net bir kontrast yaratır.','Lacivert':'Lacivert poşette beyaz ya da altın kulp prestijli ve kurumsal görünür.','Siyah':'Siyah poşette altın ya da kırmızı kulp lüks ve güçlü bir görünüm verir.'};
+var CLASH={'Kırmızı|Yeşil':1,'Yeşil|Kırmızı':1,'Mavi|Yeşil':1,'Yeşil|Mavi':1,'Turuncu|Kırmızı':1,'Kırmızı|Turuncu':1,'Lacivert|Siyah':1,'Siyah|Lacivert':1};
+function nearestOf(pal,hex){var best=pal[0],bd=1e9,a=hexRGB(hex);pal.forEach(function(k){var b=hexRGB(k[1]),dd=Math.pow(a[0]-b[0],2)+Math.pow(a[1]-b[1],2)+Math.pow(a[2]-b[2],2);if(dd<bd){bd=dd;best=k}});return best}
+function hexL(h){if(h.charAt(0)!=='#')return .9;var c=[1,3,5].map(function(i){var v=parseInt(h.substr(i,2),16)/255;return v<=.03928?v/12.92:Math.pow((v+.055)/1.055,2.4)});return .2126*c[0]+.7152*c[1]+.0722*c[2]}
+function cr(a,b){var x=hexL(a),y=hexL(b);return (Math.max(x,y)+.05)/(Math.min(x,y)+.05)}
+function logoColor(src,cb){var im=new Image();im.onload=function(){try{var cv=document.createElement('canvas'),s=48;cv.width=cv.height=s;var x=cv.getContext('2d');x.drawImage(im,0,0,s,s);var d=x.getImageData(0,0,s,s).data,bins={},best=null,bn=0;
+  for(var i=0;i<d.length;i+=4){if(d[i+3]<128)continue;var r=d[i],g=d[i+1],b=d[i+2],mx=Math.max(r,g,b),mn=Math.min(r,g,b);if(mx>235&&mn>225)continue;var k=(r>>5)+','+(g>>5)+','+(b>>5);bins[k]=(bins[k]||0)+1;if(bins[k]>bn){bn=bins[k];best=[r,g,b]}}
+  cb(best?'#'+best.map(function(v){return ('0'+v.toString(16)).slice(-2)}).join(''):null)}catch(e){cb(null)}};im.src=src}
 function swatches(cur){return '<div class="swatches">'+COLS.map(function(c){return '<button type="button" data-color="'+c[0]+'" class="'+(cur===c[0]?'on':'')+'" aria-pressed="'+(cur===c[0])+'"><i style="background:'+c[1]+'"></i>'+c[0]+'</button>'}).join('')+'</div>'}
 
 function sizeStr(o){return o.w+'+'+o.g+'+'+o.g+' x '+o.h+' cm'}
@@ -152,21 +186,13 @@ var WORKS=[
      ['yesil','Açık yeşil','#78BE78','Açık yeşil zemin doğa dostu bir izlenim verir; koyu renkli baskıyla en iyi sonucu alırsınız.']]}
 ];
 var IMG=R+'assets/isler/';
-$('#works').innerHTML=WORKS.map(function(w,wi){var v0=w.v[0];return '<article class="work" data-w="'+wi+'">'+
+$('#works').innerHTML=WORKS.map(function(w){var v0=w.v[0];return '<article class="work">'+
   '<div class="wimg"><img src="'+IMG+w.id+'-'+v0[0]+'.webp" alt="'+esc(w.alt)+'" loading="lazy"></div>'+
-  '<div class="wbody"><span class="wtag">'+esc(w.ad)+'</span><h3>'+esc(w.mus)+'</h3><p class="muted">'+esc(w.info)+'</p>'+
-  '<p class="wlab">'+w.lab+': <b>'+v0[1]+'</b></p><div class="wsw">'+w.v.map(function(v,vi){return '<button type="button" data-v="'+vi+'" class="'+(vi?'':'on')+'" aria-pressed="'+(vi===0)+'" aria-label="'+w.lab+' '+v[1]+'" title="'+v[1]+'" style="background:'+v[2]+'"></button>'}).join('')+'</div>'+
-  '<p class="wtip"><span aria-hidden="true">💡</span>'+esc(v0[3])+'</p></div></article>'}).join('');
-// ön yükleme: kullanıcı karta gelince diğer renkleri hazırla
-$('#works').addEventListener('mouseover',function(e){var c=e.target.closest('.work');if(!c||c._pre)return;c._pre=1;WORKS[+c.getAttribute('data-w')].v.forEach(function(v){var i=new Image();i.src=IMG+WORKS[+c.getAttribute('data-w')].id+'-'+v[0]+'.webp'})});
-$('#works').addEventListener('click',function(e){var b=e.target.closest('[data-v]');if(!b)return;var c=b.closest('.work'),w=WORKS[+c.getAttribute('data-w')],v=w.v[+b.getAttribute('data-v')];
-  Array.prototype.forEach.call(c.querySelectorAll('[data-v]'),function(x){x.className=x===b?'on':'';x.setAttribute('aria-pressed',x===b)});
-  var img=c.querySelector('img');img.style.opacity=.35;var n=new Image();n.onload=function(){img.src=n.src;img.style.opacity=1};n.src=IMG+w.id+'-'+v[0]+'.webp';
-  c.querySelector('.wlab b').textContent=v[1];c.querySelector('.wtip').innerHTML='<span aria-hidden="true">💡</span>'+esc(v[3])});
+  '<div class="wbody"><span class="wtag">'+esc(w.ad)+'</span><h3>'+esc(w.mus)+'</h3><p class="muted">'+esc(w.info)+'</p></div></article>'}).join('');
 /* poşetinizi tasarlayın */
 var D={color:'Beyaz',ink:'Lacivert',logo:null};
-function hexL(h){if(h.charAt(0)!=='#')return .9;var c=[1,3,5].map(function(i){var v=parseInt(h.substr(i,2),16)/255;return v<=.03928?v/12.92:Math.pow((v+.055)/1.055,2.4)});return .2126*c[0]+.7152*c[1]+.0722*c[2]}
-function cr(a,b){var x=hexL(a),y=hexL(b);return (Math.max(x,y)+.05)/(Math.min(x,y)+.05)}
+
+
 var LOGOCOL=null;
 function nearestName(hex){var best=null,bd=1e9;INKS.forEach(function(k){var a=parseInt(hex.substr(1),16),b=parseInt(k[1].substr(1),16);var d=Math.pow((a>>16)-(b>>16),2)+Math.pow(((a>>8)&255)-((b>>8)&255),2)+Math.pow((a&255)-(b&255),2);if(d<bd){bd=d;best=k[0]}});return best}
 function dTip(){
@@ -178,9 +204,7 @@ function dTip(){
   if(D.logo&&LOGOCOL)t+=' Logonuzun ana rengi '+nearestName(LOGOCOL).toLocaleLowerCase('tr')+' tonunda; kulplu poşet seçerseniz kulp rengini bu tonda seçmek tasarımı bütünleştirir.';
   $('#dtip').innerHTML='<span aria-hidden="true">💡</span>'+esc(t);
 }
-function logoColor(src,cb){var im=new Image();im.onload=function(){try{var cv=document.createElement('canvas'),s=48;cv.width=cv.height=s;var x=cv.getContext('2d');x.drawImage(im,0,0,s,s);var d=x.getImageData(0,0,s,s).data,bins={},best=null,bn=0;
-  for(var i=0;i<d.length;i+=4){if(d[i+3]<128)continue;var r=d[i],g=d[i+1],b=d[i+2],mx=Math.max(r,g,b),mn=Math.min(r,g,b);if(mx>235&&mn>225)continue;var k=(r>>5)+','+(g>>5)+','+(b>>5);bins[k]=(bins[k]||0)+1;if(bins[k]>bn){bn=bins[k];best=[r,g,b]}}
-  cb(best?'#'+best.map(function(v){return ('0'+v.toString(16)).slice(-2)}).join(''):null)}catch(e){cb(null)}};im.src=src}
+
 
 function drawD(){
   $('#dbag').innerHTML=bagRender(find(COLS,D.color)[1],D.color==='Şeffaf',find(INKS,D.ink)[1],D.logo,true);
@@ -198,7 +222,7 @@ drawD();
 }
 if($('#pg-asistan')){
 /* ---------- asistan ---------- */
-var A={step:0,sector:null,content:null,handle:null,size:null,print:null,color:null,unit:'adet',w:30,g:10,h:60,name:'',phone:'',file:'',tried:false};
+var A={step:0,sector:null,content:null,handle:null,size:null,print:null,color:'Beyaz',kulp:'Siyah',logoImg:null,logoCol:null,unit:'adet',w:30,g:10,h:60,name:'',phone:'',file:'',tried:false};
 var SEC=[['market','Market ve Mağaza','Bakkal, market, butik','Atlet Poşet'],['firin','Fırın ve Pastane','Ekmek, simit, pasta','Ekmek Poşeti'],['manav','Manav ve Pazar','Meyve, sebze','Rulo Manav Poşeti'],['gida','Gıda Üreticisi','Bakliyat, kuru gıda, buz','Bakliyat Poşeti'],['eticaret','E-ticaret ve Kargo','Online satış, gönderi','Kargo Poşeti'],['kt','Kuru Temizleme','Askılı kıyafet','Kuru Temizleme Poşeti'],['hali','Halı Yıkama','Halı ve kilim','Halı Poşeti'],['tekstil','Tekstil ve Hazır Giyim','Ürün paketleme','OPP-CPP Torba'],['sanayi','Sanayi ve Otomotiv','Parça, lastik, depolama','Kilitli Torba']];
 var CON=[['hafif','Hafif ürünler','Giyim, aksesuar, kozmetik'],['orta','Günlük alışveriş','Market ürünleri, karışık'],['agir','Ağır ürünler','Şişe, konserve, bakliyat'],['gida','Doğrudan gıda','Ekmek, meyve, açık gıda'],['soguk','Soğuk veya donuk','Buz, dondurma, donuk ürün'],['parca','Parça veya büyük eşya','Halı, lastik, yedek parça']];
 var HAN=[['atlet','Atlet','M14 8v12M50 8v12M14 20c0 8 8 10 10 10h16c2 0 10-2 10-10M10 20h44v46H10z'],['el','El geçmeli','M10 8h44v58H10zM24 18h16v6H24z'],['kulp','Kulplu','M10 22h44v44H10zM22 22c0-14 20-14 20 0'],['sapsiz','Sapsız torba','M12 10h40v56H12zM12 18h40'],['rulo','Rulo / bobin','M16 16h32v40H16zM16 16c-6 0-6 40 0 40M48 16c6 0 6 40 0 40'],['oneri','Siz önerin','M26 22a6 6 0 1 1 8 6c-2 1-2 3-2 6M32 42v2']];
@@ -218,12 +242,15 @@ function recommend(){
   if(A.sector==='sanayi'&&A.content==='parca'&&(!A.handle||A.handle==='oneri'))rec='Oto Lastik Poşeti';
   return rec;
 }
+function mockId(){var m={atlet:'atlet',el:'elgecme',kulp:'kulplu'};if(m[A.handle])return m[A.handle];if(A.handle==='oneri'||!A.handle){var r=recommend();if(/^Atlet/.test(r))return 'atlet';if(/^El Geçmeli/.test(r))return 'elgecme';if(/^Kulplu/.test(r))return 'kulplu'}return null}
+function aLogo(){if(A.logoImg)return A.logoImg;if(A.print!=='logo'&&A.print!=='foto')return null;var bg=find(BODY,A.color)[1];var ink=['#2B3787','#1E1E1E','#FFFFFF'].sort(function(a,b){return cr(bg,b)-cr(bg,a)})[0];return placeholderLogo(ink)}
 function drawSide(){
   var sec=find(SEC,A.sector);
   $('#rec').textContent=recommend();var mr=$('#mrec');if(mr)mr.innerHTML='<span>Önerimiz</span><b>'+esc(recommend())+'</b><a href="#oneri">Özet ↓</a>';
   $('#why').textContent=sec?sec[1]+' işletmelerinin en çok tercih ettiği çözümlerden biri. Seçimlerinize göre ölçü, kalınlık ve baskıyı birlikte netleştiririz.':'Sektörünüzü seçtiğinizde size en uygun poşeti burada göstereceğiz.';
   function lab(arr,k){var f=find(arr,A[k]);return f?f[1]:'—'}
-  var rows=[['Sektör',sec?sec[1]:'—'],['İçerik',lab(CON,'content')],['Tutma şekli',lab(HAN,'handle')],['Boyut',A.size==='ozel'?sizeStr(A):lab(SIZ,'size')],['Baskı',lab(PRI,'print')+(A.color?' · '+A.color:'')]];
+  var rows=[['Sektör',sec?sec[1]:'—'],['İçerik',lab(CON,'content')],['Tutma şekli',lab(HAN,'handle')],['Boyut',A.size==='ozel'?sizeStr(A):lab(SIZ,'size')],['Poşet rengi',A.color]].concat(mockId()==='kulplu'?[['Kulp rengi',A.kulp]]:[]).concat([['Baskı',lab(PRI,'print')]]);
+  var sp=$('#sprev'),mid=mockId();if(sp){sp.hidden=!mid||A.step<2;if(mid&&A.step>=2)drawMock($('#spc'),mid,find(BODY,A.color)[1],find(HANDLE,A.kulp)[1],aLogo())}
   $('#summary').innerHTML=rows.map(function(r){return '<li><span>'+r[0]+'</span><b style="font-weight:600;text-align:right">'+esc(r[1])+'</b></li>'}).join('');
   var n=[];
   if(A.content==='agir')n.push('Kalın ve dayanıklı film önerilir');
@@ -232,9 +259,25 @@ function drawSide(){
   if(A.size==='ozel')n.push('Özel ölçü üretim');
   $('#notes').innerHTML=n.map(function(x){return '<span class="note">'+x+'</span>'}).join('');
 }
+
+function drawTip(){var el=$('#ctip');if(!el)return;var mid=mockId(),t='',btns=[];
+  if(mid==='kulplu'){var rec=PAIR[A.color]||[];
+    if(A.kulp===A.color)t='Poşet ve kulp aynı renkte: sade ve bütünlüklü bir görünüm.';
+    else if(CLASH[A.color+'|'+A.kulp])t=A.color+' poşet ile '+A.kulp.toLocaleLowerCase('tr')+' kulp yan yana yorucu durabilir. '+PAIRTXT[A.color];
+    else if(rec.indexOf(A.kulp)>=0)t='Uyumlu seçim. '+PAIRTXT[A.color];
+    else t=PAIRTXT[A.color];
+    rec.forEach(function(k){if(k!==A.kulp)btns.push(['data-kulp',k,k+' kulp'])});
+    if(A.logoCol){var lk=nearestOf(HANDLE,A.logoCol)[0];if(lk!==A.kulp){t+=' Logonuzun ana rengi '+lk.toLocaleLowerCase('tr')+' tonunda; kulbu bu renkte seçmek tasarımı bütünleştirir.';btns.unshift(['data-kulp',lk,lk+' kulp (logonuzun rengi)'])}}
+  }else{
+    var dark=hexL(find(BODY,A.color)[1])<.25;
+    t=dark?A.color+' poşette beyaz ya da açık renkli baskı en iyi okunur.':A.color+' poşette koyu renkli baskı uzaktan net okunur.';
+    if(A.logoCol&&cr(find(BODY,A.color)[1],A.logoCol)<2){t='Logonuzun ana rengi bu zemine çok yakın, logonuz kaybolabilir. Daha zıt bir poşet rengi deneyin.';var alt=BODY.slice().sort(function(a,b){return cr(b[1],A.logoCol)-cr(a[1],A.logoCol)});btns.push(['data-body',alt[0][0],alt[0][0]+' poşet']);if(alt[1][0]!=='Siyah')btns.push(['data-body',alt[1][0],alt[1][0]+' poşet'])}
+  }
+  el.innerHTML='<p><span aria-hidden="true">💡</span>'+esc(t)+'</p>'+(btns.length?'<div class="ctb">'+btns.slice(0,3).map(function(b){return '<button type="button" '+b[0]+'="'+b[1]+'">'+esc(b[2])+' uygula</button>'}).join('')+'</div>':'');
+}
 function drawSteps(){
-  var L6=['Sektör','İçerik','Tutma şekli','Boyut','Baskı','İletişim'];var st=$('#steptxt');if(st)st.textContent=A.step<6?'Adım '+(A.step+1)+' / 6 · '+L6[A.step]:'Tamamlandı';
-  $('#steps').innerHTML=['Sektör','İçerik','Tutma','Boyut','Baskı','İletişim'].map(function(l,i){return '<li class="'+(i<A.step?'done':i===A.step?'cur':'')+'"><span></span>'+(i+1)+'. '+l+'</li>'}).join('');
+  var L6=['Sektör','İçerik','Tutma şekli','Boyut','Renk ve baskı','İletişim'];var st=$('#steptxt');if(st)st.textContent=A.step<6?'Adım '+(A.step+1)+' / 6 · '+L6[A.step]:'Tamamlandı';
+  $('#steps').innerHTML=['Sektör','İçerik','Tutma','Boyut','Renk','İletişim'].map(function(l,i){return '<li class="'+(i<A.step?'done':i===A.step?'cur':'')+'"><span></span>'+(i+1)+'. '+l+'</li>'}).join('');
 }
 function drawQ(){
   var s=A.step,h='';
@@ -243,8 +286,16 @@ function drawQ(){
   if(s===2)h='<h2 class="qh">Nasıl taşınacak?</h2><p class="muted" style="margin:0 0 24px">Emin değilseniz "Siz önerin" deyin, sektörünüze göre seçelim.</p>'+opts(HAN,'handle',true);
   if(s===3){h='<h2 class="qh">Hangi boyutta olsun?</h2><p class="muted" style="margin:0 0 24px">Kabaca seçmeniz yeterli. Kesin ölçüyü teklif aşamasında birlikte netleştiririz.</p>'+opts(SIZ,'size');
     if(A.size==='ozel')h+='<div class="dims"><div class="f3"><label class="fld">En (cm)<input type="number" data-dim="w" value="'+A.w+'"></label><label class="fld">Körük (cm)<input type="number" data-dim="g" value="'+A.g+'"></label><label class="fld">Boy (cm)<input type="number" data-dim="h" value="'+A.h+'"></label><p class="muted full" style="font-size:13px;margin:0">Körük, poşetin yan kıvrımıdır. Ölçü "en + körük + körük × boy" şeklinde yazılır.</p></div><div id="adim">'+dimSvg(A.w,A.g,A.h,sizeStr(A))+'</div></div>';}
-  if(s===4){h='<h2 class="qh">Baskı olsun mu?</h2><p class="muted" style="margin:0 0 24px">Logonuz poşetinizi reklam aracına çevirir. Fotoğraf baskı dahil tüm renkler mümkün.</p>'+opts(PRI,'print')+'<p style="font-weight:600;font-size:14px;margin:24px 0 10px">Poşet zemin rengi</p>'+swatches(A.color);
-    if(A.print==='logo'||A.print==='foto')h+='<label class="drop"><b>'+(A.file?'Yüklendi: '+esc(A.file):'Logonuzu veya tasarımınızı buraya bırakın')+'</b><span class="muted" style="font-size:13px">PDF, AI, PNG veya JPG. Elinizde yoksa sonra da gönderebilirsiniz.</span><input type="file" data-file="a"></label>';}
+  if(s===4){var mid=mockId(),kul=mid==='kulplu';
+    var sw=function(pal,cur,attr){return '<div class="pcolors">'+pal.map(function(c){return '<button type="button" '+attr+'="'+c[0]+'" class="'+(cur===c[0]?'on':'')+'" aria-pressed="'+(cur===c[0])+'" aria-label="'+c[0]+'" title="'+c[0]+'" style="background:'+c[1]+'"></button>'}).join('')+'</div>'};
+    h='<h2 class="qh">Rengini seçin, nasıl duracağını görün</h2><p class="muted" style="margin:0 0 20px">'+(mid?'Önizleme gerçek ürün fotoğrafımız üzerinde. ':'')+'Poşet rengini'+(kul?', kulp rengini':'')+' ve baskıyı seçin.</p>'+
+      '<div class="pvwrap">'+(mid?'<div class="pv"><canvas id="pvc" role="img" aria-label="Poşet önizlemesi"></canvas><span class="pvnote">Önizleme temsilidir</span></div>':'')+
+      '<div class="pvctl"><p class="dlab">Poşet rengi <span>· '+A.color+'</span></p>'+sw(BODY,A.color,'data-body')+
+      (kul?'<p class="dlab">Kulp rengi <span>· '+A.kulp+'</span></p>'+sw(HANDLE,A.kulp,'data-kulp'):'')+
+      '<div class="ctip" id="ctip"></div>'+
+      '<p class="dlab" style="margin-top:18px">Baskı</p>'+opts(PRI,'print')+
+      ((A.print==='logo'||A.print==='foto')?'<label class="drop"><b>'+(A.file?'Yüklendi: '+esc(A.file):'Logonuzu yükleyin, poşet üzerinde görün')+'</b><span class="muted" style="font-size:13px">PNG, JPG ya da SVG. Elinizde yoksa sonra da gönderebilirsiniz.</span><input type="file" accept="image/*,.pdf,.ai" data-file="a"></label>':'')+
+      '</div></div>';}
   if(s===5){var e=A.tried;h='<h2 class="qh">Son adım: size nasıl ulaşalım?</h2><p class="muted" style="margin:0 0 24px">Sadece iki alan zorunlu. Gerisini telefonda konuşabiliriz.</p><div class="f2">'+
     '<label class="fld">Ad soyad<em class="req">Zorunlu</em><input data-in="name" autocomplete="name" value="'+esc(A.name)+'" class="'+(e&&!A.name.trim()?'err':'')+'"></label>'+
     '<label class="fld">Telefon<em class="req">Zorunlu</em><input type="tel" data-in="phone" placeholder="05xx xxx xx xx" value="'+esc(A.phone)+'" class="'+(e&&A.phone.trim().length<7?'err':'')+'"></label>'+
@@ -254,7 +305,7 @@ function drawQ(){
   if(s===6){h='<div class="ok"><span class="circ"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#24803A" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg></span><h2 class="qh" style="margin:18px 0 8px">Teşekkürler '+esc(A.name.trim().split(' ')[0])+', talebiniz bize ulaştı.</h2><p class="muted" style="max-width:480px;margin:0 auto 24px">Satış ekibimiz en kısa sürede '+esc(A.phone)+' numarasından size dönecek. Acele ediyorsanız WhatsApp\'tan da yazabilirsiniz.</p><a class="btn ghost" href="'+HOME+'" style="margin:4px">Ana sayfaya dön</a> <a class="btn" href="'+URUN+'" style="margin:4px">'+esc(recommend())+' sayfasına git</a></div>';}
   if(s<6){var can=s>=5||!!A[KEYS[s]];
     h+='<div class="qnav"><button type="button" class="btn ghost" data-nav="back" style="visibility:'+(s===0?'hidden':'visible')+'">← Geri</button><div>'+(s===5?'<a class="btn ghost" href="https://wa.me/905357183598" style="border-color:#24803A;color:#24803A">WhatsApp ile gönder</a>':'')+'<button type="button" class="btn" data-nav="next"'+(can?'':' disabled')+'>'+(s===5?'Teklif iste':'Devam et →')+'</button></div></div>';}
-  $('#qpanel').innerHTML=h; drawSteps(); drawSide();
+  $('#qpanel').innerHTML=h; drawSteps(); drawSide(); if(s===4){var mid=mockId();if(mid)drawMock($('#pvc'),mid,find(BODY,A.color)[1],find(HANDLE,A.kulp)[1],aLogo());drawTip()}
 }
 var qs=location.search.match(/[?&]sektor=([a-z]+)/);if(qs&&find(SEC,qs[1])){A.sector=qs[1];A.step=1}
 var qp=$('#qpanel');
@@ -263,7 +314,8 @@ qp.addEventListener('click',function(e){
   if(t.hasAttribute('data-k')){var k=t.getAttribute('data-k');A[k]=t.getAttribute('data-v');drawQ();
     if(A.step<3&&k===KEYS[A.step]){var cur=A.step;setTimeout(function(){if(A.step===cur){A.step++;drawQ();var top=$('#steptxt');var y=(top&&top.offsetParent?top:$('#steps')).getBoundingClientRect().top+window.pageYOffset-90;if(window.pageYOffset>y)window.scrollTo(0,y)}},280)}
     return}
-  if(t.hasAttribute('data-color')){A.color=t.getAttribute('data-color');drawQ();return}
+  if(t.hasAttribute('data-body')){A.color=t.getAttribute('data-body');drawQ();return}
+  if(t.hasAttribute('data-kulp')){A.kulp=t.getAttribute('data-kulp');drawQ();return}
   if(t.hasAttribute('data-unit')){A.unit=t.getAttribute('data-unit');Array.prototype.forEach.call(qp.querySelectorAll('[data-unit]'),function(b){b.className=b===t?'on':''});return}
   var n=t.getAttribute('data-nav');
   if(n==='back'){A.step=Math.max(0,A.step-1);drawQ()}
@@ -275,7 +327,7 @@ qp.addEventListener('input',function(e){
   if(t.hasAttribute('data-dim')){A[t.getAttribute('data-dim')]=Math.max(0,+t.value||0);$('#adim').innerHTML=dimSvg(A.w,A.g,A.h,sizeStr(A));drawSide()}
   if(t.hasAttribute('data-in')){A[t.getAttribute('data-in')]=t.value;if(A.tried&&t.value.trim())t.className=''}
 });
-qp.addEventListener('change',function(e){var t=e.target;if(t.hasAttribute('data-file')){A.file=t.files&&t.files[0]?t.files[0].name:'';drawQ()}});
+qp.addEventListener('change',function(e){var t=e.target;if(!t.hasAttribute('data-file'))return;var f=t.files&&t.files[0];A.file=f?f.name:'';if(f&&/^image\//.test(f.type)){var fr=new FileReader();fr.onload=function(){var im=new Image();im.onload=function(){A.logoImg=im;logoColor(fr.result,function(c){A.logoCol=c;drawQ()})};im.src=fr.result};fr.readAsDataURL(f)}else drawQ()});
 drawQ();
 
 }

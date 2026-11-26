@@ -386,3 +386,18 @@ img{max-width:100%}
 .ctips li span{flex:none;width:26px;height:26px;border-radius:50%;background:var(--navy);color:#fff;font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center;margin-right:10px}
 @media(max-width:960px){.works{grid-template-columns:1fr 1fr}.ctips ol{grid-template-columns:1fr}}
 @media(max-width:640px){.works{grid-template-columns:1fr}.wimg{height:280px}}
+
+/* asistan önizleme */
+.pvwrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);grid-gap:26px;align-items:start}
+.pv{position:relative;background:radial-gradient(circle at 50% 42%,#fff 0%,#E9EDF5 78%);border:1px solid var(--line);border-radius:20px;padding:18px;display:flex;align-items:center;justify-content:center;min-height:360px}
+.pv canvas,.sprev canvas{display:block;max-width:100%;max-height:420px;width:auto;height:auto;filter:drop-shadow(0 14px 18px rgba(25,27,69,.16))}
+.pvnote{position:absolute;left:12px;bottom:10px;font-size:11px;color:var(--mut)}
+.pvctl .pcolors button{width:36px;height:36px}
+.ctip{background:#FFFBEA;border:1px solid #F4E3A3;border-radius:12px;padding:10px 12px;margin-top:6px;font-size:14px;line-height:1.5;color:#4A3F12}
+.ctip:empty{display:none}.ctip p{margin:0;display:flex}.ctip p span{margin-right:8px}
+.ctb{display:flex;flex-wrap:wrap;margin-top:8px}
+.ctb button{min-height:36px;padding:0 12px;border-radius:999px;border:1px solid #E7CF7A;background:#fff;font:600 13px Inter,sans-serif;color:#4A3F12;cursor:pointer;margin:0 6px 6px 0}
+.ctb button:hover{background:#FFF3C4}
+.sprev{background:#fff;border-radius:16px;padding:14px;margin-bottom:16px;display:flex;justify-content:center}
+.sprev canvas{max-height:220px}
+@media(max-width:860px){.pvwrap{grid-template-columns:1fr}.pv{min-height:0}.pv canvas{max-height:320px}}
