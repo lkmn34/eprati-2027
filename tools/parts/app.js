@@ -245,29 +245,78 @@ function recommend(){
   return rec;
 }
 function mockId(){var m={atlet:'atlet',el:'elgecme',kulp:'kulplu'};if(m[A.handle])return m[A.handle];if(A.handle==='oneri'||!A.handle){var r=recommend();if(/^Atlet/.test(r))return 'atlet';if(/^El Geçmeli/.test(r))return 'elgecme';if(/^Kulplu/.test(r))return 'kulplu'}return null}
-var AINKS=[['Otomatik','auto'],['Lacivert','#2B3787'],['Siyah','#1E1E1E'],['Beyaz','#FFFFFF'],['Kırmızı','#C62828'],['Yeşil','#2E7D32'],['Mavi','#1565C0'],['Altın','#B08A2E']];
-function inkHex(){var bg=find(BODY,A.color)[1];if(A.ink!=='Otomatik')return find(AINKS,A.ink)[1];return ['#2B3787','#1E1E1E','#FFFFFF'].sort(function(a,b){return cr(bg,b)-cr(bg,a)})[0]}
-function textBlock(lines,ink,img){var F='"Plus Jakarta Sans",Inter,Arial,sans-serif',t=document.createElement('canvas').getContext('2d'),wid=0,lh=0,sc=1;
-  lines=lines.filter(function(l){return l[1]});
-  if(img){sc=Math.min(520/img.naturalWidth,230/img.naturalHeight);lh=img.naturalHeight*sc}
-  lines.forEach(function(l){t.font=l[0].replace('F',F);wid=Math.max(wid,t.measureText(l[1]).width)});
-  if(!lines.length&&!img)return null;
-  var W=Math.min(1100,Math.max(img?img.naturalWidth*sc:0,wid+24,120)),H=(lh?lh+(lines.length?26:0):0)+lines.reduce(function(a,l){return a+l[2]},0)+8;
-  var c=document.createElement('canvas');c.width=W;c.height=H;var x=c.getContext('2d'),y=0;
-  if(img){var lw=img.naturalWidth*sc;x.drawImage(img,(W-lw)/2,0,lw,lh);y=lh+(lines.length?26:0)}
-  x.fillStyle=ink;x.textAlign='center';lines.forEach(function(l){x.font=l[0].replace('F',F);y+=l[2];x.fillText(l[1],W/2,y-l[2]*.22)});return c}
-function aLogo(){if(A.print!=='logo'&&A.print!=='foto')return null;var p=A.pt,ink=inkHex(),has=p.firma||p.slogan||p.tel||p.adres||p.web;
-  if(!has&&!A.logoImg)return [{c:placeholderLogo(ink),k:'logo'},{c:textBlock([['600 34px Inter,Arial,sans-serif','0212 000 00 00  ·  Adresiniz, İlçe / İl',46]],ink),k:'foot'}];
-  var main=textBlock([['800 96px F',p.firma,112],['500 40px Inter,Arial,sans-serif',p.slogan,56]],ink,A.logoImg);
-  var foot=textBlock([['600 34px Inter,Arial,sans-serif',[p.tel,p.web].filter(Boolean).join('   ·   '),46],['500 30px Inter,Arial,sans-serif',p.adres,42]],ink);
-  return [{c:main,k:'logo'},{c:foot,k:'foot'}]}
+var AINKS=[['Otomatik','auto'],['Lacivert','#2B3787'],['Siyah','#1E1E1E'],['Beyaz','#FFFFFF'],['Kırmızı','#C62828'],['Yeşil','#2E7D32'],['Mavi','#1565C0'],['Altın','#B08A2E'],['Turuncu','#E8731F']];
+/* ---- baskı editörü ---- */
+var FONTS=[['Montserrat','800','Montserrat'],['Poppins','700','Poppins'],['Oswald','700','Oswald'],['Bebas Neue','400','Bebas Neue'],['Playfair Display','700','Playfair'],['Roboto Slab','700','Roboto Slab'],['Lobster','400','Lobster'],['Inter','600','Inter']];
+var fontsAdded=false;function addFonts(){if(fontsAdded)return;fontsAdded=true;var l=document.createElement('link');l.rel='stylesheet';l.href='https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700;800&family=Poppins:wght@500;700&family=Oswald:wght@500;700&family=Bebas+Neue&family=Playfair+Display:wght@700&family=Roboto+Slab:wght@500;700&family=Lobster&display=swap';document.head.appendChild(l)}
+function fontW(f){return (find(FONTS,f)||FONTS[7])[1]}
+function ensureFont(f,cb){if(!document.fonts||!document.fonts.load)return cb();document.fonts.load(fontW(f)+' 40px "'+f+'"','ŞĞİöç').then(function(){cb()},function(){cb()})}
+/* poşet ölçüleri (en × boy, cm) ve fotoğraftaki ön yüz sınırları */
+var BAGSZ={atlet:{kucuk:[20,35],orta:[25,45],buyuk:[30,60]},elgecme:{kucuk:[25,35],orta:[35,45],buyuk:[45,55]},kulplu:{kucuk:[40,30],orta:[49,35],buyuk:[54,40]}};
+var FACE={atlet:{x0:.075,x1:.925,top:.008,cut:.25,bot:.975},elgecme:{x0:.025,x1:.975,top:.003,cut:.16,bot:.99},kulplu:{x0:.045,x1:.955,top:.185,cut:.31,bot:.965}};
+function bagCm(mid){if(A.size==='ozel'&&A.w>0&&A.h>0)return [A.w,A.h];var t=BAGSZ[mid];return t[A.size]||t.orta}
+function printArea(mid,M){var f=FACE[mid],cm=bagCm(mid),fw=(f.x1-f.x0)*M.w,ppc=fw/cm[0],ppcV=(f.bot-f.top)*M.h/cm[1],mg=5;
+  var x0=f.x0*M.w+mg*ppc,x1=f.x1*M.w-mg*ppc,y0=f.cut*M.h+2*ppcV,y1=f.bot*M.h-mg*ppcV;
+  if(x1-x0<20){var c=(x0+x1)/2;x0=c-10;x1=c+10}if(y1-y0<20){y1=y0+20}
+  return {x0:x0,x1:x1,y0:y0,y1:y1,ppc:ppc,wcm:Math.max(0,cm[0]-2*mg),hcm:Math.max(0,(y1-y0)/ppcV),cm:cm}}
+A.els={logo:{y:.14,size:7,font:'',col:'Otomatik'},firma:{text:'',font:'Montserrat',size:4,col:'Otomatik',y:.36},slogan:{text:'',font:'Montserrat',size:1.5,col:'Otomatik',y:.5},iletisim:{text:'',font:'Inter',size:1.2,col:'Otomatik',y:.9},adres:{text:'',font:'Inter',size:1,col:'Otomatik',y:.98}};
+A.sel='firma';
+var ELN=[['firma','Firma adı','ör. Yıldız Market','FİRMA ADI'],['slogan','Slogan','ör. Her zaman taze','Sloganınız'],['iletisim','Telefon / web','ör. 0212 000 00 00 · www.firma.com','0212 000 00 00 · www.firmaniz.com'],['adres','Adres','ör. Cumhuriyet Mah. Ekin Sk. No:5 Esenyurt / İstanbul','Adresiniz, İlçe / İl']];
+var SZR={logo:[2,14],firma:[1.5,9],slogan:[.6,4],iletisim:[.5,3],adres:[.5,2.5]};
+function elInk(k){var e=A.els[k];if(e.col!=='Otomatik')return find(AINKS,e.col)[1];var bg=find(BODY,A.color)[1];return ['#2B3787','#1E1E1E','#FFFFFF'].sort(function(a,b){return cr(bg,b)-cr(bg,a)})[0]}
+function anyText(){return ELN.some(function(n){return A.els[n[0]].text})}
+/* baskı katmanını oluştur: tuval + öğe kutuları */
+function buildPrint(mid,M){var ar=printArea(mid,M),c=document.createElement('canvas');c.width=M.w;c.height=M.h;var x=c.getContext('2d'),boxes={},cx=(ar.x0+ar.x1)/2,aw=ar.x1-ar.x0,ah=ar.y1-ar.y0,ph=!anyText()&&!A.logoImg;
+  function place(k,w,h){var e=A.els[k],cy=ar.y0+e.y*ah;cy=Math.max(ar.y0+h/2,Math.min(ar.y1-h/2,cy));e.y=ah>0?(cy-ar.y0)/ah:e.y;boxes[k]={x:cx-w/2,y:cy-h/2,w:w,h:h};return cy}
+  if(A.logoImg){var e=A.els.logo,lh=e.size*ar.ppc,lw=A.logoImg.naturalWidth*lh/A.logoImg.naturalHeight;if(lw>aw){lw=aw;lh=A.logoImg.naturalHeight*lw/A.logoImg.naturalWidth}var cy=place('logo',lw,lh);x.drawImage(A.logoImg,cx-lw/2,cy-lh/2,lw,lh)}
+  ELN.forEach(function(n){var k=n[0],e=A.els[k],t=e.text||(ph?n[3]:'');if(!t)return;var px=e.size*ar.ppc/0.72;x.font=fontW(e.font)+' '+px+'px "'+e.font+'",Inter,Arial,sans-serif';var w=x.measureText(t).width;
+    if(w>aw){px=px*aw/w;x.font=fontW(e.font)+' '+px+'px "'+e.font+'",Inter,Arial,sans-serif';w=aw;e.fit=true}else e.fit=false;
+    var h=px*.95,cy=place(k,w,h);x.globalAlpha=ph?.55:1;x.fillStyle=elInk(k);x.textAlign='center';x.textBaseline='middle';x.fillText(t,cx,cy+px*.04);x.globalAlpha=1});
+  return {c:c,boxes:boxes,ar:ar}}
+/* poşet tabanı önbelleği */
+var BASE={};
+function baseData(mid,M,body,handle){var key=mid+body+handle;if(BASE[key])return BASE[key];var d=M.d,o=new Uint8ClampedArray(d.length),B=hexRGB(body),H=hexRGB(handle);
+  for(var i=0;i<d.length;i+=4){var a=d[i+3];o[i+3]=a;if(!a)continue;var s=d[i]/127.5,bm=d[i+1]/255,hm=d[i+2]/255,sb=s<1?s:1,hl=(s-1)/.6;hl=hl<0?0:hl>1?1:hl;
+    var r=B[0]*sb*(1-hl)+hl,g=B[1]*sb*(1-hl)+hl,b=B[2]*sb*(1-hl)+hl;
+    if(hm>0){var h2=(s-1)/.8;h2=h2<0?0:h2>1?1:h2;r=r*bm+(H[0]*sb*(1-h2)+h2)*hm;g=g*bm+(H[1]*sb*(1-h2)+h2)*hm;b=b*bm+(H[2]*sb*(1-h2)+h2)*hm}
+    o[i]=r*255;o[i+1]=g*255;o[i+2]=b*255}
+  BASE[key]=o;return o}
+function renderAst(cv,overlay){var mid=mockId();if(!cv||!mid)return;var tok=(cv._tok||0)+1;cv._tok=tok;
+  loadMock(mid,function(M){if(cv._tok!==tok)return;if(cv.width!==M.w){cv.width=M.w;cv.height=M.h}
+    var x=cv.getContext('2d'),img=x.createImageData(M.w,M.h),o=img.data;o.set(baseData(mid,M,find(BODY,A.color)[1],find(HANDLE,A.kulp)[1]));
+    var pr=(A.print==='logo'||A.print==='foto')?buildPrint(mid,M):null;
+    if(pr){var ar=pr.ar,L=pr.c.getContext('2d').getImageData(0,0,M.w,M.h).data,d=M.d,X0=Math.max(0,ar.x0-4|0),X1=Math.min(M.w,ar.x1+4|0),Y0=Math.max(0,ar.y0-4|0),Y1=Math.min(M.h,ar.y1+4|0);
+      for(var y=Y0;y<Y1;y++)for(var xx=X0;xx<X1;xx++){var i=(y*M.w+xx)*4,la=L[i+3];if(!la||!d[i+3]||d[i+1]<128)continue;la/=255;var s=d[i]/127.5,sb=s<1?s:1,hl=(s-1)/.6;hl=hl<0?0:hl>1?1:hl;
+        for(var c=0;c<3;c++){var v=(L[i+c]/255*sb)*(1-hl)+hl;o[i+c]=o[i+c]*(1-la)+v*255*la}}
+      cv._pr=pr}
+    x.putImageData(img,0,0);
+    if(overlay&&pr){var ar=pr.ar;x.save();x.setLineDash([10,8]);x.lineWidth=2;x.strokeStyle='rgba(36,128,58,.9)';x.strokeRect(ar.x0,ar.y0,ar.x1-ar.x0,ar.y1-ar.y0);
+      x.setLineDash([]);x.font='600 '+Math.max(11,M.w*.024)+'px Inter,sans-serif';var lab='Baskı alanı ≈ '+Math.round(ar.wcm)+' × '+Math.round(ar.hcm)+' cm';var tw=x.measureText(lab).width;x.fillStyle='rgba(36,128,58,.92)';x.fillRect(ar.x0,ar.y0-M.w*.04,tw+16,M.w*.04);x.fillStyle='#fff';x.textBaseline='middle';x.fillText(lab,ar.x0+8,ar.y0-M.w*.02);
+      var bx=pr.boxes[A.sel];if(bx){x.strokeStyle='#2B3787';x.setLineDash([5,4]);x.lineWidth=1.5;x.strokeRect(bx.x-6,bx.y-4,bx.w+12,bx.h+8);x.setLineDash([]);x.fillStyle='#2B3787';x.beginPath();x.arc(bx.x+bx.w+6,bx.y+bx.h/2,5,0,7);x.fill()}x.restore()}
+  })}
+function redrawAst(){if(A._raf)return;A._raf=requestAnimationFrame(function(){A._raf=0;renderAst($('#pvc'),true);renderAst($('#spc'),false)})}
+function bindCanvas(){var cv=$('#pvc');if(!cv||cv._bound)return;cv._bound=1;var drag=null;
+  function pt(e){var r=cv.getBoundingClientRect();return [(e.clientX-r.left)*cv.width/r.width,(e.clientY-r.top)*cv.height/r.height]}
+  cv.addEventListener('pointerdown',function(e){var pr=cv._pr;if(!pr)return;var p=pt(e),hit=null,ha=1e12;Object.keys(pr.boxes).forEach(function(k){var b=pr.boxes[k];if(p[0]>=b.x-10&&p[0]<=b.x+b.w+10&&p[1]>=b.y-8&&p[1]<=b.y+b.h+8){var ar2=k===A.sel?-1:b.w*b.h;if(ar2<ha){ha=ar2;hit=k}}});
+    if(!hit)return;e.preventDefault();cv.setPointerCapture&&cv.setPointerCapture(e.pointerId);var ah=pr.ar.y1-pr.ar.y0;drag={k:hit,y0:p[1],e0:A.els[hit].y,ah:ah};if(A.sel!==hit){A.sel=hit;syncCards()}redrawAst()});
+  cv.addEventListener('pointermove',function(e){var pr=cv._pr;if(!pr)return;var p=pt(e);if(!drag){var over=Object.keys(pr.boxes).some(function(k){var b=pr.boxes[k];return p[0]>=b.x-10&&p[0]<=b.x+b.w+10&&p[1]>=b.y-8&&p[1]<=b.y+b.h+8});cv.style.cursor=over?'ns-resize':'default';return}
+    A.els[drag.k].y=Math.max(0,Math.min(1,drag.e0+(p[1]-drag.y0)/drag.ah));redrawAst()});
+  ['pointerup','pointercancel'].forEach(function(n){cv.addEventListener(n,function(){drag=null})})}
+function syncCards(){Array.prototype.forEach.call(document.querySelectorAll('.elcard'),function(c){var on=c.getAttribute('data-card')===A.sel;c.classList.toggle('on',on);var b=c.querySelector('.elbody');if(b)b.hidden=!on})}
+function elCard(k,label,ph,isLogo){var e=A.els[k],on=A.sel===k,r=SZR[k];
+  var cols='<div class="pcolors sm">'+AINKS.map(function(c){var o=e.col===c[0];return '<button type="button" data-elcol="'+k+'|'+c[0]+'" class="'+(o?'on':'')+(c[1]==='auto'?' autoink':'')+'" aria-pressed="'+o+'" aria-label="'+label+' rengi '+c[0]+'" title="'+c[0]+'"'+(c[1]==='auto'?'':' style="background:'+c[1]+'"')+'>'+(c[1]==='auto'?'A':'')+'</button>'}).join('')+'</div>';
+  return '<div class="elcard'+(on?' on':'')+'" data-card="'+k+'"><div class="elhead" data-elsel="'+k+'"><b>'+label+'</b>'+(isLogo?'<span class="muted">'+esc(A.file)+'</span>':'<input data-eltext="'+k+'" value="'+esc(e.text)+'" placeholder="'+esc(ph)+'" maxlength="70" aria-label="'+label+'">')+'</div>'+
+   '<div class="elbody"'+(on?'':' hidden')+'>'+(isLogo?'':'<label class="elrow">Yazı tipi<select data-elfont="'+k+'">'+FONTS.map(function(f){return '<option value="'+f[0]+'"'+(e.font===f[0]?' selected':'')+' style="font-family:\''+f[0]+'\'">'+f[2]+'</option>'}).join('')+'</select></label>')+
+   '<label class="elrow">Boyut <span class="szv" data-szv="'+k+'">'+e.size.toFixed(1).replace('.',',')+' cm</span><input type="range" min="'+r[0]+'" max="'+r[1]+'" step="0.1" value="'+e.size+'" data-elsize="'+k+'"></label>'+
+   (isLogo?'':'<div class="elrow">Renk'+cols+'</div>')+(e.fit?'<p class="elwarn">Yazı baskı alanına sığması için küçültüldü.</p>':'')+'</div></div>'}
+
 function drawSide(){
   var sec=find(SEC,A.sector);
   $('#rec').textContent=recommend();var mr=$('#mrec');if(mr)mr.innerHTML='<span>Önerimiz</span><b>'+esc(recommend())+'</b><a href="#oneri">Özet ↓</a>';
   $('#why').textContent=sec?sec[1]+' işletmelerinin en çok tercih ettiği çözümlerden biri. Seçimlerinize göre ölçü, kalınlık ve baskıyı birlikte netleştiririz.':'Sektörünüzü seçtiğinizde size en uygun poşeti burada göstereceğiz.';
   function lab(arr,k){var f=find(arr,A[k]);return f?f[1]:'—'}
   var rows=[['Sektör',sec?sec[1]:'—'],['İçerik',lab(CON,'content')],['Tutma şekli',lab(HAN,'handle')],['Boyut',A.size==='ozel'?sizeStr(A):lab(SIZ,'size')],['Poşet rengi',A.color]].concat(mockId()==='kulplu'?[['Kulp rengi',A.kulp]]:[]).concat([['Baskı',lab(PRI,'print')]]);
-  var sp=$('#sprev'),mid=mockId();if(sp){sp.hidden=!mid||A.step<2;if(mid&&A.step>=2)drawMock($('#spc'),mid,find(BODY,A.color)[1],find(HANDLE,A.kulp)[1],aLogo())}
+  var sp=$('#sprev'),mid=mockId();if(sp){sp.hidden=!mid||A.step<2;if(mid&&A.step>=2)renderAst($('#spc'),false)}
   $('#summary').innerHTML=rows.map(function(r){return '<li><span>'+r[0]+'</span><b style="font-weight:600;text-align:right">'+esc(r[1])+'</b></li>'}).join('');
   var n=[];
   if(A.content==='agir')n.push('Kalın ve dayanıklı film önerilir');
@@ -287,7 +336,7 @@ function drawTip(){var el=$('#ctip');if(!el)return;var mid=mockId(),t='',btns=[]
     if(A.logoCol){var lk=nearestOf(HANDLE,A.logoCol)[0];if(lk!==A.kulp){t+=' Logonuzun ana rengi '+lk.toLocaleLowerCase('tr')+' tonunda; kulbu bu renkte seçmek tasarımı bütünleştirir.';btns.unshift(['data-kulp',lk,lk+' kulp (logonuzun rengi)'])}}
   }else{
     var dark=hexL(find(BODY,A.color)[1])<.25;
-    if((A.print==='logo'||A.print==='foto')&&A.ink!=='Otomatik'&&cr(find(BODY,A.color)[1],inkHex())<2.2){var bi=AINKS.slice(1).sort(function(a,b){return cr(find(BODY,A.color)[1],b[1])-cr(find(BODY,A.color)[1],a[1])})[0];t=A.color+' poşet üzerinde '+A.ink.toLocaleLowerCase('tr')+' baskı zor okunur.';btns.push(['data-ink',bi[0],bi[0]+' baskı'])}
+    var bad=(A.print==='logo'||A.print==='foto')?ELN.map(function(n){return n[0]}).filter(function(k){return A.els[k].col!=='Otomatik'&&cr(find(BODY,A.color)[1],elInk(k))<2.2}):[];if(bad.length){var bi=AINKS.slice(1).sort(function(a,b){return cr(find(BODY,A.color)[1],b[1])-cr(find(BODY,A.color)[1],a[1])})[0];t=A.color+' poşet üzerinde '+bad.map(function(k){return find(ELN,k)[1].toLocaleLowerCase('tr')}).join(', ')+' rengi zor okunur. '+bi[0]+' öneririz.';btns.push(['data-elcol',bad[0]+'|'+bi[0],bi[0]+' renk'])}
     else t=dark?A.color+' poşette beyaz ya da açık renkli baskı en iyi okunur.':A.color+' poşette koyu renkli baskı uzaktan net okunur.';
     if(A.logoCol&&cr(find(BODY,A.color)[1],A.logoCol)<2){t='Logonuzun ana rengi bu zemine çok yakın, logonuz kaybolabilir. Daha zıt bir poşet rengi deneyin.';var alt=BODY.slice().sort(function(a,b){return cr(b[1],A.logoCol)-cr(a[1],A.logoCol)});btns.push(['data-body',alt[0][0],alt[0][0]+' poşet']);if(alt[1][0]!=='Siyah')btns.push(['data-body',alt[1][0],alt[1][0]+' poşet'])}
   }
@@ -312,10 +361,9 @@ function drawQ(){
       (kul?'<p class="dlab">Kulp rengi <span>· '+A.kulp+'</span></p>'+sw(HANDLE,A.kulp,'data-kulp'):'')+
       '<div class="ctip" id="ctip"></div>'+
       '<p class="dlab" style="margin-top:18px">Baskı</p>'+opts(PRI,'print')+
-      ((A.print==='logo'||A.print==='foto')?'<div class="ptx"><p class="dlab" style="margin-top:18px">Poşetin üzerine yazılacaklar</p><p class="muted" style="font-size:13px;margin:-4px 0 10px">Logonuz yoksa sorun değil: firma adınızı ve iletişim bilgilerinizi yazın, poşette nasıl duracağını görün. Bu bir önizlemedir; son tasarımı sipariş aşamasında birlikte netleştiririz.</p><div class="f2">'+
-        [['firma','Firma adı <em>ortada, büyük</em>','ör. Yıldız Market'],['slogan','Slogan <em>isteğe bağlı</em>','ör. Taze ve uygun'],['tel','Telefon <em>alt kısım</em>','ör. 0212 000 00 00'],['web','Web / sosyal medya <em>alt kısım</em>','ör. yildizmarket.com'],['adres','Adres <em>alt kısım</em>','ör. Cumhuriyet Mah. Atatürk Cad. No:5 Beylikdüzü / İstanbul']].map(function(f){return '<label class="fld'+(f[0]==='adres'?' full':'')+'">'+f[1]+'<input data-pt="'+f[0]+'" value="'+esc(A.pt[f[0]])+'" placeholder="'+f[2]+'" maxlength="80"></label>'}).join('')+
-        '</div><p class="dlab" style="margin-top:14px">Baskı rengi <span>· '+A.ink+'</span></p><div class="pcolors">'+AINKS.map(function(c){var on=A.ink===c[0];return '<button type="button" data-ink="'+c[0]+'" class="'+(on?'on':'')+(c[1]==='auto'?' autoink':'')+'" aria-pressed="'+on+'" aria-label="Baskı rengi '+c[0]+'" title="'+c[0]+'"'+(c[1]==='auto'?'':' style="background:'+c[1]+'"')+'>'+(c[1]==='auto'?'A':'')+'</button>'}).join('')+'</div>'+
-        '<label class="drop"><b>'+(A.file?'Yüklendi: '+esc(A.file):'Logonuz varsa yükleyin (isteğe bağlı)')+'</b><span class="muted" style="font-size:13px">PNG, JPG ya da SVG. Logonuz ortada, firma adının üstünde yer alır.</span><input type="file" accept="image/*,.pdf,.ai" data-file="a"></label></div>':'')+
+      ((A.print==='logo'||A.print==='foto')?'<div class="ptx"><p class="dlab" style="margin-top:18px">Poşetin üzerine yazılacaklar</p><p class="muted" style="font-size:13px;margin:-4px 0 12px">Yazılarınızı girin; yazı tipini, boyutunu ve rengini ayrı ayrı seçin. Önizlemede yazıyı <b>fareyle tutup yukarı-aşağı sürükleyebilirsiniz</b>. Yeşil çerçeve, kenarlardan ve alttan 5 cm boşluk bırakılmış baskı alanıdır. Bu bir önizlemedir; son tasarımı sipariş aşamasında birlikte netleştiririz.</p>'+
+        (A.logoImg?elCard('logo','Logo','',true):'')+ELN.map(function(n){return elCard(n[0],n[1],n[2])}).join('')+
+        '<label class="drop"><b>'+(A.logoImg?'Logoyu değiştir':'Logonuz varsa yükleyin (isteğe bağlı)')+'</b><span class="muted" style="font-size:13px">PNG, JPG ya da SVG. Logo da sürüklenebilir ve boyutlandırılabilir.</span><input type="file" accept="image/*,.pdf,.ai" data-file="a"></label></div>':'')+
       '</div></div>';}
   if(s===5){var e=A.tried;h='<h2 class="qh">Son adım: size nasıl ulaşalım?</h2><p class="muted" style="margin:0 0 24px">Sadece iki alan zorunlu. Gerisini telefonda konuşabiliriz.</p><div class="f2">'+
     '<label class="fld">Ad soyad<em class="req">Zorunlu</em><input data-in="name" autocomplete="name" value="'+esc(A.name)+'" class="'+(e&&!A.name.trim()?'err':'')+'"></label>'+
@@ -326,7 +374,7 @@ function drawQ(){
   if(s===6){h='<div class="ok"><span class="circ"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#24803A" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg></span><h2 class="qh" style="margin:18px 0 8px">Teşekkürler '+esc(A.name.trim().split(' ')[0])+', talebiniz bize ulaştı.</h2><p class="muted" style="max-width:480px;margin:0 auto 24px">Satış ekibimiz en kısa sürede '+esc(A.phone)+' numarasından size dönecek. Acele ediyorsanız WhatsApp\'tan da yazabilirsiniz.</p><a class="btn ghost" href="'+HOME+'" style="margin:4px">Ana sayfaya dön</a> <a class="btn" href="'+URUN+'" style="margin:4px">'+esc(recommend())+' sayfasına git</a></div>';}
   if(s<6){var can=s>=5||!!A[KEYS[s]];
     h+='<div class="qnav"><button type="button" class="btn ghost" data-nav="back" style="visibility:'+(s===0?'hidden':'visible')+'">← Geri</button><div>'+(s===5?'<a class="btn ghost" href="https://wa.me/905357183598" style="border-color:#24803A;color:#24803A">WhatsApp ile gönder</a>':'')+'<button type="button" class="btn" data-nav="next"'+(can?'':' disabled')+'>'+(s===5?'Teklif iste':'Devam et →')+'</button></div></div>';}
-  $('#qpanel').innerHTML=h; drawSteps(); drawSide(); if(s===4){var mid=mockId();if(mid)drawMock($('#pvc'),mid,find(BODY,A.color)[1],find(HANDLE,A.kulp)[1],aLogo());drawTip()}
+  $('#qpanel').innerHTML=h; drawSteps(); drawSide(); if(s===4){addFonts();renderAst($('#pvc'),true);bindCanvas();drawTip();FONTS.forEach(function(f){ensureFont(f[0],redrawAst)})}
 }
 var qs=location.search.match(/[?&]sektor=([a-z]+)/);if(qs&&find(SEC,qs[1])){A.sector=qs[1];A.step=1}
 var qp=$('#qpanel');
@@ -337,20 +385,23 @@ qp.addEventListener('click',function(e){
     return}
   if(t.hasAttribute('data-body')){A.color=t.getAttribute('data-body');drawQ();return}
   if(t.hasAttribute('data-kulp')){A.kulp=t.getAttribute('data-kulp');drawQ();return}
-  if(t.hasAttribute('data-ink')&&qp.contains(t)){A.ink=t.getAttribute('data-ink');drawQ();return}
+  if(t.hasAttribute('data-elcol')){var kv=t.getAttribute('data-elcol').split('|');A.els[kv[0]].col=kv[1];A.sel=kv[0];if(t.closest('.ctb')){drawQ();return}Array.prototype.forEach.call(t.parentNode.children,function(b){b.classList.toggle('on',b===t)});redrawAst();drawTip();return}
   if(t.hasAttribute('data-unit')){A.unit=t.getAttribute('data-unit');Array.prototype.forEach.call(qp.querySelectorAll('[data-unit]'),function(b){b.className=b===t?'on':''});return}
   var n=t.getAttribute('data-nav');
   if(n==='back'){A.step=Math.max(0,A.step-1);drawQ()}
   if(n==='next'){if(A.step===5){if(!A.name.trim()||A.phone.trim().length<7){A.tried=true;drawQ();return}A.step=6;drawQ();return}
     if(A[KEYS[A.step]]){A.step++;drawQ()}}
 });
+qp.addEventListener('click',function(e){var h=e.target.closest&&e.target.closest('[data-elsel]');if(!h)return;var k=h.getAttribute('data-elsel');if(A.sel!==k){A.sel=k;syncCards();redrawAst()}});
+qp.addEventListener('focusin',function(e){var k=e.target.getAttribute&&e.target.getAttribute('data-eltext');if(k&&A.sel!==k){A.sel=k;syncCards();redrawAst()}});
 qp.addEventListener('input',function(e){
   var t=e.target;
   if(t.hasAttribute('data-dim')){A[t.getAttribute('data-dim')]=Math.max(0,+t.value||0);$('#adim').innerHTML=dimSvg(A.w,A.g,A.h,sizeStr(A));drawSide()}
-  if(t.hasAttribute('data-pt')){A.pt[t.getAttribute('data-pt')]=t.value;if(!A._raf)A._raf=requestAnimationFrame(function(){A._raf=0;var mid=mockId();if(mid){drawMock($('#pvc'),mid,find(BODY,A.color)[1],find(HANDLE,A.kulp)[1],aLogo());drawSide()}});return}
+  if(t.hasAttribute('data-eltext')){var k=t.getAttribute('data-eltext');A.els[k].text=t.value;if(k==='firma')A.pt.firma=t.value;redrawAst();return}
+  if(t.hasAttribute('data-elsize')){var k2=t.getAttribute('data-elsize');A.els[k2].size=+t.value;A.sel=k2;var sv=qp.querySelector('[data-szv="'+k2+'"]');if(sv)sv.textContent=(+t.value).toFixed(1).replace('.',',')+' cm';redrawAst();return}
   if(t.hasAttribute('data-in')){A[t.getAttribute('data-in')]=t.value;if(A.tried&&t.value.trim())t.className=''}
 });
-qp.addEventListener('change',function(e){var t=e.target;if(!t.hasAttribute('data-file'))return;var f=t.files&&t.files[0];A.file=f?f.name:'';if(f&&/^image\//.test(f.type)){var fr=new FileReader();fr.onload=function(){var im=new Image();im.onload=function(){A.logoImg=im;logoColor(fr.result,function(c){A.logoCol=c;drawQ()})};im.src=fr.result};fr.readAsDataURL(f)}else drawQ()});
+qp.addEventListener('change',function(e){var t=e.target;if(t.hasAttribute('data-elfont')){var k=t.getAttribute('data-elfont');A.els[k].font=t.value;A.sel=k;ensureFont(t.value,redrawAst);redrawAst();return}if(!t.hasAttribute('data-file'))return;var f=t.files&&t.files[0];A.file=f?f.name:'';if(f&&/^image\//.test(f.type)){var fr=new FileReader();fr.onload=function(){var im=new Image();im.onload=function(){A.logoImg=im;A.sel='logo';logoColor(fr.result,function(c){A.logoCol=c;drawQ()})};im.src=fr.result};fr.readAsDataURL(f)}else drawQ()});
 drawQ();
 
 }
