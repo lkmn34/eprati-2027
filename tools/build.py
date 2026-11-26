@@ -74,7 +74,7 @@ for k,c in CATS.items():
 
 SP = [
   ('hakkimizda/', 'Hakkımızda', PG.HAKKIMIZDA, 'Hakkımızda | Eprati Plastik — 2000\'den Beri Poşet Üretimi', 'Eprati Plastik 2000 yılından beri Beylikdüzü OSB\'deki fabrikasında poşet ve ambalaj üretiyor. Hikâyemiz, üretim sürecimiz, vizyonumuz ve misyonumuz.', []),
-  ('sertifikalarimiz/', 'Sertifikalarımız', PG.SERTIFIKA, 'Sertifikalarımız | Eprati Plastik', 'Gıda tescil belgesi (TR-34-K-282635), ISO 45001 ve diğer kalite belgelerimiz.', [('Hakkımızda','hakkimizda/')]),
+  ('sertifikalarimiz/', 'Sertifikalarımız', PG.sertifika_html(PRODS, purl, esc), 'Sertifikalarımız | Eprati Plastik', 'Gıda tescil belgesi (TR-34-K-282635), ISO 45001 ve diğer kalite belgelerimiz.', [('Hakkımızda','hakkimizda/')]),
   ('referanslar/', 'Referanslar', PG.refs_html(), 'Referanslar ve Örnek İşler | Eprati Plastik', 'Eprati Plastik\'i tercih eden markalar ve ürettiğimiz baskılı poşetlerden örnekler.', [('Hakkımızda','hakkimizda/')]),
   ('sss/', 'Sıkça Sorulan Sorular', PG.sss_html(), 'Sıkça Sorulan Sorular | Eprati Plastik', 'Poşet ölçüleri, baskı, gıdaya uygunluk, sipariş süreci ve ihracat hakkında sık sorulan sorular.', []),
   ('iletisim/', 'İletişim', PG.ILETISIM, 'İletişim | Eprati Plastik — Beylikdüzü / İstanbul', 'Eprati Plastik iletişim: 0212 651 66 69, WhatsApp 0535 718 35 98, satis@eprati.com. Beylikdüzü OSB, İstanbul.', []),

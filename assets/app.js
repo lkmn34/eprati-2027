@@ -211,6 +211,19 @@ Array.prototype.forEach.call(document.querySelectorAll('form[data-demoform]'),fu
   fm.addEventListener('input',function(e){var t=e.target;if(t.classList.contains('err'))t.classList.remove('err');var c=t.closest('.cbx');if(c)c.classList.remove('err')});
 });
 Array.prototype.forEach.call(document.querySelectorAll('[data-loadmap]'),function(b){b.addEventListener('click',function(){var box=b.closest('.mapbox');box.innerHTML='<iframe title="Eprati Plastik konum haritası" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="'+b.getAttribute('data-loadmap')+'"></iframe>'})});
+Array.prototype.forEach.call(document.querySelectorAll('.audi'),function(el){var k=el.getAttribute('data-ic');if(IC[k])el.innerHTML=icon(k,34)});
+Array.prototype.forEach.call(document.querySelectorAll('[data-copy]'),function(b){b.addEventListener('click',function(){var v=b.getAttribute('data-copy'),done=function(){b.textContent='Kopyalandı ✓';setTimeout(function(){b.textContent='Kopyala'},1800)};
+  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(v).then(done,function(){})}else{var t=document.createElement('textarea');t.value=v;document.body.appendChild(t);t.select();try{document.execCommand('copy');done()}catch(e){}document.body.removeChild(t)}})});
+(function(){var lb=$('#lb');if(!lb)return;var items=[],seen={},cur=0,last=null;
+  Array.prototype.forEach.call(document.querySelectorAll('[data-lb]'),function(b){var i=+b.getAttribute('data-lb');if(!seen[i]){seen[i]=1;items[i]={t:b.getAttribute('data-t'),s:b.getAttribute('data-s'),img:b.getAttribute('data-img')}}
+    b.addEventListener('click',function(){last=b;show(i)})});
+  function show(i){cur=(i+items.length)%items.length;var it=items[cur];$('#lbt').textContent=it.t;$('#lbs').textContent=it.s;$('#lbn').textContent=(cur+1)+' / '+items.length;
+    $('#lbimg').innerHTML=it.img?'<img src="'+R+'assets/sertifikalar/'+it.img+'" alt="'+esc(it.t)+'">':'<div class="lbph"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/></svg><b>Belge görseli henüz eklenmedi</b><span>Bir kopyasını isterseniz satis@eprati.com adresine yazın.</span></div>';
+    if(lb.hidden){lb.hidden=false;document.body.classList.add('lbopen');lb.querySelector('.lbx').focus()}}
+  function close(){lb.hidden=true;document.body.classList.remove('lbopen');if(last)last.focus()}
+  lb.addEventListener('click',function(e){if(e.target.closest('[data-lbclose]'))close();var g=e.target.closest('[data-lbgo]');if(g)show(cur+(+g.getAttribute('data-lbgo')))});
+  document.addEventListener('keydown',function(e){if(lb.hidden)return;if(e.key==='Escape')close();else if(e.key==='ArrowRight')show(cur+1);else if(e.key==='ArrowLeft')show(cur-1)});
+})();
 Array.prototype.forEach.call(document.querySelectorAll('.pcic'),function(el){var k=el.getAttribute('data-ic');if(IC[k])el.innerHTML=icon(k,40)});
 
 /* ---------- geri bildirim ---------- */

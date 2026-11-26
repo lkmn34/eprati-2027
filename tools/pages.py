@@ -105,37 +105,76 @@ HAKKIMIZDA = f'''<section class="wrap shero"><div>
 </section>'''
 
 # ---------------------------------------------------------------- SERTİFİKALAR
+# (ad, veren kurum / kapsam, no·tarih, kategori, görsel dosyası [assets/sertifikalar/...] ya da None)
 CERTS = [
-  ('Gıda Tescil Belgesi', 'T.C. Tarım ve Orman Bakanlığı', 'Kayıt No: TR-34-K-282635 · 2025', 'gida'),
-  ('ISO 45001', 'İş Sağlığı ve Güvenliği Yönetim Sistemi', ph('Belgelendirme kuruluşu ve tarih eklenecek'), 'iso'),
-  ('Sertifika adı eklenecek', ph('Belgelendirme kuruluşu'), ph('Belge no · tarih'), ''),
-  ('Sertifika adı eklenecek', ph('Belgelendirme kuruluşu'), ph('Belge no · tarih'), ''),
-  ('Sertifika adı eklenecek', ph('Belgelendirme kuruluşu'), ph('Belge no · tarih'), ''),
-  ('Sertifika adı eklenecek', ph('Belgelendirme kuruluşu'), ph('Belge no · tarih'), ''),
-  ('Sertifika adı eklenecek', ph('Belgelendirme kuruluşu'), ph('Belge no · tarih'), ''),
+  ('Gıda Tescil Belgesi', 'T.C. Tarım ve Orman Bakanlığı', 'TR-34-K-282635 · 2025', 'Gıda', None),
+  ('ISO 45001', 'İş Sağlığı ve Güvenliği Yönetim Sistemi', None, 'İş güvenliği', None),
+  (None, None, None, 'Kalite', None),
+  (None, None, None, 'Kalite', None),
+  (None, None, None, 'Diğer', None),
+  (None, None, None, 'Diğer', None),
+  (None, None, None, 'Diğer', None),
 ]
-def certs_html():
-  out = []
-  for n, by, no, k in CERTS:
-    t = n if k else ph(n)
-    out.append(f'<article class="cert">{photo("Belge görseli", "3/4")}<div><b>{t}</b><p>{by}</p><small>{no}</small>'
-               f'<button type="button" class="chipb" disabled>Belgeyi görüntüle</button></div></article>')
-  return ''.join(out)
+DOC_ICON = '<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></svg>'
+SEAL = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="9" r="6"/><path d="M9 14.2 7.5 22 12 19.5 16.5 22 15 14.2"/><path d="m9.5 9 1.8 1.8L14.8 7.3"/></svg>'
 
-SERTIFIKA = f'''<section class="wrap shero sm"><div>
-  <span class="eyebrow">SERTİFİKALARIMIZ</span><h1>Belgelerimiz</h1>
-  <p>Gıdaya temas eden ambalajlardan iş güvenliğine kadar üretimimizi belgelendiriyoruz. Belgelerin aslını görmek isterseniz
-  satış ekibimizden talep edebilirsiniz.</p></div></section>
-<section class="wrap" style="padding-bottom:24px"><div class="certs">{certs_html()}</div></section>
-<section class="wrap sec2"><div class="split2">
-  <div class="card"><span class="eyebrow">GIDAYA UYGUNLUK</span><h3 style="margin:6px 0 8px">Ekmek, manav, bakliyat ve buz poşetlerinde</h3>
-  <p class="muted" style="margin:0">Gıda ambalajlarımız gıdaya uygun hammaddeden, TR-34-K-282635 kayıt numaralı belgeyle üretilir.
-  Gıda ile doğrudan temas eden ürünler için bu belge numarasını faturanızda ve teklifinizde görebilirsiniz.</p>
-  <a class="btn ghost" style="margin-top:16px" href="{{{{R}}}}urunler/gida-ambalajlari/">Gıda ambalajlarını gör</a></div>
-  <div class="card"><span class="eyebrow">BELGE TALEBİ</span><h3 style="margin:6px 0 8px">Tedarikçi dosyanız için belge mi lazım?</h3>
-  <p class="muted" style="margin:0">Kurumsal satın alma ve tedarikçi onay süreçleri için belgelerin güncel kopyalarını e-posta ile gönderiyoruz.</p>
-  <a class="btn" style="margin-top:16px" href="mailto:satis@eprati.com?subject=Sertifika%20talebi">Belge talep et</a></div>
-</div></section>'''
+def _thumb(img, big=False):
+  if img:
+    return f'<img src="{{{{R}}}}assets/sertifikalar/{img}" alt="" loading="lazy">'
+  return f'<span class="cthumb-ph">{DOC_ICON}<small>{"Belge görseli eklenecek" if big else "Görsel"}</small></span>'
+
+def sertifika_html(PRODS, purl, esc):
+  n, by, no, cat, img = CERTS[0]
+  food = ''.join(f'<a href="{{{{R}}}}{purl(q)}">{esc(q["name"])}</a>' for q in PRODS if q.get('food'))
+  data = lambda i, c: f'data-lb="{i}" data-t="{esc(c[0] or "Sertifika")}" data-s="{esc(c[1] or "")}" data-img="{c[4] or ""}"'
+  feat = f'''<article class="cfeat">
+    <button type="button" class="cthumb big" {data(0, CERTS[0])} aria-label="{n} belgesini büyüt">{_thumb(img, True)}<span class="zoomi" aria-hidden="true">⤢</span></button>
+    <div class="cfbody">
+      <span class="eyebrow">ÖNE ÇIKAN BELGE · GIDA</span>
+      <h2>{n}</h2>
+      <p class="cby">{by}</p>
+      <div class="cno"><span>Kayıt no</span><b id="cnoval">TR-34-K-282635</b><button type="button" class="copyb" data-copy="TR-34-K-282635">Kopyala</button></div>
+      <p class="muted">Gıda ile doğrudan temas eden poşetlerimizin, gıdaya uygun hammaddeden ve kayıtlı bir işletmede üretildiğini gösterir.
+      Fırın, manav, şarküteri ve gıda üreticileri bu numarayı denetimlerde ve tedarikçi dosyalarında kullanabilir.</p>
+      <p class="cfl">Bu belgeyle üretilen ürünler</p>
+      <div class="cfood">{food}</div>
+      <div class="cfbtn"><button type="button" class="btn" {data(0, CERTS[0])}>Belgeyi görüntüle</button><a class="btn ghost" href="mailto:satis@eprati.com?subject=G%C4%B1da%20tescil%20belgesi%20talebi">Kopyasını iste</a></div>
+    </div></article>'''
+  items = ''
+  for i, c in enumerate(CERTS[1:], 1):
+    name = c[0] or ph('Belge adı')
+    sub = c[1] or ph('Kuruluş')
+    meta = c[2] or ph('No · tarih')
+    items += (f'<button type="button" class="citem" {data(i, c)}><span class="cthumb">{_thumb(c[4])}</span>'
+              f'<span class="cibody"><em class="ccat">{c[3]}</em><b>{name}</b><span>{sub}</span><small>{meta}</small></span>'
+              f'<span class="ciarr" aria-hidden="true">→</span></button>')
+  return f'''<section class="wrap shero chero"><div>
+  <span class="eyebrow">SERTİFİKALARIMIZ</span><h1>Belgeli üretim, içiniz rahat.</h1>
+  <p>Gıdaya temas eden ambalajlardan iş güvenliğine kadar üretimimizi belgelendiriyoruz.
+  Tedarikçi dosyanız için tüm belgelerin güncel kopyasını tek e-postayla gönderiyoruz.</p>
+  <div class="ctrust"><span>{SEAL}<b>Gıdaya uygun</b>TR-34-K-282635</span><span>{SEAL}<b>ISO 45001</b>İş sağlığı ve güvenliği</span><span>{SEAL}<b>{len(CERTS)} belge</b>Kopyası talep üzerine</span></div></div>
+  <div class="docfan" aria-hidden="true"><i></i><i></i><i><span class="dseal">{SEAL}</span><span class="dl1"></span><span class="dl2"></span><span class="dl3"></span><span class="dl4"></span><span class="dl5"></span></i></div>
+</section>
+<section class="wrap" style="padding-bottom:20px">{feat}</section>
+<section class="wrap" style="padding-top:28px;padding-bottom:56px">
+  <div class="ugh"><h2>Diğer belgelerimiz</h2><span class="muted" style="font-size:14px">Büyütmek için dokunun</span></div>
+  <div class="clist">{items}</div>
+</section>
+<section class="band"><div class="wrap sec2">
+  <span class="eyebrow">BELGELER SİZİN İÇİN NE İFADE EDİYOR?</span><h2 class="h2">Her müşteri için ayrı bir güvence</h2>
+  <div class="aud">
+    <div><span class="audi" data-ic="ekmek"></span><b>Fırın, manav ve gıda işletmeleri</b><p>Ürününüzle doğrudan temas eden poşetin gıdaya uygun olduğunu belgeleyebilir, denetimde kayıt numarasını gösterebilirsiniz.</p></div>
+    <div><span class="audi" data-ic="atlet"></span><b>Zincir mağazalar ve kurumsal satın alma</b><p>Tedarikçi onay süreçleriniz için gereken belgeleri tek seferde, güncel hâliyle alırsınız.</p></div>
+    <div><span class="audi" data-ic="kargo"></span><b>İhracat müşterileri</b><p>Belgelerimizin kopyalarını sipariş öncesinde paylaşıyoruz; ihtiyaç duyulan ek belgeler için birlikte çalışırız.</p></div>
+  </div></div></section>
+<section class="wrap sec2"><div class="cta2"><div><h2>Tedarikçi dosyanız için belge mi lazım?</h2><p>Tüm belgelerin güncel kopyalarını e-postanıza gönderelim.</p></div>
+  <div class="cta2b"><a class="btn green" href="mailto:satis@eprati.com?subject=Tedarik%C3%A7i%20belge%20talebi">E-postayla iste</a><a class="btn outline" href="https://wa.me/905357183598">WhatsApp</a></div></div></section>
+<div class="lb" id="lb" hidden role="dialog" aria-modal="true" aria-labelledby="lbt">
+  <div class="lbbox">
+    <div class="lbhead"><div><b id="lbt"></b><span id="lbs"></span></div><span class="lbn" id="lbn"></span><button type="button" class="lbx" data-lbclose aria-label="Kapat">×</button></div>
+    <div class="lbimg" id="lbimg"></div>
+    <div class="lbnav"><button type="button" class="lbp" data-lbgo="-1" aria-label="Önceki belge">← Önceki</button><button type="button" class="lbp" data-lbgo="1" aria-label="Sonraki belge">Sonraki →</button></div>
+  </div><div class="lbbg" data-lbclose></div></div>'''
 
 # ---------------------------------------------------------------- İLETİŞİM
 ILETISIM = f'''<section class="wrap shero sm"><div>
@@ -352,8 +391,9 @@ def refs_html():
 def urunler_html(CATS, PRODS, purl, esc):
   out = '''<section class="wrap shero sm"><div><span class="eyebrow">ÜRÜNLER</span><h1>Tüm ürünlerimiz</h1>
   <p>Dört ürün grubunda 24 ürün. Aradığınızı bulamazsanız <a href="{{R}}poset-asistani/">Poşet Asistanı</a> birkaç soruyla size uygun olanı önersin.</p></div></section>'''
+  out += '<nav class="wrap ujump" aria-label="Ürün grupları">' + ''.join(f'<a href="#g-{k}">{esc(c["name"])}</a>' for k, c in CATS.items()) + '</nav>'
   for k, c in CATS.items():
     cards = ''.join(f'<a class="pcard" href="{{{{R}}}}{purl(q)}"><span class="pcic" data-ic="{q["icon"]}"></span><b>{esc(q["name"])}</b><p>{esc(q["use"])}</p>' + ('<em>Gıdaya uygun</em>' if q.get('food') else '') + '<i>İncele →</i></a>' for q in PRODS if q['cat'] == k)
-    out += f'<section class="wrap" style="padding-bottom:40px"><div class="ugh"><h2>{esc(c["name"])}</h2><a href="{{{{R}}}}urunler/{k}/">Gruba git →</a></div><div class="pgrid">{cards}</div></section>'
+    out += f'<section class="wrap" id="g-{k}" style="padding-bottom:40px;scroll-margin-top:150px"><div class="ugh"><h2>{esc(c["name"])}</h2><a href="{{{{R}}}}urunler/{k}/">Gruba git →</a></div><div class="pgrid">{cards}</div></section>'
   out += f'''<section class="wrap" style="padding-bottom:72px"><div class="eldora"><div><span class="eyebrow">HEMEN SATIN AL</span><b>Hazır kargo poşeti mi lazım?</b><p>Standart ölçülerdeki baskısız kargo poşetlerini e-ticaret mağazamız Eldora'dan kredi kartıyla hemen sipariş edin.</p></div><a class="btn" href="{ELDORA}" target="_blank" rel="noopener">Eldora'dan satın al ↗</a></div></section>'''
   return out
