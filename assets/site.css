@@ -427,3 +427,15 @@ img{max-width:100%}
 .pcolors.sm button{width:30px;height:30px;margin:0 7px 7px 0}
 .elwarn{font-size:12px;color:#9A6B00;margin:6px 0 0}
 @media(max-width:760px){.elhead b{width:78px}}
+
+.areabtn{position:absolute;top:10px;right:10px;min-height:34px;padding:0 12px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.95);font:600 12px Inter,sans-serif;color:var(--ink);cursor:pointer;box-shadow:0 2px 8px rgba(25,27,69,.08)}
+.areabtn:hover{border-color:var(--navy)}
+.facelab{position:absolute;top:10px;left:10px;font:700 12px Inter,sans-serif;background:var(--navy);color:#fff;border-radius:999px;padding:7px 12px}
+.sides{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));grid-gap:8px}
+.sides button{text-align:left;padding:10px 12px;border-radius:12px;border:2px solid var(--line);background:#FBFCFA;cursor:pointer;color:var(--ink);min-height:64px}
+.sides button b{display:block;font-size:14px}.sides button span{display:block;font-size:12px;color:var(--mut);margin-top:2px}
+.sides button.on{border-color:var(--green);background:var(--sel)}
+.faces{display:inline-flex;background:#EEF1F6;border-radius:12px;padding:4px;margin-top:12px}
+.faces button{min-height:40px;padding:0 20px;border-radius:9px;border:0;background:transparent;font:700 14px Inter,sans-serif;color:var(--mut);cursor:pointer}
+.faces button.on{background:var(--navy);color:#fff}
+@media(max-width:560px){.sides{grid-template-columns:1fr}}
