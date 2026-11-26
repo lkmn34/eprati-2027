@@ -586,3 +586,6 @@ img{max-width:100%}
 .tksteps b{display:block;font-size:17px}.tksteps p{margin:3px 0 0;color:var(--mut);font-size:15px}
 .refin{margin-top:28px}.reflab{text-align:center;font-size:13px;font-weight:600;color:var(--mut);margin:0 0 6px;letter-spacing:.03em}
 @media(max-width:860px){.tkgrid{grid-template-columns:1fr;grid-gap:24px}.tkvis{height:320px}#tkcv{max-height:260px}}
+.feats{list-style:none;margin:0 0 18px;padding:0;display:grid;grid-gap:6px}
+.feats li{position:relative;padding-left:24px;font-size:15px;color:var(--ink)}
+.feats li:before{content:'';position:absolute;left:2px;top:6px;width:12px;height:7px;border-left:2.5px solid var(--green);border-bottom:2.5px solid var(--green);transform:rotate(-45deg)}

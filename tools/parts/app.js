@@ -135,7 +135,7 @@ function icon(k,size,col){return '<svg width="'+(size||28)+'" height="'+(size||2
 /* ---------- hafif hareketler: kaydırınca belirme, sayaçlar ---------- */
 var calm=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 if('IntersectionObserver' in window&&!calm){
-  var rv=document.querySelectorAll('.sec .h2, .sec .eyebrow, .card, .cat, .dcard, .mapwrap, .faq, .cta, .dstage, .dctl, .qform, .sz');
+  var rv=document.querySelectorAll('.sec .h2, .sec .eyebrow, .card, .cat, .dcard, .mapwrap, .faq, .cta, .dstage, .dctl, .qform');
   Array.prototype.forEach.call(rv,function(el){var sib=el.parentNode?Array.prototype.indexOf.call(el.parentNode.children,el):0;el.classList.add('rv');el.style.transitionDelay=Math.min(sib,6)*60+'ms'});
   var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}})},{rootMargin:'0px 0px -8% 0px'});
   Array.prototype.forEach.call(rv,function(el){io.observe(el)});

@@ -1,71 +1,667 @@
 {
  "cats": {
-  "magaza-ambalajlari": {"name": "Mağaza Ambalajları", "short": "Mağaza", "bg": "#E8F3E3"},
-  "gida-ambalajlari": {"name": "Gıda Ambalajları", "short": "Gıda", "bg": "#F3EFE6"},
-  "tekstil-ve-temizlik-ambalajlari": {"name": "Tekstil ve Temizlik Ambalajları", "short": "Tekstil ve Temizlik", "bg": "#E6EAF7"},
-  "endustriyel-ambalajlar": {"name": "Endüstriyel Ambalajlar", "short": "Endüstriyel", "bg": "#EEF1EC"}
+  "magaza-ambalajlari": {
+   "name": "Mağaza Ambalajları",
+   "short": "Mağaza",
+   "bg": "#E8F3E3"
+  },
+  "gida-ambalajlari": {
+   "name": "Gıda Ambalajları",
+   "short": "Gıda",
+   "bg": "#F3EFE6"
+  },
+  "tekstil-ve-temizlik-ambalajlari": {
+   "name": "Tekstil ve Temizlik Ambalajları",
+   "short": "Tekstil ve Temizlik",
+   "bg": "#E6EAF7"
+  },
+  "endustriyel-ambalajlar": {
+   "name": "Endüstriyel Ambalajlar",
+   "short": "Endüstriyel",
+   "bg": "#EEF1EC"
+  }
  },
  "products": [
-  {"id": "atlet-poset", "cat": "magaza-ambalajlari", "name": "Atlet Poşet", "mock": "atlet", "icon": "atlet", "food": true,
+  {
+   "id": "atlet-poset",
+   "cat": "magaza-ambalajlari",
+   "name": "Atlet Poşet",
+   "mock": "atlet",
+   "icon": "atlet",
+   "food": true,
    "desc": "Körüklü yapısı sayesinde geniş iç hacim sunan, marketten butiğe en çok kullanılan poşet. Farklı hammaddelerle üretilir; logonuzla basıldığında her alışverişte markanızı taşır.",
    "use": "Market, bakkal ve mağazalar için",
-   "facts": [["Standart ölçü", "6 seçenek + özel ölçü"], ["Baskı", "Baskısız · 1–3 renk · CMYK"], ["Gıda belgesi", "TR-34-K-282635"], ["Varyantlar", "Küçük · Battal · Dökme · Eczane"]],
-   "sizes": [["1", "20+7+7 × 35 cm", "Küçük alışveriş, eczane", [20, 7, 35]], ["2", "[ÖLÇÜ]", "[KULLANIM]", null], ["3", "[ÖLÇÜ]", "[KULLANIM]", null], ["4", "[ÖLÇÜ]", "[KULLANIM]", null], ["5", "[ÖLÇÜ]", "[KULLANIM]", null], ["6", "30+10+10 × 60 cm", "Battal, toplu alışveriş", [30, 10, 60]]],
+   "facts": [
+    [
+     "Standart ölçü",
+     "6 seçenek + özel ölçü"
+    ],
+    [
+     "Baskı",
+     "Baskısız · 1–3 renk · CMYK"
+    ],
+    [
+     "Gıda belgesi",
+     "TR-34-K-282635"
+    ],
+    [
+     "Varyantlar",
+     "Küçük · Battal · Dökme · Eczane"
+    ]
+   ],
+   "sizes": [
+    [
+     "1",
+     "20+7+7 × 35 cm",
+     "Küçük alışveriş, eczane",
+     [
+      20,
+      7,
+      35
+     ]
+    ],
+    [
+     "2",
+     "[ÖLÇÜ]",
+     "[KULLANIM]",
+     null
+    ],
+    [
+     "3",
+     "[ÖLÇÜ]",
+     "[KULLANIM]",
+     null
+    ],
+    [
+     "4",
+     "[ÖLÇÜ]",
+     "[KULLANIM]",
+     null
+    ],
+    [
+     "5",
+     "[ÖLÇÜ]",
+     "[KULLANIM]",
+     null
+    ],
+    [
+     "6",
+     "30+10+10 × 60 cm",
+     "Battal, toplu alışveriş",
+     [
+      30,
+      10,
+      60
+     ]
+    ]
+   ],
    "sizenote": "2–5 numaralı ölçüler ve kullanım notları mevcut SSS içeriğinden aktarılacak.",
-   "works": [["atlet-sari.webp", "ŞOK Market", "Sarı zemin · 2 renk baskı"]]},
-  {"id": "el-gecmeli-poset", "cat": "magaza-ambalajlari", "name": "El Geçmeli Poşet", "mock": "elgecme", "icon": "elgecme",
-   "desc": "Üst kısmındaki tutma deliğiyle sade ve şık bir taşıma sunan poşet. Geniş düz yüzeyi, logonuzun ve tasarımınızın öne çıkmasını sağlar.",
-   "use": "Butik, giyim mağazası ve kurumsal etkinlikler için",
-   "facts": [["Ölçü", "Standart ve özel ölçü"], ["Baskı", "Baskısız · 1–3 renk · CMYK"], ["Form", "Dikey ve yatay"], ["Kullanım", "Mağaza, fuar, etkinlik"]],
-   "sizes": [], "works": [["elgecme-beyaz.webp", "Turkish Support Services", "Beyaz zemin · 2 renk baskı"]]},
-  {"id": "kulplu-poset", "cat": "magaza-ambalajlari", "name": "Kulplu Poşet", "mock": "kulplu", "icon": "kulplu",
-   "desc": "Kulplu yapısıyla hacimli ürünleri rahatça taşır. Poşet, kulp ve baskı renkleri ayrı ayrı seçilebildiği için markanıza tam uyum sağlar.",
-   "use": "Ayakkabı kutusu, tekstil ve hediyelik ürünler için",
-   "facts": [["Ölçü", "Kutu ve tekstil ölçüleri"], ["Baskı", "Baskısız · 1–3 renk · CMYK"], ["Kulp", "Farklı renk seçenekleri"], ["Kullanım", "Ayakkabı, tekstil, tatlı"]],
-   "sizes": [["1", "1 Nolu kutu · 49 × 28 × 10 cm", "Ayakkabı kutusu", null], ["2", "2 Nolu kutu · 54 × 30 × 12 cm", "Büyük kutu", null], ["3", "30 × 30 cm – 50 × 65 cm", "Tekstil", null]],
-   "works": [["kulplu-kirmizi.webp", "İpek Pişmaniye", "Beyaz zemin · kırmızı kulp · çok renkli baskı"]]},
-  {"id": "kargo-poseti", "cat": "magaza-ambalajlari", "name": "Kargo Poşeti", "icon": "kargo",
-   "desc": "E-ticaret ve kurye gönderileriniz için dayanıklı poşet. Logonuzla basıldığında her gönderide markanızı taşır.", "use": "E-ticaret ve kargo gönderileri için"},
-  {"id": "rulo-manav-poseti", "cat": "gida-ambalajlari", "name": "Rulo Manav Poşeti", "icon": "rulo", "food": true,
-   "desc": "Rulo halinde sunulan, kolay koparılan manav poşeti. Meyve ve sebze satış noktalarında hızlı ve hijyenik kullanım sağlar.", "use": "Manav, pazar ve market reyonları için"},
-  {"id": "bakliyat-poseti", "cat": "gida-ambalajlari", "name": "Bakliyat Poşeti", "icon": "bakliyat", "food": true,
-   "desc": "Pirinç, mercimek ve diğer kuru gıdaların paketlenmesi için gıdaya uygun poşet.", "use": "Kuru gıda paketleme için"},
-  {"id": "plast-kagit", "cat": "gida-ambalajlari", "name": "Plast Kağıt", "icon": "ekmek", "food": true,
-   "desc": "Kasap, şarküteri ve peynir reyonlarında ürün sarmak için kullanılan gıdaya uygun ambalaj.", "use": "Kasap ve şarküteri için"},
-  {"id": "koli-kasa-poseti", "cat": "gida-ambalajlari", "name": "Koli-Kasa Poşeti", "icon": "opp", "food": true,
-   "desc": "Koli ve kasaların içine serilerek ürünleri koruyan gıdaya uygun poşet.", "use": "Toptan gıda ve kasa içi kullanım için"},
-  {"id": "ekmek-poseti", "cat": "gida-ambalajlari", "name": "Ekmek Poşeti", "icon": "ekmek", "food": true,
-   "desc": "Ekmek ve unlu mamullerin hijyenik şekilde paketlenmesi için gıdaya uygun poşet. Fırınınızın adıyla baskılı üretilebilir.", "use": "Fırın ve pastaneler için"},
-  {"id": "dondurma-buz-poseti", "cat": "gida-ambalajlari", "name": "Dondurma-Buz Poşeti", "icon": "buz", "food": true,
-   "desc": "Buz ve dondurulmuş ürünlerin paketlenmesi için gıdaya uygun poşet.", "use": "Buz ve dondurma üreticileri için"},
-  {"id": "kuru-temizleme-poseti", "cat": "tekstil-ve-temizlik-ambalajlari", "name": "Kuru Temizleme Poşeti", "icon": "aski",
-   "desc": "Askıdaki kıyafetleri toz ve kirden koruyan kuru temizleme poşeti.", "use": "Kuru temizleme ve terziler için"},
-  {"id": "hali-poseti", "cat": "tekstil-ve-temizlik-ambalajlari", "name": "Halı Poşeti", "icon": "hali",
-   "desc": "Yıkanmış halıların paketlenmesi için kullanılan poşet. Ortalama 30 kg ağırlığında sonsuz rulo olarak sunulur.", "use": "Halı yıkama firmaları için",
-   "facts": [["Sunum", "Sonsuz rulo"], ["Ağırlık", "Ortalama 30 kg"], ["Baskı", "Baskısız · baskılı"], ["Kullanım", "Halı ve kilim"]]},
-  {"id": "opp-cpp-torba", "cat": "tekstil-ve-temizlik-ambalajlari", "name": "OPP-CPP Torba", "icon": "opp",
-   "desc": "Şeffaf ve parlak yapısıyla ürünü olduğu gibi gösteren OPP-CPP torba.", "use": "Tekstil ve ürün paketleme için"},
-  {"id": "opp-cpp-bantli-torba", "cat": "tekstil-ve-temizlik-ambalajlari", "name": "OPP-CPP Bantlı Torba", "icon": "kilitli",
-   "desc": "Yapışkan bantlı kapamasıyla pratik kullanım sunan şeffaf OPP-CPP torba.", "use": "Tekstil ve ürün paketleme için"},
-  {"id": "opp-film-bobin", "cat": "tekstil-ve-temizlik-ambalajlari", "name": "OPP-Film Bobin", "icon": "bobin",
-   "desc": "Paketleme makinelerinde kullanılmak üzere bobin halinde sunulan OPP film.", "use": "Makineli paketleme için"},
-  {"id": "jelatin", "cat": "tekstil-ve-temizlik-ambalajlari", "name": "Jelatin", "icon": "opp",
-   "desc": "Ürünleri sarmak ve korumak için kullanılan şeffaf jelatin ambalaj.", "use": "Ürün sarma ve koruma için"},
-  {"id": "tasima-torbasi", "cat": "tekstil-ve-temizlik-ambalajlari", "name": "Taşıma Torbası", "icon": "kulplu",
-   "desc": "Çamaşır ve büyük hacimli ürünlerin taşınması için dayanıklı torba.", "use": "Çamaşırhane ve tekstil için"},
-  {"id": "torba", "cat": "endustriyel-ambalajlar", "name": "Torba", "icon": "opp",
-   "desc": "Sanayi ve depolama ihtiyaçları için dayanıklı endüstriyel torba.", "use": "Sanayi ve depo için"},
-  {"id": "bantli-torba", "cat": "endustriyel-ambalajlar", "name": "Bantlı Torba", "icon": "kilitli",
-   "desc": "Yapışkan bantlı kapamasıyla içeriği güvenle kapatan endüstriyel torba.", "use": "Sanayi ve gönderi için"},
-  {"id": "bardak-poseti", "cat": "endustriyel-ambalajlar", "name": "Bardak Poşeti", "icon": "bardak",
-   "desc": "Karton ve plastik bardakların hijyenik şekilde paketlenmesi için poşet.", "use": "Bardak üreticileri için"},
-  {"id": "fermuarli-kilitli-torba", "cat": "endustriyel-ambalajlar", "name": "Fermuarlı Kilitli Torba", "icon": "kilitli",
-   "desc": "Fermuarlı kilidiyle tekrar tekrar açılıp kapanabilen torba.", "use": "Numune, parça ve gıda saklama için"},
-  {"id": "kilitli-torba", "cat": "endustriyel-ambalajlar", "name": "Kilitli Torba", "icon": "kilitli",
-   "desc": "Bastırarak kapanan kilidiyle içeriği güvenle saklayan torba.", "use": "Numune, parça ve gıda saklama için"},
-  {"id": "oto-lastik-poseti", "cat": "endustriyel-ambalajlar", "name": "Oto Lastik Poşeti", "icon": "lastik",
-   "desc": "Lastiklerin depolanması ve taşınması sırasında temiz kalmasını sağlayan poşet.", "use": "Lastikçi ve oto servisleri için"},
-  {"id": "film-bobin", "cat": "endustriyel-ambalajlar", "name": "Film (Bobin)", "icon": "bobin",
-   "desc": "Paketleme ve sarma işlemleri için bobin halinde sunulan film.", "use": "Paketleme ve sarma için"}
+   "works": [
+    [
+     "atlet-sari.webp",
+     "ŞOK Market",
+     "Sarı zemin · 2 renk baskı"
+    ]
+   ],
+   "feats": []
+  },
+  {
+   "id": "el-gecmeli-poset",
+   "cat": "magaza-ambalajlari",
+   "name": "El Geçmeli Poşet",
+   "mock": "elgecme",
+   "icon": "elgecme",
+   "desc": "Perakende mağazalardan sağlık sektörüne (hastane, eczane, medikal malzeme) kadar en çok tercih edilen poşet türlerinden biri. Taşıma kapasitesi ürüne göre takviyeli ya da takviyesiz olarak ayarlanabilir; farklı hammadde, renk ve baskı seçenekleriyle üretilir.",
+   "use": "Mağaza, eczane ve kurumsal kullanım için",
+   "facts": [
+    [
+     "Standart ölçü",
+     "5 ölçü + özel ölçü"
+    ],
+    [
+     "Baskı",
+     "Baskısız · 1–3 renk · CMYK"
+    ],
+    [
+     "Takviye",
+     "Takviyeli / takviyesiz"
+    ],
+    [
+     "Kullanım",
+     "Mağaza, sağlık, kurumsal"
+    ]
+   ],
+   "sizes": [
+    [
+     "1",
+     "20 × 30 cm",
+     "Küçük ürün, eczane",
+     [
+      20,
+      0,
+      30
+     ]
+    ],
+    [
+     "2",
+     "35 × 45 cm",
+     "Giyim, aksesuar",
+     [
+      35,
+      0,
+      45
+     ]
+    ],
+    [
+     "3",
+     "40 × 50 cm",
+     "Ayakkabı, kitap",
+     [
+      40,
+      0,
+      50
+     ]
+    ],
+    [
+     "4",
+     "50 × 60 cm",
+     "Büyük ürün",
+     [
+      50,
+      0,
+      60
+     ]
+    ],
+    [
+     "5",
+     "60 × 70 cm",
+     "Hacimli ürün",
+     [
+      60,
+      0,
+      70
+     ]
+    ]
+   ],
+   "works": [
+    [
+     "elgecme-beyaz.webp",
+     "Turkish Support Services",
+     "Beyaz zemin · 2 renk baskı"
+    ]
+   ],
+   "feats": [
+    "Takviyeli veya takviyesiz üretim",
+    "Dikey ve yatay form",
+    "Giyim, ayakkabı, aksesuar, kitap, kırtasiye, elektronik ve hediyelik eşya mağazalarına uygun"
+   ],
+   "sizenote": "Ölçüler en × boy (cm) olarak verilmiştir. Özel ölçü üretilir."
+  },
+  {
+   "id": "kulplu-poset",
+   "cat": "magaza-ambalajlari",
+   "name": "Kulplu Poşet",
+   "mock": "kulplu",
+   "icon": "kulplu",
+   "desc": "Farklı sap tasarımıyla poşetin içinde ekstra alan kazandırır. Şık görünümü sayesinde kutulu ürün satan pastaneler, tekstil ve ayakkabı mağazaları tarafından özellikle tercih edilir. Farklı hammadde ve baskı seçenekleriyle firmanıza ekonomik bir reklam katkısı sağlar.",
+   "use": "Pastane, tekstil ve ayakkabı mağazaları için",
+   "facts": [
+    [
+     "Standart ölçü",
+     "Pasta kutusu ve tekstil ölçüleri"
+    ],
+    [
+     "Baskı",
+     "Baskısız · 1–3 renk · CMYK"
+    ],
+    [
+     "Kulp",
+     "Farklı renk seçenekleri"
+    ],
+    [
+     "Kullanım",
+     "Pastane, tekstil, ayakkabı"
+    ]
+   ],
+   "sizes": [
+    [
+     "1",
+     "49 × 28 × 10 cm",
+     "1 Nolu yaş pasta kutusu",
+     null
+    ],
+    [
+     "2",
+     "54 × 30 × 12 cm",
+     "2 Nolu yaş pasta kutusu",
+     null
+    ],
+    [
+     "3",
+     "39 × 22 + 7 cm",
+     "500 g baklava / kuru pasta",
+     null
+    ],
+    [
+     "4",
+     "30 × 30 · 30 × 40 · 35 × 35 cm",
+     "Tekstil (küçük)",
+     null
+    ],
+    [
+     "5",
+     "35 × 50 · 40 × 50 · 40 × 55 cm",
+     "Tekstil (orta)",
+     null
+    ],
+    [
+     "6",
+     "50 × 60 · 50 × 65 cm",
+     "Tekstil (büyük)",
+     null
+    ]
+   ],
+   "works": [
+    [
+     "kulplu-kirmizi.webp",
+     "İpek Pişmaniye",
+     "Beyaz zemin · kırmızı kulp · çok renkli baskı"
+    ]
+   ],
+   "feats": [
+    "Poşet, kulp ve baskı renkleri ayrı seçilebilir",
+    "Yaş pasta, baklava ve kuru pasta kutularına uygun ölçüler",
+    "Tekstil ürünleri için geniş ölçü yelpazesi"
+   ],
+   "sizenote": "Özel ölçü üretilir."
+  },
+  {
+   "id": "kargo-poseti",
+   "cat": "magaza-ambalajlari",
+   "name": "Kargo Poşeti",
+   "icon": "kargo",
+   "desc": "E-ticaret yapan ve ürünlerini kargoyla gönderen işletmeler için üretilir. Yüksek kaliteli kapak bandı sayesinde poşet bantla kapatıldıktan sonra yırtılmadan açılamaz; ürünleriniz müşterinize güvenle ulaşır.",
+   "use": "E-ticaret ve kargo gönderileri için",
+   "feats": [
+    "Fatura cepli veya cepsiz",
+    "El geçmeli seçenek",
+    "Gönderici ve alıcı bilgisi baskılı seçenek",
+    "İsteğe bağlı tek tarafı şeffaf"
+   ],
+   "facts": [
+    [
+     "Ölçü",
+     "22 × 30 + 5 cm – 45 × 55 + 5 cm"
+    ],
+    [
+     "Kapama",
+     "Yüksek kaliteli kapak bandı"
+    ],
+    [
+     "Seçenek",
+     "Fatura cepli / cepsiz"
+    ],
+    [
+     "Baskı",
+     "Baskısız · 1–3 renk · CMYK"
+    ]
+   ]
+  },
+  {
+   "id": "rulo-manav-poseti",
+   "cat": "gida-ambalajlari",
+   "name": "Rulo Manav Poşeti",
+   "icon": "rulo",
+   "food": true,
+   "desc": "İnce ve dayanıklı yapısıyla kullanımı kolay ve hijyeniktir. Çek-kopar yapısı sayesinde poşetler dağılmadan rulo halinde sunulur ve manav reyonlarında pratik kullanım sağlar.",
+   "use": "Manav, pazar ve market reyonları için",
+   "feats": [
+    "Çek-kopar (perforeli) rulo",
+    "İnce ve dayanıklı",
+    "Hijyenik kullanım"
+   ]
+  },
+  {
+   "id": "bakliyat-poseti",
+   "cat": "gida-ambalajlari",
+   "name": "Bakliyat Poşeti",
+   "icon": "bakliyat",
+   "food": true,
+   "desc": "Gıda ile temasa uygun PE hammaddeden üretilir. Şeffaf yapısı sayesinde içindeki ürün dışarıdan net görülür; firma logosu ve ürün bilgileri poşet üzerine basılabilir.",
+   "use": "Kuru gıda paketleme için",
+   "feats": [
+    "Gıdaya uygun PE hammadde",
+    "Şeffaf, ürünü gösteren yapı",
+    "Logo ve ürün bilgisi baskısı"
+   ]
+  },
+  {
+   "id": "plast-kagit",
+   "cat": "gida-ambalajlari",
+   "name": "Plast Kağıt",
+   "icon": "ekmek",
+   "food": true,
+   "desc": "Gıdaya uygun PE hammaddeden üretilir. Sıvı ve yağ geçirmez; soğuk zincirde taşınan ve saklanan et ürünlerinin birbiriyle temasını engeller. İnce yapısı sayesinde ekonomik avantaj sağlar.",
+   "use": "Et ürünleri ve soğuk zincir için",
+   "feats": [
+    "Sıvı ve yağ geçirmez",
+    "Soğuk zincire uygun",
+    "İnce ve ekonomik"
+   ]
+  },
+  {
+   "id": "koli-kasa-poseti",
+   "cat": "gida-ambalajlari",
+   "name": "Koli-Kasa Poşeti",
+   "icon": "opp",
+   "food": true,
+   "desc": "Sevkiyatta kullanılan kasa ve kolilerin en, boy ve yüksekliğine göre özel ebatlanır. Ürünlerinizi dış etkenlere karşı hijyenik şekilde korur.",
+   "use": "Toptan gıda ve kasa içi kullanım için",
+   "feats": [
+    "Kasa ve koliye göre özel ebat",
+    "Hijyenik koruma"
+   ]
+  },
+  {
+   "id": "ekmek-poseti",
+   "cat": "gida-ambalajlari",
+   "name": "Ekmek Poşeti",
+   "icon": "ekmek",
+   "food": true,
+   "desc": "Her çeşit ekmek için farklı hammadde ve şekillerde üretilir. Ürünü dış etkenlere karşı korur; firma logonuz ve ürün bilgileriniz poşet üzerine basılabilir.",
+   "use": "Fırın ve pastaneler için",
+   "feats": [
+    "Her çeşit ekmeğe uygun",
+    "Farklı hammadde ve şekiller",
+    "Logo ve ürün bilgisi baskısı"
+   ]
+  },
+  {
+   "id": "dondurma-buz-poseti",
+   "cat": "gida-ambalajlari",
+   "name": "Dondurma-Buz Poşeti",
+   "icon": "buz",
+   "food": true,
+   "desc": "Dondurma poşeti, ürünün temiz ve hijyenik şekilde dondurulmasına ve sevkine yardımcı olur; yırtılma ve sızdırma yapmaz. Buz poşeti, üretilen buzların muhafazasında ve buz kalıplarının şekillendirilmesinde kullanılır; dayanıklı ve esnektir. İkisi de gıdaya uygun PE hammaddeden üretilir.",
+   "use": "Buz ve dondurma üreticileri için",
+   "feats": [
+    "Gıdaya uygun PE hammadde",
+    "Yırtılma ve sızdırma yapmaz",
+    "İçerik, çeşit ve son kullanma tarihi baskısı"
+   ]
+  },
+  {
+   "id": "kuru-temizleme-poseti",
+   "cat": "tekstil-ve-temizlik-ambalajlari",
+   "name": "Kuru Temizleme Poşeti",
+   "icon": "aski",
+   "desc": "Mont, ceket, pantolon, gelinlik ve gömlek gibi askılı tekstil ürünlerini taşınma sırasında toz, kir ve dış etkenlerden korur. Kullanım ihtiyacına göre şeffaf LDPE ya da hışır HDPE hammaddeden üretilir.",
+   "use": "Kuru temizleme ve terziler için",
+   "feats": [
+    "Düz askı delikli veya omuzluklu askı delikli",
+    "Perforeli (çek-kopar) rulo",
+    "Poşet kesim makinelerine uygun makine rulosu",
+    "LDPE (şeffaf) veya HDPE (hışır)"
+   ],
+   "facts": [
+    [
+     "Standart ölçü",
+     "60 cm genişlik, 90–180 cm boy"
+    ],
+    [
+     "Hammadde",
+     "LDPE şeffaf · HDPE hışır"
+    ],
+    [
+     "Tür",
+     "Askı delikli · perforeli · makine rulosu"
+    ],
+    [
+     "Baskı",
+     "Baskısız · 1–3 renk · CMYK"
+    ]
+   ],
+   "sizes": [
+    [
+     "1",
+     "60 cm makine rulosu",
+     "Kesim makinesi",
+     null
+    ],
+    [
+     "2",
+     "60 × 90 cm",
+     "LDPE ≈ 50 adet/kg · HDPE ≈ 65 adet/kg",
+     null
+    ],
+    [
+     "3",
+     "60 × 120 cm",
+     "LDPE ≈ 36 adet/kg · HDPE ≈ 48 adet/kg",
+     null
+    ],
+    [
+     "4",
+     "60 × 150 cm",
+     "LDPE ≈ 28 adet/kg · HDPE ≈ 38 adet/kg",
+     null
+    ],
+    [
+     "5",
+     "60 × 180 cm",
+     "LDPE ≈ 23 adet/kg · HDPE ≈ 32 adet/kg",
+     null
+    ]
+   ],
+   "sizenote": "Kilogram başına adetler yaklaşıktır. Minimum sipariş miktarı ölçü, hammadde ve baskıya göre değişir. Özel ölçü üretilir."
+  },
+  {
+   "id": "hali-poseti",
+   "cat": "tekstil-ve-temizlik-ambalajlari",
+   "name": "Halı Poşeti",
+   "icon": "hali",
+   "desc": "Halı üretim fabrikaları, satış mağazaları ve halı yıkama tesislerinde depolama ve sevkiyat sırasında halıları korur. Sonsuz rulo halinde üretilir ve halının boyuna göre kesilerek kullanılır; bu da maliyet avantajı sağlar.",
+   "use": "Halı fabrikası, mağaza ve yıkama tesisleri için",
+   "facts": [
+    [
+     "Sunum",
+     "Sonsuz rulo"
+    ],
+    [
+     "Ağırlık",
+     "Ortalama 30 kg"
+    ],
+    [
+     "Baskı",
+     "Baskısız · baskılı"
+    ],
+    [
+     "Kullanım",
+     "Halı ve kilim"
+    ]
+   ],
+   "feats": [
+    "Sonsuz rulo (bobin), halı boyuna göre kesilir",
+    "Kesimli, perforeli, baskılı veya standart baskılı",
+    "Ortalama 30 kg'lık rulolar"
+   ],
+   "sizes": [
+    [
+     "1",
+     "20 – 35 cm",
+     "20, 25, 30, 35 cm genişlik",
+     null
+    ],
+    [
+     "2",
+     "38 – 45 cm",
+     "38, 40, 42, 45 cm genişlik",
+     null
+    ],
+    [
+     "3",
+     "50 – 70 cm",
+     "50, 55, 60, 65, 70 cm genişlik",
+     null
+    ]
+   ],
+   "sizenote": "Standart olarak ortalama 30 kg'lık sonsuz rulolar halinde sunulur. Özel ölçü ve kalınlıkta üretim yapılabilir; minimum sipariş miktarı ölçü, baskı ve üretim türüne göre değişir."
+  },
+  {
+   "id": "opp-cpp-torba",
+   "cat": "tekstil-ve-temizlik-ambalajlari",
+   "name": "OPP-CPP Torba",
+   "icon": "opp",
+   "desc": "Şeffaf ve parlak yapısıyla tekstil ve gıda sektörlerinde tercih edilir. Üzerinde toz tutmaz ve raflarda sergilemeye uygundur; bantlı veya bantsız üretilebilir.",
+   "use": "Tekstil ve gıda ürünleri için",
+   "feats": [
+    "Şeffaf ve parlak",
+    "Toz tutmaz, raf sergisine uygun",
+    "Bantlı veya bantsız"
+   ]
+  },
+  {
+   "id": "opp-cpp-bantli-torba",
+   "cat": "tekstil-ve-temizlik-ambalajlari",
+   "name": "OPP-CPP Bantlı Torba",
+   "icon": "kilitli",
+   "desc": "Opp-Cpp malzemeden üretilen, bantlı kapamalı şeffaf torba. Parlak görünümüyle tekstil ve gıda ürünlerinin raflarda sergilenmesine uygundur ve üzerinde toz tutmaz.",
+   "use": "Tekstil ve gıda ürünleri için",
+   "feats": [
+    "Bantlı kapama",
+    "Şeffaf ve parlak",
+    "Raf sergisine uygun"
+   ]
+  },
+  {
+   "id": "opp-film-bobin",
+   "cat": "tekstil-ve-temizlik-ambalajlari",
+   "name": "OPP-Film Bobin",
+   "icon": "bobin",
+   "desc": "Seri üretim tesislerinde otomatik makinelerle paketleme için bobin halinde sunulur. Tekstil, gıda ve endüstriyel ürünlerin elle temas etmeden paketlenmesini, depolanmasını ve teşhirini sağlar.",
+   "use": "Otomatik makineli paketleme için",
+   "feats": [
+    "Otomatik paketleme makinelerine uygun",
+    "Baskılı veya baskısız",
+    "Tekstil, gıda ve endüstriyel kullanım"
+   ]
+  },
+  {
+   "id": "jelatin",
+   "cat": "tekstil-ve-temizlik-ambalajlari",
+   "name": "Jelatin",
+   "icon": "opp",
+   "desc": "Şeffaf ve parlak yapısıyla koruyucu dış ambalaj olarak kullanılır. Bantlı veya bantsız, baskılı veya baskısız üretilebilir.",
+   "use": "Tekstil ve gıda ürünleri için",
+   "feats": [
+    "Şeffaf ve parlak",
+    "Bantlı veya bantsız",
+    "Koruyucu dış ambalaj"
+   ]
+  },
+  {
+   "id": "tasima-torbasi",
+   "cat": "tekstil-ve-temizlik-ambalajlari",
+   "name": "Taşıma Torbası",
+   "icon": "kulplu",
+   "desc": "Ağır hizmet sektörlerinde ürün sevkiyatı sırasında güvenli ve dayanıklı taşıma sağlar. Körüklü yapıdadır ve firmanın isteğine göre farklı kalınlıklarda üretilebilir.",
+   "use": "Ağır hizmet sevkiyatı için",
+   "feats": [
+    "Körüklü yapı",
+    "İsteğe göre kalınlık",
+    "Dayanıklı taşıma"
+   ]
+  },
+  {
+   "id": "torba",
+   "cat": "endustriyel-ambalajlar",
+   "name": "Torba",
+   "icon": "opp",
+   "desc": "Ev aletleri, beyaz eşya, hırdavat ve oto yedek parça üretimi gibi endüstriyel sektörlerde yoğun kullanılır. Firmanıza özel ebat, kalınlık, renk ve baskı seçenekleriyle üretilir.",
+   "use": "Beyaz eşya, hırdavat ve yedek parça için",
+   "feats": [
+    "Firmaya özel ebat ve kalınlık",
+    "Körüklü seçenek",
+    "Baskılı veya baskısız"
+   ]
+  },
+  {
+   "id": "bantli-torba",
+   "cat": "endustriyel-ambalajlar",
+   "name": "Bantlı Torba",
+   "icon": "kilitli",
+   "desc": "Ürünün ambalajın içinden görünmesi istenen paketlemelerde kullanılır. PE hammaddeden üretilir; kaygan yapısı sayesinde ağzı kolay açılır ve ürünler rahatça paketlenir. İsteğe bağlı hava deliği açılabilir.",
+   "use": "Ürünü gösteren paketleme için",
+   "feats": [
+    "PE hammadde, parlak ve şeffaf",
+    "Kolay açılan kaygan yapı",
+    "İsteğe bağlı hava deliği"
+   ]
+  },
+  {
+   "id": "bardak-poseti",
+   "cat": "endustriyel-ambalajlar",
+   "name": "Bardak Poşeti",
+   "icon": "bardak",
+   "desc": "Plastik ve karton bardakların üretimden sonra hijyenik biçimde paketlenmesi, depolanması ve sevkiyatı için kullanılır. Talebe göre ebatlarda, manuel ve otomatik dolum makinelerine uygun üretilir.",
+   "use": "Bardak üreticileri için",
+   "feats": [
+    "Manuel ve otomatik dolum makinelerine uygun",
+    "Talebe göre ebat",
+    "Baskılı veya baskısız"
+   ]
+  },
+  {
+   "id": "fermuarli-kilitli-torba",
+   "cat": "endustriyel-ambalajlar",
+   "name": "Fermuarlı Kilitli Torba",
+   "icon": "kilitli",
+   "desc": "Hem kilitli hem fermuarlı yapısıyla kolayca açılıp kapanır ve defalarca kullanılabilir. %100 orijinal hammaddeden üretilir; hijyenik ve güvenli saklama sağlar.",
+   "use": "Tekrar kullanılabilir saklama için",
+   "feats": [
+    "Kilitli ve fermuarlı",
+    "Şeffaf ve buzlu tasarım",
+    "Defalarca kullanılabilir"
+   ]
+  },
+  {
+   "id": "kilitli-torba",
+   "cat": "endustriyel-ambalajlar",
+   "name": "Kilitli Torba",
+   "icon": "kilitli",
+   "desc": "Yüksek mukavemetli kilit yapısıyla sızdırmaz ve hava geçirmezdir. Kolay açılıp kapanan kilidi sayesinde içindeki ürünleri güvenle muhafaza eder.",
+   "use": "Ürün saklama ve muhafaza için",
+   "feats": [
+    "Sızdırmaz ve hava geçirmez kilit",
+    "Kolay aç-kapa",
+    "Genellikle şeffaf"
+   ]
+  },
+  {
+   "id": "oto-lastik-poseti",
+   "cat": "endustriyel-ambalajlar",
+   "name": "Oto Lastik Poşeti",
+   "icon": "lastik",
+   "desc": "Oto lastiklerinin fabrikadan bayilere sevkiyatında kullanılır. Yazlık ve kışlık lastikleri sezon sonunda nem ve toz gibi dış etkenlerden korur.",
+   "use": "Lastik üreticileri, bayiler ve oto servisleri için",
+   "feats": [
+    "Sevkiyat ve sezonluk saklama",
+    "Nem ve toza karşı koruma",
+    "Özel ölçü (en, boy, körük)"
+   ]
+  },
+  {
+   "id": "film-bobin",
+   "cat": "endustriyel-ambalajlar",
+   "name": "Film (Bobin)",
+   "icon": "bobin",
+   "desc": "HDPE ve LDPE hammaddeden, gravimetrik dozajlama üniteli ekstrüzyon makinelerinde üretilir. Tek katlı (mono) veya çok katlı (coex), renkli ya da şeffaf olarak sunulur.",
+   "use": "Paketleme ve sarma için",
+   "feats": [
+    "HDPE ve LDPE hammadde",
+    "Mono veya coex (çok katlı)",
+    "İstenen en, körük ve kalınlıkta"
+   ]
+  }
  ]
 }

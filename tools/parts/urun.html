@@ -31,7 +31,8 @@
     <div class="pinfo">
       <div>{{P_TAGS}}</div>
       <h1 style="font-size:46px;margin:10px 0 14px">{{P_NAME}}</h1>
-      <p class="muted" style="font-size:17px;margin:0 0 18px">{{P_DESC}}</p>
+      <p class="muted" style="font-size:17px;margin:0 0 14px">{{P_DESC}}</p>
+      {{P_FEATS}}
       <div id="ucolors">
       <p style="font-weight:600;font-size:14px;margin:0 0 10px">Poşet rengi: <span class="muted" id="cname"></span></p>
       <div class="pcolors" id="dots"></div>
@@ -50,7 +51,7 @@
     <div class="wrap" style="padding-top:56px;padding-bottom:56px">
       <div class="row" style="justify-content:space-between;align-items:flex-end;margin-bottom:16px">
         <h2 style="font-size:30px;margin-bottom:8px">Standart ölçüler</h2>
-        <p class="muted" style="font-size:14px">Ölçü formatı: en + körük + körük × boy (cm). Bir ölçü seçin, teklif formuna aktarılsın.</p>
+        <p class="muted" style="font-size:14px">{{P_SIZEFMT}}</p>
       </div>
       <div style="overflow-x:auto"><table class="sz"><thead><tr><th>No</th><th>Ölçü</th><th>Tipik kullanım</th><th></th></tr></thead><tbody id="sztable"></tbody></table></div>
       <p class="muted" style="font-size:13px;margin:12px 0 0">{{P_SIZENOTE}}</p>

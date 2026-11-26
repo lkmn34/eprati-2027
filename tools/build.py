@@ -72,6 +72,8 @@ def prod_fill(html, p, R):
     '{{P_NAME}}': esc(p['name']), '{{P_CAT}}': esc(cat['name']), '{{P_CATSHORT}}': esc(cat['short']), '{{P_DESC}}': esc(p['desc']),
     '{{P_TAGS}}': ''.join(f'<span class="tag" style="background:{bg};color:{fg}">{t}</span>' for t, bg, fg in tags),
     '{{P_FACTS}}': ''.join(f'<div><span>{esc(k)}</span><b>{esc(v)}</b></div>' for k, v in facts),
+    '{{P_FEATS}}': ('<ul class="feats">' + ''.join(f'<li>{esc(x)}</li>' for x in p.get('feats', [])) + '</ul>') if p.get('feats') else '',
+    '{{P_SIZEFMT}}': 'Ölçü formatı: en + körük + körük × boy (cm). Bir ölçü seçin, teklif formuna aktarılsın.' if p['id']=='atlet-poset' else 'Ölçüler cm cinsindendir. Bir ölçü seçin, teklif formuna aktarılsın.',
     '{{P_SIZENOTE}}': esc(p.get('sizenote') or 'Standart ölçü listesi katalogdan aktarılacak. Dilediğiniz ölçüyü teklif formuna yazabilirsiniz.'),
     '{{P_RELATED}}': ''.join(f'<a class="card relc" href="{R}{purl(q)}"><span class="relic" data-ic="{q["icon"]}"></span><b>{esc(q["name"])}</b><p class="muted">{esc(q["use"])}</p></a>' for q in rel),
     '{{NOTICE}}': NOTICE,
