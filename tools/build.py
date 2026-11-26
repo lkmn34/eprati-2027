@@ -92,6 +92,21 @@ def mbar(R):
   <a class="pri" href="{R}poset-asistani/">Teklif Al</a>
 </div>'''
 
+
+def quick(R, show):
+  if not show: return ''
+  secs=[('market','Market ve mağaza'),('firin','Fırın ve pastane'),('manav','Manav ve pazar'),('eticaret','E-ticaret ve kargo'),('kt','Kuru temizleme'),('sanayi','Sanayi ve otomotiv')]
+  links=''.join(f'<a href="{R}poset-asistani/?sektor={k}">{n}</a>' for k,n in secs)
+  return f'''<button type="button" class="qtab" id="qtab" aria-controls="qpop" aria-expanded="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>Teklif Al</button>
+<div class="qpop" id="qpop" role="dialog" aria-label="Hızlı teklif">
+  <button type="button" class="qx" data-qclose aria-label="Kapat">×</button>
+  <span class="eyebrow">POŞET ASİSTANI · 1 DAKİKA</span>
+  <h3>Nasıl bir poşet istiyorsunuz?</h3><p>İşinizi seçin, size uygun poşeti birlikte bulalım.</p>
+  <div class="qs">{links}</div>
+  <a class="btn" href="{R}poset-asistani/">Asistanı başlat →</a>
+  <div class="qalt"><a href="tel:+902126516669">0212 651 66 69</a><a href="https://wa.me/905357183598">WhatsApp</a></div>
+</div><div class="qbg" data-qclose></div>'''
+
 def page(p):
   R = p['root']; H = R or './'
   canon = BASE + p['url']
@@ -129,6 +144,7 @@ def page(p):
 {main}
 {foot}
 {mbar(R)}
+{quick(R, p['main']!='asistan.html')}
 <script src="{R}assets/app.js?v={VER}" defer></script>
 </body>
 </html>

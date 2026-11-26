@@ -55,6 +55,28 @@ function cr(a,b){var x=hexL(a),y=hexL(b);return (Math.max(x,y)+.05)/(Math.min(x,
 function logoColor(src,cb){var im=new Image();im.onload=function(){try{var cv=document.createElement('canvas'),s=48;cv.width=cv.height=s;var x=cv.getContext('2d');x.drawImage(im,0,0,s,s);var d=x.getImageData(0,0,s,s).data,bins={},best=null,bn=0;
   for(var i=0;i<d.length;i+=4){if(d[i+3]<128)continue;var r=d[i],g=d[i+1],b=d[i+2],mx=Math.max(r,g,b),mn=Math.min(r,g,b);if(mx>235&&mn>225)continue;var k=(r>>5)+','+(g>>5)+','+(b>>5);bins[k]=(bins[k]||0)+1;if(bins[k]>bn){bn=bins[k];best=[r,g,b]}}
   cb(best?'#'+best.map(function(v){return ('0'+v.toString(16)).slice(-2)}).join(''):null)}catch(e){cb(null)}};im.src=src}
+
+/* logo hazırlama: kenarlardan tek renk arka planı bul ve şeffaflaştır */
+function prepLogo(src,cb){var im=new Image();im.onload=function(){try{
+  var W=im.naturalWidth,H=im.naturalHeight,sc=Math.min(1,900/Math.max(W,H));W=Math.round(W*sc);H=Math.round(H*sc);
+  var c=document.createElement('canvas');c.width=W;c.height=H;var x=c.getContext('2d');x.drawImage(im,0,0,W,H);var id=x.getImageData(0,0,W,H),d=id.data;
+  var edge=[],trans=0,i;function px(xx,yy){var k=(yy*W+xx)*4;return[d[k],d[k+1],d[k+2],d[k+3]]}
+  for(i=0;i<W;i+=2){edge.push(px(i,0));edge.push(px(i,H-1))}for(i=0;i<H;i+=2){edge.push(px(0,i));edge.push(px(W-1,i))}
+  edge.forEach(function(p){if(p[3]<20)trans++});
+  if(trans>edge.length*.5)return cb(im,{bg:'seffaf'});
+  var bins={},best=null,bn=0;edge.forEach(function(p){var k=(p[0]>>4)+','+(p[1]>>4)+','+(p[2]>>4);bins[k]=(bins[k]||0)+1;if(bins[k]>bn){bn=bins[k];best=p}});
+  if(bn<edge.length*.6)return cb(im,{bg:'karisik'});
+  var br=best[0],bg=best[1],bb=best[2],T=46,seen=new Uint8Array(W*H),st=[];
+  function near(k){var dr=d[k]-br,dg=d[k+1]-bg,db=d[k+2]-bb;return dr*dr+dg*dg+db*db<T*T*3}
+  for(i=0;i<W;i++){st.push(i);st.push((H-1)*W+i)}for(i=0;i<H;i++){st.push(i*W);st.push(i*W+W-1)}
+  while(st.length){var p=st.pop();if(seen[p])continue;var k=p*4;if(!near(k))continue;seen[p]=1;d[k+3]=0;var xx=p%W,yy=(p/W)|0;
+    if(xx>0)st.push(p-1);if(xx<W-1)st.push(p+1);if(yy>0)st.push(p-W);if(yy<H-1)st.push(p+W)}
+  for(p=0;p<W*H;p++){if(seen[p])continue;k=p*4;var xx2=p%W,yy2=(p/W)|0,nb=0;if(xx2>0&&seen[p-1])nb++;if(xx2<W-1&&seen[p+1])nb++;if(yy2>0&&seen[p-W])nb++;if(yy2<H-1&&seen[p+W])nb++;if(nb){var dr=d[k]-br,dg=d[k+1]-bg,db=d[k+2]-bb,dist=Math.sqrt((dr*dr+dg*dg+db*db)/3);if(dist<T*2)d[k+3]=Math.round(255*Math.min(1,(dist-T*.5)/(T*1.5)))}}
+  x.putImageData(id,0,0);var mnx=W,mny=H,mxx=0,mxy=0;for(var yy3=0;yy3<H;yy3++)for(var xx3=0;xx3<W;xx3++)if(d[(yy3*W+xx3)*4+3]>16){if(xx3<mnx)mnx=xx3;if(xx3>mxx)mxx=xx3;if(yy3<mny)mny=yy3;if(yy3>mxy)mxy=yy3}
+  if(mxx>mnx&&mxy>mny){var cw=mxx-mnx+1,ch=mxy-mny+1,c2=document.createElement('canvas');c2.width=cw;c2.height=ch;c2.getContext('2d').drawImage(c,mnx,mny,cw,ch,0,0,cw,ch);c=c2}
+  var out=new Image();out.onload=function(){cb(out,{bg:(br>235&&bg>235&&bb>235)?'beyaz':'renkli',orig:im})};out.src=c.toDataURL('image/png');
+}catch(e){cb(im,{bg:'hata'})}};im.src=src}
+function logoMsg(info){if(!info)return '';return {seffaf:'Logonuz şeffaf arka planlı, olduğu gibi kullanıldı.',beyaz:'Logonuzun beyaz arka planı otomatik kaldırıldı.',renkli:'Logonuzun renkli arka planı otomatik kaldırıldı. Sonuç beklediğiniz gibi değilse orijinali kullanabilirsiniz.',karisik:'Logonuzun arka planı tek renk olmadığı için kaldıramadık. En iyi sonuç için şeffaf arka planlı PNG yükleyin; şimdilik kutu olarak gösteriyoruz.',hata:''}[info.bg]||''}
 function swatches(cur){return '<div class="swatches">'+COLS.map(function(c){return '<button type="button" data-color="'+c[0]+'" class="'+(cur===c[0]?'on':'')+'" aria-pressed="'+(cur===c[0])+'"><i style="background:'+c[1]+'"></i>'+c[0]+'</button>'}).join('')+'</div>'}
 
 function sizeStr(o){return o.w+'+'+o.g+'+'+o.g+' x '+o.h+' cm'}
@@ -121,6 +143,18 @@ if('IntersectionObserver' in window&&!calm){
     function step(ts){if(!t0)t0=ts;var p=Math.min(1,(ts-t0)/1400);p=1-Math.pow(1-p,3);el.textContent=Math.round(fr+(to-fr)*p);if(p<1)requestAnimationFrame(step)}requestAnimationFrame(step)})},{threshold:.6});
   Array.prototype.forEach.call(document.querySelectorAll('.count'),function(el){co.observe(el)});
 }
+
+/* ---------- her an erişilebilen Teklif Al paneli ---------- */
+(function(){var qt=$('#qtab'),qp=$('#qpop');if(!qt||!qp)return;
+  var hero=$('.asist'),closed=false;try{closed=sessionStorage.getItem('eprQ')==='0'}catch(e){}
+  function open(v){qp.classList.toggle('show',v);qt.setAttribute('aria-expanded',v);qt.classList.toggle('hide',v);if(window.innerWidth<=760)document.documentElement.style.overflow=v?'hidden':''}
+  function vis(){var past=!hero||hero.getBoundingClientRect().bottom<0;qt.classList.toggle('in',past);if(window.innerWidth>760){if(!past){qp.classList.remove('show');qt.classList.remove('hide')}else if(!closed&&!qp.classList.contains('show')&&!qp._shown){qp._shown=1;open(true)}}}
+  qt.addEventListener('click',function(){open(true)});
+  document.addEventListener('click',function(e){if(e.target.closest&&e.target.closest('[data-qclose]')){open(false);closed=true;try{sessionStorage.setItem('eprQ','0')}catch(x){}}});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape'&&qp.classList.contains('show'))open(false)});
+  window.addEventListener('scroll',vis,{passive:true});window.addEventListener('resize',vis);vis();
+  Array.prototype.forEach.call(document.querySelectorAll('.mbar .pri'),function(a){a.addEventListener('click',function(e){e.preventDefault();open(true)})});
+})();
 if($('#pg-home')){
 /* ---------- ana sayfa ---------- */
 var P=[['Atlet Poşet','Mağaza','market, hışır, alışveriş, bakkal'],['El Geçmeli Poşet','Mağaza','butik, giyim, mağaza'],['Kulplu Poşet','Mağaza','ayakkabı, kutu, tekstil'],['Kargo Poşeti','Mağaza','e-ticaret, gönderi, kurye'],
@@ -200,25 +234,30 @@ function dTip(){var t,bg=find(BODY,D.color)[1];
   else if(D.logoImg&&D.logoCol&&cr(bg,D.logoCol)<2)t='Logonuzun ana rengi bu poşet rengine çok yakın; daha zıt bir poşet rengi deneyin.';
   else if(!D.logoImg&&cr(bg,find(INKS,D.ink)[1])<2.2)t=D.color+' poşet üzerinde '+D.ink.toLocaleLowerCase('tr')+' baskı zor okunur; daha zıt bir baskı rengi seçin.';
   else t=hexL(bg)<.25?D.color+' poşette açık renkli baskı en iyi okunur.':D.color+' poşette koyu renkli baskı uzaktan net okunur.';
+  if(D.logoInfo&&logoMsg(D.logoInfo))t=logoMsg(D.logoInfo)+' '+t;
   $('#dtip').innerHTML='<span aria-hidden="true">💡</span>'+esc(t)}
+function dMark(box,attr,cur){Array.prototype.forEach.call(box.querySelectorAll('['+attr+']'),function(b){var on=b.getAttribute(attr)===cur;b.classList.toggle('on',on);b.setAttribute(b.getAttribute('role')==='tab'?'aria-selected':'aria-pressed',on)})}
 function drawD(){var bg=find(BODY,D.color)[1];
   drawMock($('#dbag'),D.type,bg,find(HANDLE,D.kulp)[1],[{c:D.logoImg||placeholderLogo(find(INKS,D.ink)[1]),k:'logo'}]);
-  $('#dtype').innerHTML=DTYPES.map(function(t){var on=D.type===t[0];return '<button type="button" role="tab" data-dt="'+t[0]+'" aria-selected="'+on+'" class="'+(on?'on':'')+'">'+t[1]+'</button>'}).join('');
-  $('#dcname').textContent='· '+D.color;$('#dcol').innerHTML=dSw(BODY,D.color,'data-dc','Poşet');
-  $('#dkulpw').hidden=D.type!=='kulplu';$('#dkname').textContent='· '+D.kulp;$('#dkulp').innerHTML=dSw(HANDLE,D.kulp,'data-dk','Kulp');
-  $('#dinkw').hidden=!!D.logoImg;$('#diname').textContent='· '+D.ink;$('#dink').innerHTML=dSw(INKS,D.ink,'data-di','Baskı');
+  if(!D._built){D._built=1;
+    $('#dtype').innerHTML=DTYPES.map(function(t){return '<button type="button" role="tab" data-dt="'+t[0]+'">'+t[1]+'</button>'}).join('');
+    $('#dcol').innerHTML=dSw(BODY,'','data-dc','Poşet');$('#dkulp').innerHTML=dSw(HANDLE,'','data-dk','Kulp');$('#dink').innerHTML=dSw(INKS,'','data-di','Baskı')}
+  dMark($('#dtype'),'data-dt',D.type);dMark($('#dcol'),'data-dc',D.color);dMark($('#dkulp'),'data-dk',D.kulp);dMark($('#dink'),'data-di',D.ink);
+  $('#dcname').textContent='· '+D.color;$('#dkulpw').style.visibility=D.type==='kulplu'?'visible':'hidden';$('#dkname').textContent='· '+D.kulp;
+  $('#dinkw').style.display=D.logoImg?'none':'';$('#diname').textContent='· '+D.ink;
   dTip();
   $('#dgo').href=ASIST+'?tip='+D.type+'&renk='+encodeURIComponent(D.color)+'&kulp='+encodeURIComponent(D.kulp);
 }
+
 $('#tasarla').addEventListener('click',function(e){var t=e.target.closest?e.target.closest('button'):null;if(!t)return;
   if(t.hasAttribute('data-dt'))D.type=t.getAttribute('data-dt');if(t.hasAttribute('data-dc'))D.color=t.getAttribute('data-dc');if(t.hasAttribute('data-dk'))D.kulp=t.getAttribute('data-dk');if(t.hasAttribute('data-di'))D.ink=t.getAttribute('data-di');drawD()});
 $('#dgo').addEventListener('click',function(){try{if(D.logoSrc)sessionStorage.setItem('eprLogo',D.logoSrc);else sessionStorage.removeItem('eprLogo')}catch(e){}});
-$('#dlogo').addEventListener('change',function(){var f=this.files&&this.files[0];if(!f||!/^image\//.test(f.type))return;var fr=new FileReader();fr.onload=function(){var im=new Image();im.onload=function(){D.logoImg=im;D.logoSrc=fr.result;logoColor(fr.result,function(c){D.logoCol=c;drawD()})};im.src=fr.result};fr.readAsDataURL(f)});
+$('#dlogo').addEventListener('change',function(){var f=this.files&&this.files[0];if(!f||!/^image\//.test(f.type))return;var fr=new FileReader();fr.onload=function(){prepLogo(fr.result,function(im,info){D.logoImg=im;D.logoSrc=fr.result;D.logoInfo=info;logoColor(fr.result,function(c){D.logoCol=c;drawD()})})};fr.readAsDataURL(f)});
 drawD();
 }
 if($('#pg-asistan')){
 /* ---------- asistan ---------- */
-var A={step:0,sector:null,content:null,handle:null,size:null,print:null,color:'Beyaz',kulp:'Siyah',logoImg:null,logoCol:null,ink:'Otomatik',pt:{firma:'',slogan:'',tel:'',adres:'',web:''},unit:'adet',w:30,g:10,h:60,name:'',phone:'',file:'',tried:false};
+var A={au:{tab:'yeni',email:'',pass:'',kvkk:false,sent:false,code:'',demo:'',err:''},step:0,sector:null,content:null,handle:null,size:null,print:null,color:'Beyaz',kulp:'Siyah',logoImg:null,logoCol:null,ink:'Otomatik',pt:{firma:'',slogan:'',tel:'',adres:'',web:''},unit:'adet',w:30,g:10,h:60,name:'',phone:'',file:'',tried:false};
 var SEC=[['market','Market ve Mağaza','Bakkal, market, butik','Atlet Poşet'],['firin','Fırın ve Pastane','Ekmek, simit, pasta','Ekmek Poşeti'],['manav','Manav ve Pazar','Meyve, sebze','Rulo Manav Poşeti'],['gida','Gıda Üreticisi','Bakliyat, kuru gıda, buz','Bakliyat Poşeti'],['eticaret','E-ticaret ve Kargo','Online satış, gönderi','Kargo Poşeti'],['kt','Kuru Temizleme','Askılı kıyafet','Kuru Temizleme Poşeti'],['hali','Halı Yıkama','Halı ve kilim','Halı Poşeti'],['tekstil','Tekstil ve Hazır Giyim','Ürün paketleme','OPP-CPP Torba'],['sanayi','Sanayi ve Otomotiv','Parça, lastik, depolama','Kilitli Torba']];
 var CON=[['hafif','Hafif ürünler','Giyim, aksesuar, kozmetik'],['orta','Günlük alışveriş','Market ürünleri, karışık'],['agir','Ağır ürünler','Şişe, konserve, bakliyat'],['gida','Doğrudan gıda','Ekmek, meyve, açık gıda'],['soguk','Soğuk veya donuk','Buz, dondurma, donuk ürün'],['parca','Parça veya büyük eşya','Halı, lastik, yedek parça']];
 var HAN=[['atlet','Atlet','M8 68L10 28L12 4H22L23 22C24 35 40 35 41 22L42 4H52L54 28L56 68ZM29 33V36H35V33M8 61H56'],['el','El geçmeli','M12 5H52V68H12ZM25 13H39A4 4 0 0 1 39 21H25A4 4 0 0 1 25 13Z'],['kulp','Kulplu','M8 27H56V68H8ZM22 27V17A10 10 0 0 1 42 17V27'],['sapsiz','Sapsız torba','M12 6H52V68H12ZM12 15H52'],['rulo','Rulo / bobin','M16 16h32v40H16zM16 16c-6 0-6 40 0 40M48 16c6 0 6 40 0 40'],['oneri','Siz önerin','M26 22a6 6 0 1 1 8 6c-2 1-2 3-2 6M32 42v2']];
@@ -309,7 +348,7 @@ function syncCards(){Array.prototype.forEach.call(document.querySelectorAll('.el
 function elCard(k,label,ph,isLogo){var e=A.els[k],on=A.sel===k,r=SZR[k];
   var cols='<div class="pcolors sm">'+AINKS.map(function(c){var o=e.col===c[0];return '<button type="button" data-elcol="'+k+'|'+c[0]+'" class="'+(o?'on':'')+(c[1]==='auto'?' autoink':'')+'" aria-pressed="'+o+'" aria-label="'+label+' rengi '+c[0]+'" title="'+c[0]+'"'+(c[1]==='auto'?'':' style="background:'+c[1]+'"')+'>'+(c[1]==='auto'?'A':'')+'</button>'}).join('')+'</div>';
   return '<div class="elcard'+(on?' on':'')+'" data-card="'+k+'"><div class="elhead" data-elsel="'+k+'"><b>'+label+'</b>'+(isLogo?'<span class="muted">'+esc(A.file)+'</span>':'<input data-eltext="'+k+'" value="'+esc(e.text)+'" placeholder="'+esc(ph)+'" maxlength="70" aria-label="'+label+'">')+'</div>'+
-   '<div class="elbody"'+(on?'':' hidden')+'>'+(isLogo?'':'<label class="elrow">Yazı tipi<select data-elfont="'+k+'">'+FONTS.map(function(f){return '<option value="'+f[0]+'"'+(e.font===f[0]?' selected':'')+' style="font-family:\''+f[0]+'\'">'+f[2]+'</option>'}).join('')+'</select></label>')+
+   '<div class="elbody"'+(on?'':' hidden')+'>'+(isLogo&&A.logoInfo&&logoMsg(A.logoInfo)?'<p class="elinfo">'+esc(logoMsg(A.logoInfo))+(A.logoInfo.orig?' <button type="button" class="linkbtn" data-logoorig>'+(A.logoImg===A.logoInfo.orig?'Arka planı kaldır':'Orijinali kullan')+'</button>':'')+'</p>':'')+(isLogo?'':'<label class="elrow">Yazı tipi<select data-elfont="'+k+'">'+FONTS.map(function(f){return '<option value="'+f[0]+'"'+(e.font===f[0]?' selected':'')+' style="font-family:\''+f[0]+'\'">'+f[2]+'</option>'}).join('')+'</select></label>')+
    '<label class="elrow">Boyut <span class="szv" data-szv="'+k+'">'+e.size.toFixed(1).replace('.',',')+' cm</span><input type="range" min="'+r[0]+'" max="'+r[1]+'" step="0.1" value="'+e.size+'" data-elsize="'+k+'"></label>'+
    (isLogo?'':'<div class="elrow">Renk'+cols+'</div>')+(e.fit?'<p class="elwarn">Yazı baskı alanına sığması için küçültüldü.</p>':'')+'</div></div>'}
 
@@ -346,7 +385,7 @@ function drawTip(){var el=$('#ctip');if(!el)return;var mid=mockId(),t='',btns=[]
   el.innerHTML='<p><span aria-hidden="true">💡</span>'+esc(t)+'</p>'+(btns.length?'<div class="ctb">'+btns.slice(0,3).map(function(b){return '<button type="button" '+b[0]+'="'+b[1]+'">'+esc(b[2])+' uygula</button>'}).join('')+'</div>':'');
 }
 function drawSteps(){
-  var L6=['Sektör','İçerik','Tutma şekli','Boyut','Renk ve baskı','İletişim'];var st=$('#steptxt');if(st)st.textContent=A.step<6?'Adım '+(A.step+1)+' / 6 · '+L6[A.step]:'Tamamlandı';
+  var L6=['Sektör','İçerik','Tutma şekli','Boyut','Renk ve baskı','İletişim'];var st=$('#steptxt');if(st)st.textContent=A.step<6?'Adım '+(A.step+1)+' / 6 · '+L6[A.step]:A.step===6?'Son adım · Üyelik ve doğrulama':'Tamamlandı';
   $('#steps').innerHTML=['Sektör','İçerik','Tutma','Boyut','Renk','İletişim'].map(function(l,i){return '<li class="'+(i<A.step?'done':i===A.step?'cur':'')+'"><span></span>'+(i+1)+'. '+l+'</li>'}).join('');
 }
 function drawQ(){
@@ -373,18 +412,28 @@ function drawQ(){
   if(s===5){var e=A.tried;h='<h2 class="qh">Son adım: size nasıl ulaşalım?</h2><p class="muted" style="margin:0 0 24px">Sadece iki alan zorunlu. Gerisini telefonda konuşabiliriz.</p><div class="f2">'+
     '<label class="fld">Ad soyad<em class="req">Zorunlu</em><input data-in="name" autocomplete="name" value="'+esc(A.name)+'" class="'+(e&&!A.name.trim()?'err':'')+'"></label>'+
     '<label class="fld">Telefon<em class="req">Zorunlu</em><input type="tel" data-in="phone" placeholder="05xx xxx xx xx" value="'+esc(A.phone)+'" class="'+(e&&A.phone.trim().length<7?'err':'')+'"></label>'+
-    '<label class="fld">Firma adı<em>İsteğe bağlı</em><input autocomplete="organization" value="'+esc(A.pt.firma)+'"></label><label class="fld">E-posta<em>İsteğe bağlı</em><input type="email"></label>'+
+    '<label class="fld">Firma adı<em>İsteğe bağlı</em><input autocomplete="organization" value="'+esc(A.pt.firma)+'"></label><label class="fld">E-posta<em>İsteğe bağlı</em><input type="email" data-in="email" value="'+esc(A.email||'')+'"></label>'+
     '<div class="full"><span style="font-size:14px;font-weight:600">Yaklaşık miktar</span><div style="display:flex;flex-wrap:wrap;align-items:center"><input type="number" aria-label="Miktar" placeholder="ör. 5000" style="flex:1 1 200px;min-height:50px;border:2px solid #DDE1EA;border-radius:12px;padding:0 14px;margin:6px 10px 0 0"><div class="seg" role="group" aria-label="Birim"><button type="button" data-unit="adet" class="'+(A.unit==='adet'?'on':'')+'">Adet</button><button type="button" data-unit="kg" class="'+(A.unit==='kg'?'on':'')+'">Kg</button></div></div><p class="muted" style="font-size:13px;margin:6px 0 0">Adet ya da kilogram, hangisi kolayınıza gelirse. Emin değilseniz tahmini yazın, biz hesaplarız.</p></div></div>'+
     (e&&(!A.name.trim()||A.phone.trim().length<7)?'<p class="errmsg" role="alert">Size dönebilmemiz için ad soyad ve telefon gerekli.</p>':'');}
-  if(s===6){h='<div class="ok"><span class="circ"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#24803A" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg></span><h2 class="qh" style="margin:18px 0 8px">Teşekkürler '+esc(A.name.trim().split(' ')[0])+', talebiniz bize ulaştı.</h2><p class="muted" style="max-width:480px;margin:0 auto 24px">Satış ekibimiz en kısa sürede '+esc(A.phone)+' numarasından size dönecek. Acele ediyorsanız WhatsApp\'tan da yazabilirsiniz.</p><a class="btn ghost" href="'+HOME+'" style="margin:4px">Ana sayfaya dön</a> <a class="btn" href="'+URUN+'" style="margin:4px">'+esc(recommend())+' sayfasına git</a></div>';}
+  if(s===6){var V=A.au;h='<h2 class="qh">Teklifinizi göndermek için üye olun</h2><p class="muted" style="margin:0 0 18px">Tasarımınız hazır. Teklif talebini göndermeden önce e-posta adresinizi doğruluyoruz; böylece tasarımlarınız hesabınızda saklanır ve teklifinizi takip edebilirsiniz.</p>'+
+    '<div class="faces" role="tablist" style="margin:0 0 18px">'+[['yeni','Yeni üyelik'],['giris','Zaten üyeyim']].map(function(o){var on=V.tab===o[0];return '<button type="button" role="tab" data-autab="'+o[0]+'" aria-selected="'+on+'" class="'+(on?'on':'')+'">'+o[1]+'</button>'}).join('')+'</div>';
+    if(V.tab==='yeni'&&!V.sent)h+='<div class="f2"><label class="fld">E-posta<em class="req">Zorunlu</em><input type="email" data-au="email" autocomplete="email" value="'+esc(V.email)+'" class="'+(V.err&&!/^\S+@\S+\.\S+$/.test(V.email)?'err':'')+'"></label><label class="fld">Şifre<em class="req">En az 6 karakter</em><input type="password" data-au="pass" autocomplete="new-password" value="'+esc(V.pass)+'" class="'+(V.err&&V.pass.length<6?'err':'')+'"></label></div>'+
+      '<label class="chk"><input type="checkbox" data-au="kvkk"'+(V.kvkk?' checked':'')+'> <span><a href="#" onclick="return false">Aydınlatma metnini</a> okudum, üyelik ve teklif için bilgilerimin işlenmesini kabul ediyorum.</span></label>'+(V.err?'<p class="errmsg" role="alert">'+esc(V.err)+'</p>':'')+
+      '<div class="qnav"><button type="button" class="btn ghost" data-nav="back">← Geri</button><button type="button" class="btn" data-auact="send">Doğrulama kodu gönder</button></div>';
+    else if(V.tab==='yeni')h+='<p style="margin:0 0 12px"><b>'+esc(V.email)+'</b> adresine 6 haneli bir kod gönderdik.</p><div class="f2"><label class="fld">Doğrulama kodu<input inputmode="numeric" maxlength="6" data-au="code" value="'+esc(V.code)+'" class="'+(V.err?'err':'')+'"></label></div>'+
+      '<p class="demo">Prototip notu: gerçek sitede kod e-postayla gelir. Burada denemek için <b>'+V.demo+'</b> girin.</p>'+(V.err?'<p class="errmsg" role="alert">'+esc(V.err)+'</p>':'')+
+      '<div class="qnav"><button type="button" class="btn ghost" data-auact="change">E-postayı değiştir</button><button type="button" class="btn" data-auact="verify">Doğrula ve teklifi gönder</button></div>';
+    else h+='<div class="f2"><label class="fld">E-posta<input type="email" data-au="email" autocomplete="email" value="'+esc(V.email)+'"></label><label class="fld">Şifre<input type="password" data-au="pass" autocomplete="current-password" value="'+esc(V.pass)+'"></label></div>'+(V.err?'<p class="errmsg" role="alert">'+esc(V.err)+'</p>':'')+'<p class="demo">Prototip notu: giriş gerçek WordPress sitesinde çalışacak; burada herhangi bir e-posta ve şifreyle deneyebilirsiniz.</p>'+
+      '<div class="qnav"><button type="button" class="btn ghost" data-nav="back">← Geri</button><button type="button" class="btn" data-auact="login">Giriş yap ve teklifi gönder</button></div>';}
+  if(s===7){h='<div class="ok"><span class="circ"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#24803A" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg></span><h2 class="qh" style="margin:18px 0 8px">Teşekkürler '+esc(A.name.trim().split(' ')[0])+', talebiniz bize ulaştı.</h2><p class="muted" style="margin:0 0 8px">Tasarımınız <b>'+esc(A.au.email)+'</b> hesabınıza kaydedildi.</p><p class="muted" style="max-width:480px;margin:0 auto 24px">Satış ekibimiz en kısa sürede '+esc(A.phone)+' numarasından size dönecek. Acele ediyorsanız WhatsApp\'tan da yazabilirsiniz.</p><a class="btn ghost" href="'+HOME+'" style="margin:4px">Ana sayfaya dön</a> <a class="btn" href="'+URUN+'" style="margin:4px">'+esc(recommend())+' sayfasına git</a></div>';}
   if(s<6){var can=s>=5||!!A[KEYS[s]];
-    h+='<div class="qnav"><button type="button" class="btn ghost" data-nav="back" style="visibility:'+(s===0?'hidden':'visible')+'">← Geri</button><div>'+(s===5?'<a class="btn ghost" href="https://wa.me/905357183598" style="border-color:#24803A;color:#24803A">WhatsApp ile gönder</a>':'')+'<button type="button" class="btn" data-nav="next"'+(can?'':' disabled')+'>'+(s===5?'Teklif iste':'Devam et →')+'</button></div></div>';}
+    h+='<div class="qnav"><button type="button" class="btn ghost" data-nav="back" style="visibility:'+(s===0?'hidden':'visible')+'">← Geri</button><div>'+(s===5?'<a class="btn ghost" href="https://wa.me/905357183598" style="border-color:#24803A;color:#24803A">WhatsApp ile gönder</a>':'')+'<button type="button" class="btn" data-nav="next"'+(can?'':' disabled')+'>'+(s===5?'Devam et →':'Devam et →')+'</button></div></div>';}
   $('#qpanel').innerHTML=h; drawSteps(); drawSide(); if(s===4){addFonts();renderAst($('#pvc'),true);bindCanvas();drawTip();FONTS.forEach(function(f){ensureFont(f[0],redrawAst)})}
 }
 var qs=location.search.match(/[?&]sektor=([a-z]+)/);if(qs&&find(SEC,qs[1])){A.sector=qs[1];A.step=1}
 (function(){function q(k){var m=location.search.match(new RegExp('[?&]'+k+'=([^&#]+)'));return m?decodeURIComponent(m[1]):null}
   var tp={atlet:'atlet',elgecme:'el',kulplu:'kulp'}[q('tip')];if(tp)A.handle=tp;if(q('renk')&&find(BODY,q('renk')))A.color=q('renk');if(q('kulp')&&find(HANDLE,q('kulp')))A.kulp=q('kulp');
-  if(tp){A.print='logo';try{var ls=sessionStorage.getItem('eprLogo');if(ls){var im=new Image();im.onload=function(){A.logoImg=im;A.LG.on=im;A.file='Ana sayfada yüklediğiniz logo';A.sel='logo';logoColor(ls,function(c){A.logoCol=c;drawQ()})};im.src=ls}}catch(e){}}})();
+  if(tp){A.print='logo';A.step=4;if(!A.size)A.size='orta';try{var ls=sessionStorage.getItem('eprLogo');if(ls){prepLogo(ls,function(im,info){A.logoImg=im;A.logoInfo=info;A.LG.on=im;A.file='Ana sayfada yüklediğiniz logo';A.sel='logo';logoColor(ls,function(c){A.logoCol=c;drawQ()})})}}catch(e){}}})();
 var qp=$('#qpanel');
 qp.addEventListener('click',function(e){
   var t=e.target.closest?e.target.closest('button'):null; if(!t)return;
@@ -393,6 +442,14 @@ qp.addEventListener('click',function(e){
     return}
   if(t.hasAttribute('data-body')){A.color=t.getAttribute('data-body');drawQ();return}
   if(t.hasAttribute('data-kulp')){A.kulp=t.getAttribute('data-kulp');drawQ();return}
+  if(t.hasAttribute('data-logoorig')&&A.logoInfo){var o=A.logoInfo.orig;if(!A.logoInfo.clean)A.logoInfo.clean=A.logoImg;A.logoImg=A.logoImg===o?A.logoInfo.clean:o;A.LG[A.face]=A.logoImg;drawQ();return}
+  if(t.hasAttribute('data-autab')){A.au.tab=t.getAttribute('data-autab');A.au.err='';drawQ();return}
+  if(t.hasAttribute('data-auact')){var V=A.au,act=t.getAttribute('data-auact');V.err='';
+    if(act==='send'){if(!/^\S+@\S+\.\S+$/.test(V.email))V.err='Geçerli bir e-posta adresi girin.';else if(V.pass.length<6)V.err='Şifre en az 6 karakter olmalı.';else if(!V.kvkk)V.err='Devam etmek için aydınlatma metnini onaylayın.';else{V.sent=true;V.demo=String(Math.floor(100000+Math.random()*900000))}}
+    if(act==='change'){V.sent=false;V.code=''}
+    if(act==='verify'){if(V.code.trim()===V.demo)A.step=7;else V.err='Kod hatalı, tekrar deneyin.'}
+    if(act==='login'){if(!/^\S+@\S+\.\S+$/.test(V.email)||!V.pass)V.err='E-posta ve şifrenizi girin.';else A.step=7}
+    drawQ();return}
   if(t.id==='areabtn'){A.showArea=A.showArea===false;t.textContent=A.showArea?'Baskı alanını gizle':'Baskı alanını göster';redrawAst();return}
   if(t.hasAttribute('data-side')){var sd=t.getAttribute('data-side');if(sd!=='ayri'&&A.face!=='on')setFace('on');A.side=sd;drawQ();return}
   if(t.hasAttribute('data-face')){setFace(t.getAttribute('data-face'));A.sel=A.logoImg?'logo':'firma';drawQ();return}
@@ -400,7 +457,7 @@ qp.addEventListener('click',function(e){
   if(t.hasAttribute('data-unit')){A.unit=t.getAttribute('data-unit');Array.prototype.forEach.call(qp.querySelectorAll('[data-unit]'),function(b){b.className=b===t?'on':''});return}
   var n=t.getAttribute('data-nav');
   if(n==='back'){A.step=Math.max(0,A.step-1);drawQ()}
-  if(n==='next'){if(A.step===5){if(!A.name.trim()||A.phone.trim().length<7){A.tried=true;drawQ();return}A.step=6;drawQ();return}
+  if(n==='next'){if(A.step===5){if(!A.name.trim()||A.phone.trim().length<7){A.tried=true;drawQ();return}A.step=6;if(!A.au.email&&A.email)A.au.email=A.email;drawQ();return}
     if(A[KEYS[A.step]]){A.step++;drawQ()}}
 });
 qp.addEventListener('click',function(e){var h=e.target.closest&&e.target.closest('[data-elsel]');if(!h)return;var k=h.getAttribute('data-elsel');if(A.sel!==k){A.sel=k;syncCards();redrawAst()}});
@@ -408,11 +465,12 @@ qp.addEventListener('focusin',function(e){var k=e.target.getAttribute&&e.target.
 qp.addEventListener('input',function(e){
   var t=e.target;
   if(t.hasAttribute('data-dim')){A[t.getAttribute('data-dim')]=Math.max(0,+t.value||0);$('#adim').innerHTML=dimSvg(A.w,A.g,A.h,sizeStr(A));drawSide()}
+  if(t.hasAttribute('data-au')){var f=t.getAttribute('data-au');A.au[f]=t.type==='checkbox'?t.checked:t.value;return}
   if(t.hasAttribute('data-eltext')){var k=t.getAttribute('data-eltext');A.els[k].text=t.value;if(k==='firma')A.pt.firma=t.value;redrawAst();return}
   if(t.hasAttribute('data-elsize')){var k2=t.getAttribute('data-elsize');A.els[k2].size=+t.value;A.sel=k2;var sv=qp.querySelector('[data-szv="'+k2+'"]');if(sv)sv.textContent=(+t.value).toFixed(1).replace('.',',')+' cm';redrawAst();return}
   if(t.hasAttribute('data-in')){A[t.getAttribute('data-in')]=t.value;if(A.tried&&t.value.trim())t.className=''}
 });
-qp.addEventListener('change',function(e){var t=e.target;if(t.hasAttribute('data-elfont')){var k=t.getAttribute('data-elfont');A.els[k].font=t.value;A.sel=k;ensureFont(t.value,redrawAst);redrawAst();return}if(!t.hasAttribute('data-file'))return;var f=t.files&&t.files[0];A.file=f?f.name:'';if(f&&/^image\//.test(f.type)){var fr=new FileReader();fr.onload=function(){var im=new Image();im.onload=function(){A.logoImg=im;A.LG[A.face]=im;A.sel='logo';logoColor(fr.result,function(c){A.logoCol=c;drawQ()})};im.src=fr.result};fr.readAsDataURL(f)}else drawQ()});
+qp.addEventListener('change',function(e){var t=e.target;if(t.hasAttribute('data-elfont')){var k=t.getAttribute('data-elfont');A.els[k].font=t.value;A.sel=k;ensureFont(t.value,redrawAst);redrawAst();return}if(!t.hasAttribute('data-file'))return;var f=t.files&&t.files[0];A.file=f?f.name:'';if(f&&/^image\//.test(f.type)){var fr=new FileReader();fr.onload=function(){prepLogo(fr.result,function(im,info){A.logoImg=im;A.logoInfo=info;A.LG[A.face]=im;A.sel='logo';logoColor(fr.result,function(c){A.logoCol=c;drawQ()})})};fr.readAsDataURL(f)}else drawQ()});
 drawQ();
 
 }
