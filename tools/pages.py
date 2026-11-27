@@ -385,7 +385,7 @@ def clients_html(key, title):
     <div class="rgrid2 cgrid2">{tiles}</div></div></section>'''
 
 def refs_html():
-  tiles = ''.join(f'<div class="rtile"><img src="{{{{R}}}}assets/refs/{r["f"]}" alt="{r["ad"]}" loading="lazy"></div>' for r in REFG['genel'])
+  tiles = ''.join((f'<div class="rtile"><img src="{{{{R}}}}assets/refs/{r["f"]}" alt="{r["ad"]}" loading="lazy"></div>' if r.get('f') else f'<div class="rtile txt"><span>{r["ad"]}</span></div>') for r in REFG['genel'])
   works = [('atlet-sari','Atlet poşet','ŞOK Market'),('kulplu-kirmizi','Kulplu poşet','İpek Pişmaniye'),('elgecme-beyaz','El geçmeli poşet','Turkish Support Services')]
   w = ''.join(f'<figure class="rwork"><img src="{{{{R}}}}assets/isler/{f}.webp" alt="{t} örnek iş" loading="lazy"><figcaption><b>{t}</b><span>{d}</span></figcaption></figure>' for f, t, d in works)
   w += ''.join(f'<figure class="rwork">{photo("İş örneği eklenecek", "4/5")}<figcaption><b>{ph("Ürün adı")}</b><span>{ph("Müşteri / sektör")}</span></figcaption></figure>' for _ in range(3))

@@ -273,7 +273,7 @@ $('#sectors').innerHTML=[['atlet','#E8F3E3','Market ve Mağaza','Atlet, el geçm
 var CATD=[['magaza-ambalajlari','Mağaza Ambalajları','#E8F3E3'],['gida-ambalajlari','Gıda Ambalajları','#F3EFE6'],['tekstil-ve-temizlik-ambalajlari','Tekstil ve Temizlik','#E6EAF7'],['endustriyel-ambalajlar','Endüstriyel Ambalajlar','#EEF1EC']];
 $('#cats').innerHTML=CATD.map(function(c){var ps=EP.filter(function(p){return p[2]===c[0]}),ics=[];ps.forEach(function(p){if(ics.indexOf(p[3])<0&&ics.length<4)ics.push(p[3])});
   return '<div class="cat" style="background:'+c[2]+'"><h3 style="font-size:20px;margin:0 0 14px">'+c[1]+'</h3><div class="tags">'+ps.map(function(p){return '<a href="'+R+p[1]+'">'+esc(p[0])+'</a>'}).join('')+'</div><div class="collage" aria-hidden="true">'+ics.map(function(k,i){return '<span style="transform:rotate('+[-6,4,-3,6][i]+'deg)">'+icon(k,40)+'</span>'}).join('')+'</div></div>'}).join('');
-var REFS=(__REFS__).map(function(r){return {ad:r.ad,img:R+'assets/refs/'+r.f}});
+var REFS=(__REFS__).map(function(r){return {ad:r.ad,img:r.f?R+'assets/refs/'+r.f:null}});
 function tile(r){return '<div class="logo-tile" title="'+esc(r.ad)+'">'+(r.img?'<img src="'+r.img+'" alt="'+esc(r.ad)+'">':esc(r.ad))+'</div>'}
 var h1=REFS.filter(function(r,i){return i%2===0}),h2=REFS.filter(function(r,i){return i%2===1});var r1=h1.map(tile).join(''), r2=h2.map(tile).join('');
 $('#mrow1').innerHTML=r1+r1+r1+r1; $('#mrow2').innerHTML=r2+r2+r2+r2;
