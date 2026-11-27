@@ -1,0 +1,332 @@
+{
+"genel": [
+{
+"ad": "Kuveyt Türk",
+"f": "kuveyt-turk.webp"
+},
+{
+"ad": "The Ritz-Carlton",
+"f": "the-ritz-carlton.webp"
+},
+{
+"ad": "Koçtaş",
+"f": "koctas.webp"
+},
+{
+"ad": "Brisa",
+"f": "brisa.webp"
+},
+{
+"ad": "Carl's Jr.",
+"f": "carls-jr.webp"
+},
+{
+"ad": "Kisbu Group",
+"f": "kisbu-group.webp"
+},
+{
+"ad": "İpek Pişmaniye",
+"f": "ipek-pismaniye.webp"
+},
+{
+"ad": "Sütiş",
+"f": "sutis.webp"
+},
+{
+"ad": "Keban Et",
+"f": "keban-et.webp"
+},
+{
+"ad": "Niltex",
+"f": "niltex.webp"
+},
+{
+"ad": "Tarihi Beykızı",
+"f": "tarihi-beykizi.webp"
+},
+{
+"ad": "Köylü",
+"f": "koylu.webp"
+},
+{
+"ad": "Ayvazoğlu Unlu Mamulleri",
+"f": "ayvazoglu-unlu-mamulleri.webp"
+},
+{
+"ad": "Mevlana Market",
+"f": "mevlana-market.webp"
+},
+{
+"ad": "İnci Pastanesi",
+"f": "inci-pastanesi.webp"
+},
+{
+"ad": "Tatlıses Çiğ Köfte",
+"f": "tatlises-cig-kofte.webp"
+},
+{
+"ad": "Ünver Pasta Cafe",
+"f": "unver-pasta-cafe.webp"
+},
+{
+"ad": "Onur Fırın",
+"f": "onur-firin.webp"
+},
+{
+"ad": "Turkish Support Services",
+"f": "turkish-support-services.png"
+},
+{
+"ad": "Anteplioğlu Örnek",
+"f": "anteplioglu-ornek.webp"
+},
+{
+"ad": "Tergan",
+"f": "tergan.webp"
+},
+{
+"ad": "Kamil Şan Pide Lahmacun",
+"f": "kamil-san-pide-lahmacun.webp"
+},
+{
+"ad": "Çaşnigir",
+"f": "casnigir.webp"
+},
+{
+"ad": "Nefise",
+"f": "nefise.webp"
+},
+{
+"ad": "Beykızı Restoran",
+"f": "beykizi-restoran.webp"
+},
+{
+"ad": "Elif Fırın",
+"f": "elif-firin.webp"
+},
+{
+"ad": "Bafra Pidesi",
+"f": "bafra-pidesi.webp"
+},
+{
+"ad": "Blanca",
+"f": "blanca.webp"
+},
+{
+"ad": "BRY Net İnşaat",
+"f": "bry-net-insaat.webp"
+},
+{
+"ad": "3Gen Taban",
+"f": "3gen-taban.webp"
+},
+{
+"ad": "Otantik Fırın",
+"f": "otantik-firin.webp"
+},
+{
+"ad": "Palamut Group",
+"f": "palamut-group.webp"
+},
+{
+"ad": "Şahkonak Restaurant",
+"f": "sahkonak-restaurant.webp"
+},
+{
+"ad": "İyilikder",
+"f": "iyilikder.webp"
+},
+{
+"ad": "Bereket Fırın 1969",
+"f": "bereket-firin-1969.webp"
+},
+{
+"ad": "Kookah",
+"f": "kookah.webp"
+},
+{
+"ad": "Lubberink Asperges",
+"f": "lubberink-asperges.webp"
+},
+{
+"ad": "Mert-er Elektronik",
+"f": "mert-er-elektronik.webp"
+},
+{
+"ad": "Rabve Vakfı",
+"f": "rabve-vakfi.webp"
+},
+{
+"ad": "Fibril",
+"f": "fibril.webp"
+},
+{
+"ad": "Gönenli Peynircim",
+"f": "gonenli-peynircim.webp"
+},
+{
+"ad": "Hot Bakery",
+"f": "hot-bakery.webp"
+},
+{
+"ad": "Özdemirler Unmek",
+"f": "ozdemirler-unmek.webp"
+},
+{
+"ad": "Karef Ekmek Pasta",
+"f": "karef-ekmek-pasta.webp"
+},
+{
+"ad": "Bizim Fırın",
+"f": "bizim-firin.webp"
+},
+{
+"ad": "Ekin Fırın",
+"f": "ekin-firin.webp"
+},
+{
+"ad": "Mevlana Pide",
+"f": "mevlana-pide.webp"
+},
+{
+"ad": "Öztürk Bey Baklava",
+"f": "ozturk-bey-baklava.webp"
+}
+],
+"kuru": [
+{
+"ad": "Bright World Laundry",
+"f": "bright-world-laundry.webp"
+},
+{
+"ad": "Elit Kuru Temizleme",
+"f": "elit-kuru-temizleme.webp"
+},
+{
+"ad": "Luxdry Kuru Temizleme",
+"f": "luxdry-kuru-temizleme.webp"
+},
+{
+"ad": "D Resort Murat Reis Ayvalık",
+"f": "d-resort-murat-reis-ayvalik.webp"
+},
+{
+"ad": "Bluesky Kuru Temizleme",
+"f": "bluesky-kuru-temizleme.webp"
+},
+{
+"ad": "Clean Land",
+"f": "clean-land.webp"
+},
+{
+"ad": "Avrupa Kuru Temizleme",
+"f": "avrupa-kuru-temizleme.webp"
+},
+{
+"ad": "Grand Makel Hotel Topkapı",
+"f": "grand-makel-hotel-topkapi.webp"
+}
+],
+"hali": [
+{
+"ad": "eHalıServisi",
+"f": "ehaliservisi.webp"
+},
+{
+"ad": "Ersu Wäscherei",
+"f": "ersu-wascherei.webp"
+},
+{
+"ad": "Faruk Halı Yıkama",
+"f": "faruk-hali-yikama.webp"
+},
+{
+"ad": "Sağlam Temizlik",
+"f": "saglam-temizlik.webp"
+},
+{
+"ad": "Green Wash Melek Halı Yıkama",
+"f": "green-wash-melek-hali-yikama.webp"
+},
+{
+"ad": "GAP Halı Yıkama",
+"f": "gap-hali-yikama.webp"
+},
+{
+"ad": "Eytem Halı Yıkama",
+"f": "eytem-hali-yikama.webp"
+},
+{
+"ad": "Fabrika Halı Yıkama",
+"f": "fabrika-hali-yikama.webp"
+},
+{
+"ad": "Akar Halı Yıkama",
+"f": "akar-hali-yikama.webp"
+},
+{
+"ad": "Bahar Halı Yıkama Fabrikası",
+"f": "bahar-hali-yikama-fabrikasi.webp"
+},
+{
+"ad": "Ayka",
+"f": "ayka.webp"
+},
+{
+"ad": "Anatolia Cleaning Services",
+"f": "anatolia-cleaning-services.webp"
+},
+{
+"ad": "Swan Halı Yıkama",
+"f": "swan-hali-yikama.webp"
+},
+{
+"ad": "Alagöz",
+"f": "alagoz.webp"
+},
+{
+"ad": "7 Kıta Halı Yıkama",
+"f": "7-kita-hali-yikama.webp"
+},
+{
+"ad": "Sarıcalar Halı Yıkama Fabrikası",
+"f": "saricalar-hali-yikama-fabrikasi.webp"
+},
+{
+"ad": "Uğur Halı Yıkama",
+"f": "ugur-hali-yikama.webp"
+},
+{
+"ad": "Teppich Waschanlage Bodensee",
+"f": "teppich-waschanlage-bodensee.webp"
+},
+{
+"ad": "Vente & Lavage de Tapis",
+"f": "vente-lavage-de-tapis.webp"
+},
+{
+"ad": "Aqua Teppichwäscherei",
+"f": "aqua-teppichwascherei.webp"
+},
+{
+"ad": "Sahat Al Tayaran Halı Yıkama",
+"f": "sahat-al-tayaran-hali-yikama.webp"
+},
+{
+"ad": "Akdeniz Halı Temizleme",
+"f": "akdeniz-hali-temizleme.webp"
+},
+{
+"ad": "H.Cleaner House Co.",
+"f": "h-cleaner-house-co.webp"
+},
+{
+"ad": "Flygande Mattan",
+"f": "flygande-mattan.webp"
+},
+{
+"ad": "Rug Salon",
+"f": "rug-salon.webp"
+}
+]
+}

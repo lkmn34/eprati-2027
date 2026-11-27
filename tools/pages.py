@@ -372,13 +372,20 @@ def sss_html():
   <div class="doc">{body}</div></section>'''
 
 # ---------------------------------------------------------------- REFERANSLAR
-REFS = [('THY',None),('Kuveyt Türk','kuveytturk'),('İpek Pişmaniye','ipek'),('Koçtaş',None),('Kisbu Group','kisbu'),('Niltex','niltex'),
-  ('Volvo',None),('Keban Et','keban-et'),('ŞOK',None),('Köylü','koylu'),('Onur Fırın','onur-firin'),('Garanti Bankası',None),
-  ('Mevlana Market','mevlana-market'),('Turkish Support Services','turkish-support-services'),('Ünver Pasta Cafe','unver'),('Sütiş','sutis'),
-  ('Seyidoğlu',None),('Sultanbacı',None),('Çiğköftem',None),('Zırhlı',None)]
+import json as _json, os as _os
+REFG = _json.load(open(_os.path.join(_os.path.dirname(_os.path.abspath(__file__)), 'parts', 'refs.json'), encoding='utf-8'))
+
+def clients_html(key, title):
+  L = REFG[key]
+  tiles = ''.join(f'<div class="rtile"><img src="{{{{R}}}}assets/refs/{r["f"]}" alt="{r["ad"]}" loading="lazy"></div>' for r in L)
+  sub = {'kuru': 'Kuru temizleme poşetlerimiz İstanbul\'dan Ankara\'ya, Körfez\'e kadar kuru temizlemeciler ve otellerde kullanılıyor.',
+         'hali': 'Halı poşetlerimiz Türkiye\'nin yanı sıra Almanya, İsveç, Yunanistan ve Körfez ülkelerindeki halı yıkama firmalarında kullanılıyor.'}[key]
+  return f'''<section class="wrap" style="padding-bottom:56px"><div class="clients">
+    <div class="clh"><span class="eyebrow">BU POŞETİ KULLANANLAR</span><h2>{title} bizi tercih ediyor</h2><p class="muted">{sub}</p></div>
+    <div class="rgrid2 cgrid2">{tiles}</div></div></section>'''
+
 def refs_html():
-  tiles = ''.join((f'<div class="rtile"><img src="{{{{R}}}}assets/refs/{f}.png" alt="{n}" loading="lazy"></div>' if f else f'<div class="rtile txt"><span>{n}</span></div>') for n, f in REFS)
-  tiles += ''.join('<div class="rtile ph2"><span>Logo eklenecek</span></div>' for _ in range(4))
+  tiles = ''.join(f'<div class="rtile"><img src="{{{{R}}}}assets/refs/{r["f"]}" alt="{r["ad"]}" loading="lazy"></div>' for r in REFG['genel'])
   works = [('atlet-sari','Atlet poşet','ŞOK Market'),('kulplu-kirmizi','Kulplu poşet','İpek Pişmaniye'),('elgecme-beyaz','El geçmeli poşet','Turkish Support Services')]
   w = ''.join(f'<figure class="rwork"><img src="{{{{R}}}}assets/isler/{f}.webp" alt="{t} örnek iş" loading="lazy"><figcaption><b>{t}</b><span>{d}</span></figcaption></figure>' for f, t, d in works)
   w += ''.join(f'<figure class="rwork">{photo("İş örneği eklenecek", "4/5")}<figcaption><b>{ph("Ürün adı")}</b><span>{ph("Müşteri / sektör")}</span></figcaption></figure>' for _ in range(3))

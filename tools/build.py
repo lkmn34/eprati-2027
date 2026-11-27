@@ -116,6 +116,8 @@ def prod_fill(html, p, R):
     '{{NOTICE}}': NOTICE,
   }
   for k, v in rep.items(): html = html.replace(k, v)
+  cl = {'kuru-temizleme-poseti': ('kuru', 'Kuru temizlemeciler ve oteller'), 'hali-poseti': ('hali', 'Halı yıkama firmaları')}.get(p['id'])
+  html = html.replace('{{P_CLIENTS}}', PG.clients_html(*cl).replace('{{R}}', R) if cl else '')
   if p['id'] == 'kargo-poseti':
     html = html.replace('<div class="facts">', '<div class="eldmini"><span><b>Hemen satın almak mı istiyorsunuz?</b> Standart ölçülerdeki baskısız kargo poşetleri Eldora mağazamızda, kredi kartıyla.</span><a href="https://www.eldora.com.tr/" target="_blank" rel="noopener">Eldora\'dan al ↗</a></div><div class="facts">', 1)
   return html.replace('<main id="pg-urun">', '<main id="pg-urun" data-product="' + esc(json.dumps(data, ensure_ascii=False)) + '">', 1)
@@ -267,7 +269,7 @@ def page(p):
 
 os.makedirs(os.path.join(ROOT, 'assets'), exist_ok=True)
 open(os.path.join(ROOT, 'assets', 'site.css'), 'w', encoding='utf-8').write(part('site.css'))
-open(os.path.join(ROOT, 'assets', 'app.js'), 'w', encoding='utf-8').write(part('app.js'))
+open(os.path.join(ROOT, 'assets', 'app.js'), 'w', encoding='utf-8').write(part('app.js').replace('__REFS__', json.dumps(PG.REFG['genel'], ensure_ascii=False)))
 for p in PAGES:
   out = os.path.join(ROOT, p['path']); os.makedirs(os.path.dirname(out) or ROOT, exist_ok=True)
   open(out, 'w', encoding='utf-8').write(page(p))
